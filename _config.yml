@@ -2,7 +2,7 @@
 theme: minima
 title: "Obliq AI SRE Agent Platform"
 description: "A comprehensive AI-powered Site Reliability Engineering platform deployed as a single Helm chart"
-url: "https://repo.obliq.avesha.io"
+url: "https://repo.obliq.avesha.io/"
 baseurl: ""
 
 # Author information
