@@ -19,6 +19,8 @@ A comprehensive AI-powered Site Reliability Engineering platform deployed as a s
 - **Container Registry Access** - Contact support@aveshasystems.com for ACR credentials
 - **kubeconfig** file for cluster access
 
+💡 **For local development**: Run `./scripts/update-dependencies.sh` to ensure all chart dependencies are resolved before local installation.
+
 ### 1. Add Helm Repository
 ```bash
 # Add the Obliq Charts Helm repository

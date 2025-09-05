@@ -45,8 +45,21 @@ jobs:
         if: ${{ github.event.inputs.obliq-chart == 'Yes' }}
         working-directory: src
         run: |
-          # Update dependencies for all charts that have them
-          helm dependency update
+          echo "Updating dependencies for all charts..."
+          
+          # Update dependencies for the main chart
+          helm dependency update .
+          
+          # Update dependencies for all sub-charts that have them
+          for chart_dir in charts/*/; do
+            if [[ -f "${chart_dir}Chart.yaml" ]]; then
+              echo "Checking dependencies for ${chart_dir}"
+              if grep -q "^dependencies:" "${chart_dir}Chart.yaml"; then
+                echo "Updating dependencies for ${chart_dir}"
+                helm dependency update "${chart_dir}"
+              fi
+            fi
+          done
           
       - name: Package Obliq Master Helm Chart
         shell: bash
