@@ -365,8 +365,8 @@ helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
   --namespace avesha \
   --dry-run \
   --set-file global.kubeconfig.content=./kubeconfig \
-  --set global.env.openai.OPENAI_API_KEY="test" \
-  # ... other parameters ...
+  --set global.env.openai.OPENAI_API_KEY="test"
+  # Add other parameters as needed
 ```
 
 ### Common Parameter Validation Errors
