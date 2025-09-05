@@ -75,6 +75,7 @@ helm install --set backend.env.app.LOG_LEVEL="DEBUG"  # Highest priority
 ## 🌐 Global Environment Variables
 
 ### Common Environment Variables
+
 | Parameter | Description | Default | Required | Example |
 |-----------|-------------|---------|----------|---------|
 | `global.env.common.NODE_ENV` | Node.js environment | `"production"` | No | `"development"` |
