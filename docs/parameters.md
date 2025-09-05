@@ -368,6 +368,7 @@ helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
 - **Resource conflicts**: Setting conflicting resource limits
 
 ### Required Parameters
+
 | Parameter | Required For | Error Message |
 |-----------|-------------|---------------|
 | `global.env.openai.OPENAI_API_KEY` | Core AI services | "OpenAI API key is required for AI services" |
