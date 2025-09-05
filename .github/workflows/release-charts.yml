@@ -81,6 +81,10 @@ jobs:
           git add $(git ls-files -o --exclude-standard)
           git add index.yaml
           
+          # Force add .tgz files (they should be tracked in the gh-pages branch)
+          git add -f *.tgz || true
+          git add -f charts/*.tgz || true
+          
           # Check if there are any changes to commit
           if git diff --cached --quiet; then
             echo "No changes to commit"

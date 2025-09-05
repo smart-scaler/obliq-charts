@@ -1,4 +1,5 @@
-# Exclude packaged Helm charts
+# Exclude packaged Helm charts (but allow them in gh-pages branch)
+# Note: .tgz files should be tracked in gh-pages branch for the Helm repository
 *.tgz
 charts/*.tgz
 
