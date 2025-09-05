@@ -48,7 +48,7 @@ kubectl create secret docker-registry registry \
   -n avesha
 ```
 
-📚 **For advanced secret management:** See [docs/secret-management.md](./docs/secret-management.md)
+📚 **For advanced secret management:** Visit the [Secret Management Guide](./docs/secret-management.md)
 
 ### 3. Install Options
 
@@ -75,7 +75,7 @@ helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
 
 📋 **Prerequisites**: Before running AWS integration, ensure you have:
 - **[AWS IAM Policies](./docs/aws-iam-policies.md)** - Required IAM roles and policies setup
-- **[AWS Prerequisites](./docs/prerequisites.md#aws-integration-requirements)** - AWS account configuration and permissions
+- **[AWS Prerequisites](./docs/prerequisites.md#aws-integration)** - AWS account configuration and permissions
 - **Valid AWS credentials** - IAM user with appropriate permissions
 
 ```bash
@@ -101,7 +101,7 @@ helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
   --timeout 15m
 ```
 
-📋 **For full integration with all services:** See [Complete Deployment Examples](./docs/parameters.md#-complete-deployment-examples)
+📋 **For full integration with all services:** See [Complete Deployment Examples](./docs/parameters.md#--complete-deployment-examples)
 
 ⚠️ **Important**: Full integration requires additional setup:
 - **[Kubernetes Permissions](./docs/kubernetes-permissions.md)** - Required RBAC and cluster permissions
@@ -149,7 +149,7 @@ helm uninstall obliq-sre-agent -n avesha
 kubectl delete namespace avesha
 ```
 
-📋 **For complete configuration options:** See [docs/parameters.md](./docs/parameters.md)
+📋 **For complete configuration options:** Visit the [Parameters Reference](./docs/parameters.md)
 
 ## 🆘 Troubleshooting
 
@@ -178,4 +178,4 @@ kubectl get events -n avesha --sort-by='.lastTimestamp' | tail -10
 
 ---
 
-📊 **For detailed service configuration:** See [docs/services.md](./docs/services.md)
+📊 **For detailed service configuration:** Visit the [Services Guide](./docs/services.md)
