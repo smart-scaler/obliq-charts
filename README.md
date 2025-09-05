@@ -19,7 +19,14 @@ A comprehensive AI-powered Site Reliability Engineering platform deployed as a s
 - **Container Registry Access** - Contact support@aveshasystems.com for ACR credentials
 - **kubeconfig** file for cluster access
 
-### 1. Create Registry Secret
+### 1. Clone Repository
+```bash
+# Clone the Obliq Charts repository
+git clone https://github.com/avesha-io/obliq-charts.git
+cd obliq-charts
+```
+
+### 2. Create Registry Secret
 ```bash
 # Get credentials from support@aveshasystems.com
 kubectl create namespace avesha --dry-run=client -o yaml | kubectl apply -f -
@@ -33,7 +40,7 @@ kubectl create secret docker-registry registry \
 
 📚 **For advanced secret management:** See [docs/secret-management.md](./docs/secret-management.md)
 
-### 2. Install Options
+### 3. Install Options
 
 💡 **Optional: For easier environment variable management, see [.env file setup](./docs/prerequisites.md#environment-variables-with-env-file).**
 
@@ -78,7 +85,7 @@ helm install obliq-sre-agent . \
 
 📋 **For full integration with all services:** See [Full Integration Example](./docs/parameters.md#-complete-deployment-examples)
 
-### 3. Verify Installation
+### 4. Verify Installation
 ```bash
 # Check pod status (all should be Running)
 kubectl get pods -n avesha
@@ -93,7 +100,7 @@ kubectl get deployments -n avesha
 kubectl get events -n avesha --sort-by='.lastTimestamp' | tail -10
 ```
 
-### 4. Access the UI
+### 5. Access the UI
 ```bash
 # Get the external IP (may take a few minutes to provision)
 kubectl get service -n avesha avesha-unified-ui
