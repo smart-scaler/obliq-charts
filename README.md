@@ -21,6 +21,10 @@ A comprehensive AI-powered Site Reliability Engineering platform deployed as a s
 
 💡 **For local development**: Run `./scripts/update-dependencies.sh` to ensure all chart dependencies are resolved before local installation.
 
+📋 **Note**: The `--set-file global.kubeconfig.content=./kubeconfig` parameter expects a kubeconfig file in the current directory. Make sure to:
+- Place your kubeconfig file in the same directory where you run the helm command, OR
+- Update the path to match your kubeconfig location (e.g., `--set-file global.kubeconfig.content=/path/to/your/kubeconfig`)
+
 ### 1. Add Helm Repository
 ```bash
 # Add the Obliq Charts Helm repository
