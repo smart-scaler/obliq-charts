@@ -78,19 +78,21 @@ helm install --set backend.env.app.LOG_LEVEL="DEBUG"  # Highest priority
 
 ### Common Environment Variables
 
-| Parameter | Description | Default | Required | Example |
+|Parameter | Description | Default | Required | Example |
 |-----------|-------------|---------|----------|---------|
-| `global.env.common.NODE_ENV` | Node.js environment | `"production"` | No | `"development"` |
-| `global.env.common.LOG_LEVEL` | Application log level | `"INFO"` | No | `"DEBUG"` |
-| `global.env.common.LOGURU_LEVEL` | Python logging level | `"INFO"` | No | `"WARNING"` |
-| `global.env.common.TZ` | Timezone | `"UTC"` | No | `"America/New_York"` |
-| `global.env.common.ENVIRONMENT` | Environment name | `"production"` | No | `"staging"` |
-| `global.env.common.CLUSTER_NAME` | Kubernetes cluster name | `"obliq-cluster"` | No | `"my-cluster"` |
-| `global.env.common.KUBECONFIG` | Path to kubeconfig file | `"/etc/kubeconfig/config"` | No | `"/root/.kube/config"` |
-| `global.env.common.DEBUG` | Enable debug mode | `"false"` | No | `"true"` |
-| `global.env.common.AUTOMATIC_EXECUTION_ENABLED` | Enable automatic execution | `"true"` | No | `"false"` |
+|`global.env.common.NODE_ENV` | Node.js environment | `"production"` | No | `"development"` |
+|`global.env.common.LOG_LEVEL` | Application log level | `"INFO"` | No | `"DEBUG"` |
+|`global.env.common.LOGURU_LEVEL` | Python logging level | `"INFO"` | No | `"WARNING"` |
+|`global.env.common.TZ` | Timezone | `"UTC"` | No | `"America/New_York"` |
+|`global.env.common.ENVIRONMENT` | Environment name | `"production"` | No | `"staging"` |
+|`global.env.common.CLUSTER_NAME` | Kubernetes cluster name | `"obliq-cluster"` | No | `"my-cluster"` |
+|`global.env.common.KUBECONFIG` | Path to kubeconfig file | `"/etc/kubeconfig/config"` | No | `"/root/.kube/config"` |
+|`global.env.common.DEBUG` | Enable debug mode | `"false"` | No | `"true"` |
+|`global.env.common.AUTOMATIC_EXECUTION_ENABLED` | Enable automatic execution | `"true"` | No | `"false"` |
 
 ### AWS Configuration
+
+
 | Parameter | Description | Default | Required | Example |
 |-----------|-------------|---------|----------|---------|
 | `global.env.aws.AWS_ACCESS_KEY_ID` | AWS access key ID | `""` | Yes | `"AKIAIOSFODNN7EXAMPLE"` |
@@ -102,11 +104,13 @@ helm install --set backend.env.app.LOG_LEVEL="DEBUG"  # Highest priority
 | `global.env.aws.AWS_MCP_PASSWORD` | AWS MCP password | `"admin123"` | No | `"your-password"` |
 
 ### OpenAI Configuration
+
 | Parameter | Description | Default | Required | Example |
 |-----------|-------------|---------|----------|---------|
 | `global.env.openai.OPENAI_API_KEY` | OpenAI API key | `""` | Yes | `"sk-1234567890abcdef..."` |
 
 ### Database Configuration
+
 | Parameter | Description | Default | Required | Example |
 |-----------|-------------|---------|----------|---------|
 | `global.env.database.NEO4J_USER` | Neo4j username | `"neo4j"` | No | `"admin"` |
@@ -120,74 +124,77 @@ helm install --set backend.env.app.LOG_LEVEL="DEBUG"  # Highest priority
 | `global.env.database.MONGODB_PASSWORD` | MongoDB app password | `"admin123"` | No | `"changeme"` |
 
 ### Integration Services Configuration
-| Parameter | Description | Default | Required | Example |
+
+|Parameter | Description | Default | Required | Example |
 |-----------|-------------|---------|----------|---------|
-| `global.env.slack.SLACK_BOT_TOKEN` | Slack bot token | `""` | For slack-ingester | `"xoxb-your-token"` |
-| `global.env.slack.SLACK_WEBHOOK_URL` | Slack webhook URL | `""` | No | `"https://hooks.slack.com/..."` |
-| `global.env.sg.DD_API_KEY` | DataDog API key | `""` | For service-graph-engine | `"your-dd-api-key"` |
-| `global.env.sg.DD_APP_KEY` | DataDog app key | `""` | For service-graph-engine | `"your-dd-app-key"` |
-| `global.env.sg.DD_SITE` | DataDog site | `"us5.datadoghq.com"` | No | `"datadoghq.com"` |
-| `global.env.sg.DD_ENVIRONMENTS` | DataDog environments | `"production"` | No | `"staging,production"` |
+|`global.env.slack.SLACK_BOT_TOKEN` | Slack bot token | `""` | For slack-ingester | `"xoxb-your-token"` |
+|`global.env.slack.SLACK_WEBHOOK_URL` | Slack webhook URL | `""` | No | `"https://hooks.slack.com/..."` |
+|`global.env.sg.DD_API_KEY` | DataDog API key | `""` | For service-graph-engine | `"your-dd-api-key"` |
+|`global.env.sg.DD_APP_KEY` | DataDog app key | `""` | For service-graph-engine | `"your-dd-app-key"` |
+|`global.env.sg.DD_SITE` | DataDog site | `"us5.datadoghq.com"` | No | `"datadoghq.com"` |
+|`global.env.sg.DD_ENVIRONMENTS` | DataDog environments | `"production"` | No | `"staging,production"` |
 
 ### MCP Services Configuration
-| Parameter | Description | Default | Required | Example |
+
+|Parameter | Description | Default | Required | Example |
 |-----------|-------------|---------|----------|---------|
-| `global.env.prometheus.PROMETHEUS_URL` | Prometheus URL | `""` | For prometheus-mcp | `"http://prometheus:9090"` |
-| `global.env.prometheus.PROMETHEUS_MCP_USERNAME` | Prometheus MCP username | `""` | For prometheus-mcp | `"admin"` |
-| `global.env.prometheus.PROMETHEUS_MCP_PASSWORD` | Prometheus MCP password | `""` | For prometheus-mcp | `"password"` |
-| `global.env.loki.LOKI_URL` | Loki URL | `""` | For loki-mcp | `"http://loki:3100"` |
-| `global.env.loki.LOKI_USERNAME` | Loki username | `""` | No | `"admin"` |
-| `global.env.loki.LOKI_PASSWORD` | Loki password | `""` | No | `"password"` |
-| `global.env.loki.LOKI_TOKEN` | Loki token | `""` | No | `"your-token"` |
-| `global.env.mcp.NEO4J_MCP_USERNAME` | Neo4j MCP username | `"admin"` | No | `"mcp-user"` |
-| `global.env.mcp.NEO4J_MCP_PASSWORD` | Neo4j MCP password | `"admin123"` | No | `"mcp-password"` |
+|`global.env.prometheus.PROMETHEUS_URL` | Prometheus URL | `""` | For prometheus-mcp | `"http://prometheus:9090"` |
+|`global.env.prometheus.PROMETHEUS_MCP_USERNAME` | Prometheus MCP username | `""` | For prometheus-mcp | `"admin"` |
+|`global.env.prometheus.PROMETHEUS_MCP_PASSWORD` | Prometheus MCP password | `""` | For prometheus-mcp | `"password"` |
+|`global.env.loki.LOKI_URL` | Loki URL | `""` | For loki-mcp | `"http://loki:3100"` |
+|`global.env.loki.LOKI_USERNAME` | Loki username | `""` | No | `"admin"` |
+|`global.env.loki.LOKI_PASSWORD` | Loki password | `""` | No | `"password"` |
+|`global.env.loki.LOKI_TOKEN` | Loki token | `""` | No | `"your-token"` |
+|`global.env.mcp.NEO4J_MCP_USERNAME` | Neo4j MCP username | `"admin"` | No | `"mcp-user"` |
+|`global.env.mcp.NEO4J_MCP_PASSWORD` | Neo4j MCP password | `"admin123"` | No | `"mcp-password"` |
 
 ### JIRA Integration Configuration
-| Parameter | Description | Default | Required | Example |
+
+|Parameter | Description | Default | Required | Example |
 |-----------|-------------|---------|----------|---------|
-| `global.env.jira.JIRA_BASE_URL` | JIRA base URL | `""` | For JIRA integration | `"https://company.atlassian.net"` |
-| `global.env.jira.JIRA_EMAIL` | JIRA email | `""` | For JIRA integration | `"admin@company.com"` |
-| `global.env.jira.JIRA_API_TOKEN` | JIRA API token | `""` | For JIRA integration | `"your-api-token"` |
-| `global.env.jira.JIRA_PROJECT_KEY` | JIRA project key | `""` | For JIRA integration | `"PROJ"` |
+|`global.env.jira.JIRA_BASE_URL` | JIRA base URL | `""` | For JIRA integration | `"https://company.atlassian.net"` |
+|`global.env.jira.JIRA_EMAIL` | JIRA email | `""` | For JIRA integration | `"admin@company.com"` |
+|`global.env.jira.JIRA_API_TOKEN` | JIRA API token | `""` | For JIRA integration | `"your-api-token"` |
+|`global.env.jira.JIRA_PROJECT_KEY` | JIRA project key | `""` | For JIRA integration | `"PROJ"` |
 
 ### External Tools (Optional)
-| Parameter | Description | Default | Required | Example |
+|Parameter | Description | Default | Required | Example |
 |-----------|-------------|---------|----------|---------|
-| **cert-manager** | **OPTIONAL ADD-ON - Install separately** | N/A | No | Install from upstream |
-| **ingress-nginx** | **OPTIONAL ADD-ON - Install separately** | N/A | No | Install from upstream |
+|**cert-manager** | **OPTIONAL ADD-ON - Install separately** | N/A | No | Install from upstream |
+|**ingress-nginx** | **OPTIONAL ADD-ON - Install separately** | N/A | No | Install from upstream |
 
 ---
 
 ## ⚙️ Service Configuration
 
 ### Service Enable/Disable Flags
-| Service | Default | Purpose | Dependencies |
+|Service | Default | Purpose | Dependencies |
 |---------|---------|---------|-------------|
-| **Core Services (Always Enabled)** |
-| `neo4j.enabled` | `true` | Graph database | None |
-| `mongodb.enabled` | `true` | Document database | None |
-| `opentelemetry-collector.enabled` | `true` | Observability | None |
-| `backend.enabled` | `true` | Main API server | OpenAI API key |
-| `avesha-unified-ui.enabled` | `true` | Web interface | None |
-| `orchestrator.enabled` | `true` | Workflow engine | OpenAI API key |
-| `rca-agent.enabled` | `true` | Root cause analysis | OpenAI API key |
-| `anomaly-detection.enabled` | `true` | Anomaly detection | OpenAI API key |
-| `auto-remediation.enabled` | `true` | Auto-remediation | OpenAI API key |
-| `incident-manager.enabled` | `true` | Incident management | OpenAI API key |
-| `active-inventory.enabled` | `true` | Infrastructure inventory | None |
-| `infra-agent.enabled` | `true` | Infrastructure monitoring | None |
-| `k8s-mcp.enabled` | `true` | Kubernetes MCP | kubeconfig |
-| **Optional MCP Services (Disabled by Default)** |
-| `aws-mcp.enabled` | `false` | AWS MCP integration | AWS credentials |
-| `prometheus-mcp.enabled` | `false` | Prometheus MCP | Prometheus credentials |
-| `neo4j-mcp.enabled` | `false` | Neo4j MCP | Uses internal Neo4j |
-| `loki-mcp.enabled` | `false` | Loki MCP | Loki URL |
-| `cloudwatch-mcp.enabled` | `false` | CloudWatch MCP | AWS credentials |
-| **Optional Integration Services (Disabled by Default)** |
-| `service-graph-engine.enabled` | `false` | DataDog integration | DataDog credentials |
-| `slack-ingester.enabled` | `false` | Slack integration | Slack token |
-| `kubernetes-events-ingester.enabled` | `false` | K8s events | kubeconfig |
-| `aws-ec2-cloudwatch-alarms.enabled` | `false` | CloudWatch alarms | AWS credentials |
+|**Core Services (Always Enabled)** |
+|`neo4j.enabled` | `true` | Graph database | None |
+|`mongodb.enabled` | `true` | Document database | None |
+|`opentelemetry-collector.enabled` | `true` | Observability | None |
+|`backend.enabled` | `true` | Main API server | OpenAI API key |
+|`avesha-unified-ui.enabled` | `true` | Web interface | None |
+|`orchestrator.enabled` | `true` | Workflow engine | OpenAI API key |
+|`rca-agent.enabled` | `true` | Root cause analysis | OpenAI API key |
+|`anomaly-detection.enabled` | `true` | Anomaly detection | OpenAI API key |
+|`auto-remediation.enabled` | `true` | Auto-remediation | OpenAI API key |
+|`incident-manager.enabled` | `true` | Incident management | OpenAI API key |
+|`active-inventory.enabled` | `true` | Infrastructure inventory | None |
+|`infra-agent.enabled` | `true` | Infrastructure monitoring | None |
+|`k8s-mcp.enabled` | `true` | Kubernetes MCP | kubeconfig |
+|**Optional MCP Services (Disabled by Default)** |
+|`aws-mcp.enabled` | `false` | AWS MCP integration | AWS credentials |
+|`prometheus-mcp.enabled` | `false` | Prometheus MCP | Prometheus credentials |
+|`neo4j-mcp.enabled` | `false` | Neo4j MCP | Uses internal Neo4j |
+|`loki-mcp.enabled` | `false` | Loki MCP | Loki URL |
+|`cloudwatch-mcp.enabled` | `false` | CloudWatch MCP | AWS credentials |
+|**Optional Integration Services (Disabled by Default)** |
+|`service-graph-engine.enabled` | `false` | DataDog integration | DataDog credentials |
+|`slack-ingester.enabled` | `false` | Slack integration | Slack token |
+|`kubernetes-events-ingester.enabled` | `false` | K8s events | kubeconfig |
+|`aws-ec2-cloudwatch-alarms.enabled` | `false` | CloudWatch alarms | AWS credentials |
 
 ### Common Service Parameters
 
@@ -214,6 +221,7 @@ Each service supports these common configuration options:
 ```
 
 #### Service Configuration
+
 ```yaml
 <service-name>:
   service:
@@ -339,6 +347,7 @@ helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
 ```
 
 ### Environment-Specific Configuration
+
 ```bash
 # Production values
 --set global.env.common.NODE_ENV="production" \
@@ -379,13 +388,13 @@ helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
 - **Resource conflicts**: Setting conflicting resource limits
 
 ### Required Parameters
-| Parameter | Required For | Error Message |
+|Parameter | Required For | Error Message |
 |-----------|-------------|---------------|
-| `global.env.openai.OPENAI_API_KEY` | Core AI services | "OpenAI API key is required for AI services" |
-| `global.kubeconfig.content` | k8s-mcp, kubernetes-events-ingester | "kubeconfig is required for Kubernetes integration" |
-| `global.env.aws.AWS_ACCESS_KEY_ID` | AWS services | "AWS credentials required for AWS integrations" |
-| `global.env.sg.DD_API_KEY` | service-graph-engine | "DataDog API key required for service graph engine" |
-| `global.env.slack.SLACK_BOT_TOKEN` | slack-ingester | "Slack bot token required for Slack integration" |
+|`global.env.openai.OPENAI_API_KEY` | Core AI services | "OpenAI API key is required for AI services" |
+|`global.kubeconfig.content` | k8s-mcp, kubernetes-events-ingester | "kubeconfig is required for Kubernetes integration" |
+|`global.env.aws.AWS_ACCESS_KEY_ID` | AWS services | "AWS credentials required for AWS integrations" |
+|`global.env.sg.DD_API_KEY` | service-graph-engine | "DataDog API key required for service graph engine" |
+|`global.env.slack.SLACK_BOT_TOKEN` | slack-ingester | "Slack bot token required for Slack integration" |
 
 ---
 
