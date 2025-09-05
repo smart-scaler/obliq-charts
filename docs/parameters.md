@@ -13,10 +13,10 @@ This comprehensive guide covers all Helm chart parameters for the Obliq SRE Agen
 
 ## 🎯 Quick Navigation
 
-- [Parameter Architecture](#-parameter-architecture)
+- [Parameter Architecture](#️-parameter-architecture)
 - [Global Environment Variables](#-global-environment-variables)
-- [Service Configuration](#-service-configuration)
-- [Complete Deployment Examples](#-complete-deployment-examples)
+- [Service Configuration](#️-service-configuration)
+- [Complete Deployment Examples](#--complete-deployment-examples)
 - [Parameter Validation](#-parameter-validation)
 
 ---
