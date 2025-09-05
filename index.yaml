@@ -6,7 +6,7 @@ entries:
       licenses: Apache-2.0
     apiVersion: v2
     appVersion: 1.1.1
-    created: "2025-09-05T09:51:18.621282012Z"
+    created: "2025-09-05T11:31:50.593201753Z"
     dependencies:
     - condition: opentelemetry-collector.enabled
       name: opentelemetry-collector
@@ -98,7 +98,7 @@ entries:
       version: 0.1.0
     description: A comprehensive umbrella Helm chart for deploying the Avesha Obliq
       AI SRE Agent platform
-    digest: 0a02398e8988b28df499dd2f2a277d4ffb94b22b2e4a428cc785471fbbe194f9
+    digest: 34d91468aa72ba9868b7d86a3011174fd37ed0af5c3ec796c1cc32dfe2943762
     home: https://avesha.io
     icon: https://via.placeholder.com/150x150.png?text=Obliq+SRE
     keywords:
@@ -118,4 +118,4 @@ entries:
     urls:
     - https://repo.obliq.avesha.io/obliq-sre-agent-1.1.1.tgz
     version: 1.1.1
-generated: "2025-09-05T09:51:18.557347832Z"
+generated: "2025-09-05T11:31:50.549954108Z"
