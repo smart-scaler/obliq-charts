@@ -250,7 +250,7 @@ helm repo update
 
 ### Minimal Deployment (Core Services Only)
 ```bash
-helm install obliq-sre-agent obliq-charts/obliq \
+helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
   --namespace avesha \
   --create-namespace \
   --set-file global.kubeconfig.content=./kubeconfig \
@@ -261,7 +261,7 @@ helm install obliq-sre-agent obliq-charts/obliq \
 
 ### AWS Integration Deployment
 ```bash
-helm install obliq-sre-agent obliq-charts/obliq \
+helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
   --namespace avesha \
   --create-namespace \
   --set-file global.kubeconfig.content=./kubeconfig \
@@ -281,7 +281,7 @@ helm install obliq-sre-agent obliq-charts/obliq \
 
 ### Full Integration Deployment
 ```bash
-helm install obliq-sre-agent obliq-charts/obliq \
+helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
   --namespace avesha \
   --create-namespace \
   --set-file global.kubeconfig.content=./kubeconfig \

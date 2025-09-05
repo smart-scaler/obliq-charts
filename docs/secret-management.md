@@ -111,7 +111,7 @@ helm repo update
 
 Then install with the pre-existing secret:
 ```bash
-helm install obliq-sre-agent obliq-charts/obliq \
+helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
   --namespace avesha \
   --create-namespace \
   --set-file global.kubeconfig.content=./kubeconfig \

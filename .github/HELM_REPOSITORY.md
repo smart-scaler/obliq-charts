@@ -18,7 +18,7 @@ helm search repo obliq-charts
 ### Install Chart
 ```bash
 # Install the Obliq master chart (contains all services)
-helm install my-obliq obliq-charts/obliq
+helm install obliq-sre-agent obliq-charts/obliq-sre-agent
 ```
 
 ## 🚀 Publishing Chart
@@ -31,7 +31,7 @@ helm install my-obliq obliq-charts/obliq
 
 ## 📋 Available Chart
 
-- **obliq** - Master chart containing all Obliq services and components:
+- **obliq-sre-agent** - Master chart containing all Obliq services and components:
   - Active inventory management
   - Anomaly detection
   - Auto-remediation

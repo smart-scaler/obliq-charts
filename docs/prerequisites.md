@@ -244,7 +244,7 @@ helm repo add obliq-charts https://smart-scaler.github.io/obliq-charts/
 helm repo update
 
 # Now run any of the installation commands from the main README
-helm install obliq-sre-agent obliq-charts/obliq \
+helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
   --namespace avesha \
   --create-namespace \
   --set-file global.kubeconfig.content=./kubeconfig \

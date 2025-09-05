@@ -52,7 +52,7 @@ kubectl create secret docker-registry registry \
 export OPENAI_API_KEY="sk-your-openai-api-key"
 
 # Install with LoadBalancer for external UI access
-helm install obliq-sre-agent obliq-charts/obliq \
+helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
   --namespace avesha \
   --create-namespace \
   --set-file global.kubeconfig.content=./kubeconfig `# Path to your kubeconfig file` \
@@ -71,7 +71,7 @@ export AWS_ROLE_ARN_AWS_MCP="arn:aws:iam::123456789012:role/your-aws-mcp-role"  
 export AWS_REGION="us-west-2"  # AWS region for resources
 
 # Install with AWS integration and LoadBalancer UI access
-helm install obliq-sre-agent obliq-charts/obliq \
+helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
   --namespace avesha \
   --create-namespace \
   --set-file global.kubeconfig.content=./kubeconfig `# Path to your kubeconfig` \
