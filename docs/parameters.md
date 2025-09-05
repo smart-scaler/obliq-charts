@@ -276,16 +276,15 @@ helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
 
 ### AWS Integration Deployment
 ```bash
+# Enable AWS services and credentials
 helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
   --namespace avesha \
   --create-namespace \
   --set-file global.kubeconfig.content=./kubeconfig \
   --set global.env.openai.OPENAI_API_KEY="${OPENAI_API_KEY}" \
-  # Enable AWS services
   --set aws-mcp.enabled=true \
   --set cloudwatch-mcp.enabled=true \
   --set aws-ec2-cloudwatch-alarms.enabled=true \
-  # AWS credentials
   --set global.env.aws.AWS_ACCESS_KEY_ID="${AWS_ACCESS_KEY_ID}" \
   --set global.env.aws.AWS_SECRET_ACCESS_KEY="${AWS_SECRET_ACCESS_KEY}" \
   --set global.env.aws.AWS_ROLE_ARN_AWS_MCP="${AWS_ROLE_ARN_AWS_MCP}" \
