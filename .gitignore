@@ -1,0 +1,15 @@
+# Exclude packaged Helm charts
+*.tgz
+charts/*.tgz
+
+# Exclude other common files
+.DS_Store
+*.log
+node_modules/
+.env
+.env.local
+.env.*.local
+
+# Exclude temporary files
+*.tmp
+*.temp
