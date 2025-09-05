@@ -11,7 +11,7 @@ nav_order: 2
 This comprehensive guide covers all Helm chart parameters for the Obliq SRE Agent platform, including parameter architecture, configuration flow, and complete deployment examples.
 {: .fs-6 .fw-300 }
 
-<!-- Last updated: 2025-01-06 -->
+<!-- Last updated: 2025-01-06 15:38 IST - Force rebuild -->
 
 ## 🎯 Quick Navigation
 
