@@ -19,6 +19,10 @@ A comprehensive AI-powered Site Reliability Engineering platform deployed as a s
 - **Container Registry Access** - Contact support@aveshasystems.com for ACR credentials
 - **kubeconfig** file for cluster access
 
+📚 **Important Setup Guides**:
+- **[Kubernetes Permissions](./docs/kubernetes-permissions.md)** - Required cluster permissions and RBAC setup
+- **[Prerequisites Details](./docs/prerequisites.md)** - Comprehensive system requirements and integrations
+
 💡 **For local development**: Run `./scripts/update-dependencies.sh` to ensure all chart dependencies are resolved before local installation.
 
 📋 **Note**: The `--set-file global.kubeconfig.content=./kubeconfig` parameter expects a kubeconfig file in the current directory. Make sure to:
@@ -68,6 +72,12 @@ helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
 ```
 
 #### AWS Integration
+
+📋 **Prerequisites**: Before running AWS integration, ensure you have:
+- **[AWS IAM Policies](./docs/aws-iam-policies.md)** - Required IAM roles and policies setup
+- **[AWS Prerequisites](./docs/prerequisites.md#aws-integration-requirements)** - AWS account configuration and permissions
+- **Valid AWS credentials** - IAM user with appropriate permissions
+
 ```bash
 # Core credentials
 export OPENAI_API_KEY="sk-your-openai-api-key"  # Get from OpenAI platform
@@ -91,7 +101,12 @@ helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
   --timeout 15m
 ```
 
-📋 **For full integration with all services:** See [Full Integration Example](./docs/parameters.md#-complete-deployment-examples)
+📋 **For full integration with all services:** See [Complete Deployment Examples](./docs/parameters.md#-complete-deployment-examples)
+
+⚠️ **Important**: Full integration requires additional setup:
+- **[Kubernetes Permissions](./docs/kubernetes-permissions.md)** - Required RBAC and cluster permissions
+- **[Service Dependencies](./docs/services.md)** - Understanding service relationships and dependencies
+- **[Secret Management](./docs/secret-management.md)** - Advanced credential and secret handling
 
 ### 4. Verify Installation
 ```bash
