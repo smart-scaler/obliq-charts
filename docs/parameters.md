@@ -294,44 +294,35 @@ helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
 
 ### Full Integration Deployment
 ```bash
+# Essential parameters
 helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
   --namespace avesha \
   --create-namespace \
   --set-file global.kubeconfig.content=./kubeconfig \
-  # Essential parameters
   --set global.env.openai.OPENAI_API_KEY="${OPENAI_API_KEY}" \
-  # Enable optional MCP services
   --set aws-mcp.enabled=true \
   --set prometheus-mcp.enabled=true \
   --set neo4j-mcp.enabled=true \
   --set loki-mcp.enabled=true \
   --set cloudwatch-mcp.enabled=true \
-  # Enable optional integration services
   --set service-graph-engine.enabled=true \
   --set slack-ingester.enabled=true \
   --set kubernetes-events-ingester.enabled=true \
   --set aws-ec2-cloudwatch-alarms.enabled=true \
-  # AWS credentials
   --set global.env.aws.AWS_ACCESS_KEY_ID="${AWS_ACCESS_KEY_ID}" \
   --set global.env.aws.AWS_SECRET_ACCESS_KEY="${AWS_SECRET_ACCESS_KEY}" \
   --set global.env.aws.AWS_ROLE_ARN_AWS_MCP="${AWS_ROLE_ARN_AWS_MCP}" \
   --set global.env.aws.AWS_ROLE_ARN_EC2_CLOUDWATCH_ALARMS="${AWS_ROLE_ARN_EC2_CLOUDWATCH}" \
-  # DataDog credentials
   --set global.env.sg.DD_API_KEY="${DD_API_KEY}" \
   --set global.env.sg.DD_APP_KEY="${DD_APP_KEY}" \
-  # Slack credentials
   --set global.env.slack.SLACK_BOT_TOKEN="${SLACK_BOT_TOKEN}" \
-  # Prometheus credentials
   --set global.env.prometheus.PROMETHEUS_URL="${PROMETHEUS_URL}" \
   --set global.env.prometheus.PROMETHEUS_MCP_USERNAME="${PROMETHEUS_MCP_USERNAME}" \
   --set global.env.prometheus.PROMETHEUS_MCP_PASSWORD="${PROMETHEUS_MCP_PASSWORD}" \
-  # Loki credentials
   --set global.env.loki.LOKI_URL="${LOKI_URL}" \
-  # JIRA credentials
   --set global.env.jira.JIRA_BASE_URL="${JIRA_BASE_URL}" \
   --set global.env.jira.JIRA_EMAIL="${JIRA_EMAIL}" \
   --set global.env.jira.JIRA_API_TOKEN="${JIRA_API_TOKEN}" \
-  # Enable ingress
   --set backend.ingress.enabled=true \
   --set avesha-unified-ui.ingress.enabled=true
 ```
