@@ -2,13 +2,6 @@
 
 A comprehensive AI-powered Site Reliability Engineering platform deployed as a single Helm chart.
 
-## 📦 Helm Repository
-```bash
-helm repo add obliq-charts https://smart-scaler.github.io/obliq-charts/
-helm repo update
-helm install my-obliq obliq-charts/obliq
-```
-
 ## 📖 Documentation
 
 - **[🚀 Getting Started](#-quick-install)** - Installation guide
