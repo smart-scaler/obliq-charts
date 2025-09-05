@@ -116,6 +116,6 @@ entries:
     - https://github.com/avesha/obliq-sre-agent-charts
     type: application
     urls:
-    - https://smart-scaler.github.io/obliq-charts/obliq-sre-agent-1.1.1.tgz
+    - https://repo.obliq.avesha.io/obliq-sre-agent-1.1.1.tgz
     version: 1.1.1
 generated: "2025-09-05T09:51:18.557347832Z"

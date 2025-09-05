@@ -35,4 +35,4 @@ Complete documentation for the Obliq AI SRE Agent Platform
 
 - **Repository**: [GitHub](https://github.com/smart-scaler/obliq-charts)
 - **Support**: [support@aveshasystems.com](mailto:support@aveshasystems.com)  
-- **Helm Repository**: `https://smart-scaler.github.io/obliq-charts/`
+- **Helm Repository**: `https://repo.obliq.avesha.io/`
