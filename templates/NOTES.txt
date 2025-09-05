@@ -1,0 +1,46 @@
+==========================================
+  Obliq SRE Agent Platform v1.1.1
+==========================================
+
+🚀 DEPLOYMENT SUCCESSFUL!
+
+1. Check the status of your deployment:
+   kubectl get pods -n {{ include "obliq-sre-agent.namespace" . }}
+
+2. Access the Obliq SRE Agent UI:
+   # Get the service details:
+   kubectl get service -n {{ include "obliq-sre-agent.namespace" . }} avesha-unified-ui
+   
+   # For LoadBalancer: Access at http://<EXTERNAL-IP>:80 (may take a few minutes to provision)
+   # For NodePort: Access at http://<NODE-IP>:<NODE-PORT>
+   # For ClusterIP: Use port forwarding: kubectl port-forward -n {{ include "obliq-sre-agent.namespace" . }} service/avesha-unified-ui 8080:80
+   
+   🔐 DEFAULT LOGIN CREDENTIALS:
+   Username: admin@aveshasystems.com
+   Password: admin123
+
+3. API Access:
+   # Backend API is available internally at:
+   kubectl get service -n {{ include "obliq-sre-agent.namespace" . }} backend
+
+4. For troubleshooting, check the logs:
+   # All services logs:
+   kubectl logs -n {{ include "obliq-sre-agent.namespace" . }} -l app.kubernetes.io/name={{ include "obliq-sre-agent.name" . }}
+   
+   # Specific service logs:
+   kubectl logs -n {{ include "obliq-sre-agent.namespace" . }} deployment/backend -f
+   kubectl logs -n {{ include "obliq-sre-agent.namespace" . }} deployment/orchestrator -f
+
+5. Monitor deployment status:
+   kubectl get deployments -n {{ include "obliq-sre-agent.namespace" . }}
+   kubectl get events -n {{ include "obliq-sre-agent.namespace" . }} --sort-by='.lastTimestamp' | tail -10
+
+6. To uninstall this chart:
+   helm uninstall {{ .Release.Name }} -n {{ include "obliq-sre-agent.namespace" . }}
+
+📚 For more information and advanced configuration:
+   - README.md: Installation and configuration guide
+   - docs/services.md: Service enable/disable options
+   - docs/prerequisites.md: System requirements and setup
+
+🆘 Need help? Contact support@aveshasystems.com

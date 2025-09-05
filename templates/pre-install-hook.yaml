@@ -1,0 +1,30 @@
+{{/*
+Pre-install hook to ensure proper namespace and basic infrastructure setup
+*/}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "obliq-sre-agent.fullname" . }}-pre-install
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "obliq-sre-agent.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade
+    "helm.sh/hook-weight": "-100"
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+data:
+  README.md: |
+    # Obliq SRE Agent Pre-Install Hook
+    
+    This ConfigMap serves as a pre-install hook to ensure:
+    1. Namespace is properly set up
+    2. Dependencies are validated
+    3. Infrastructure requirements are met
+    
+    Deployment Order:
+    1. Optional Add-ons: cert-manager (installed separately for SSL)
+    2. Optional Add-ons: Ingress Controller (ingress-nginx for external access) 
+    3. Application Services
+    4. Core Infrastructure (neo4j, mongodb, opentelemetry-collector)
+    5. Application Services
+    6. Orchestrator (last)

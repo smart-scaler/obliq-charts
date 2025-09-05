@@ -1,0 +1,8 @@
+# Global repository owners
+* @wmariuss @richiesebastian
+
+# Specific chart ownership (optional - can be added later)
+# apps/backend/ @backend-team
+# apps/anomaly-detection/ @ml-team
+# apps/incident-manager/ @ops-team
+# charts/cert-manager-clusterissuer/ @security-team

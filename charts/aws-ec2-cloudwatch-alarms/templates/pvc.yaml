@@ -1,0 +1,17 @@
+{{- if .Values.volumes.persistent.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "aws-ec2-cloudwatch-alarms.fullname" . }}-pvc
+  labels:
+    {{- include "aws-ec2-cloudwatch-alarms.labels" . | nindent 4 }}
+spec:
+  accessModes:
+    - {{ .Values.volumes.persistent.accessMode }}
+  {{- if .Values.volumes.persistent.storageClass }}
+  storageClassName: {{ .Values.volumes.persistent.storageClass }}
+  {{- end }}
+  resources:
+    requests:
+      storage: {{ .Values.volumes.persistent.size }}
+{{- end }}

@@ -1,0 +1,59 @@
+# Patterns to ignore when building packages.
+# This supports shell glob matching, relative path matching, and
+# negation (prefixed with !). Only one pattern per line.
+
+# Git files and directories
+.git/
+.gitignore
+.gitkeep
+
+# CI/CD files
+.github/
+.gitlab-ci.yml
+.travis.yml
+.circleci/
+
+# Documentation (not needed in packaged chart)
+docs/
+*.md
+README*
+
+# Development and testing files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.temp
+.tmp/
+
+# Scripts and development tools
+scripts/
+Makefile
+
+# Values files for development/testing (but not kubeconfig)
+test-values.yaml
+dev-values.yaml
+local-values.yaml
+custom-values.yaml
+
+# Environment files (security)
+.env
+.env.*
+
+
+# Backup files
+*.bak
+*.backup

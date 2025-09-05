@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "aws-ec2-cloudwatch-alarms.fullname" . }}
+  labels:
+    {{- include "aws-ec2-cloudwatch-alarms.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+    {{- range .Values.service.additionalPorts }}
+    - port: {{ .port }}
+      targetPort: {{ .targetPort }}
+      protocol: {{ .protocol }}
+      name: {{ .name }}
+    {{- end }}
+  selector:
+    {{- include "aws-ec2-cloudwatch-alarms.selectorLabels" . | nindent 4 }}

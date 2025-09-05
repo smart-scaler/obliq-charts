@@ -1,0 +1,330 @@
+# Helm Charts and Helmfile .gitignore
+
+# Environment files (exclude .env files in root, but allow env/ directory)
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+.env.staging
+.env.sandbox
+
+# Explicitly allow our env/ directory
+!env/
+!env/**/*
+
+# Helm specific
+*.tgz
+charts/*.tgz
+*.tar.gz
+
+# Kubernetes
+*.kubeconfig
+kubeconfig
+.kube/
+
+# Secrets and sensitive files
+secrets/
+*.secret
+*.key
+*.pem
+*.crt
+*.p12
+*.pfx
+
+# Logs
+*.log
+logs/
+helmfile.log
+
+# Temporary files
+*.tmp
+*.temp
+.tmp/
+.temp/
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Backup files
+*.bak
+*.backup
+*.old
+*.orig
+
+# Cache directories
+.cache/
+cache/
+node_modules/
+
+# Build artifacts
+dist/
+build/
+
+# Test files
+test-results/
+coverage/
+*.test.yaml
+*.test.yml
+
+# Documentation build
+docs/_build/
+site/
+_book/
+
+# Local development
+.local/
+local/
+dev/
+development/
+
+# Helm repositories cache
+.repositories/
+
+# Helmfile state
+helmfile-state.yaml
+helmfile-state.yml
+
+# Terraform (if used with Helm)
+*.tfstate
+*.tfstate.*
+.terraform/
+.terraform.lock.hcl
+
+# Ansible (if used with Helm)
+*.retry
+
+# Docker
+.dockerignore
+docker-compose.override.yml
+
+# Python (if using Python scripts)
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+# Python virtual environments (but not our env/ directory)
+/venv/
+/env.bak/
+/venv.bak/
+# Exclude Python virtual environments in subdirectories
+*/venv/
+*/ENV/
+*/env.bak/
+*/venv.bak/
+
+# Node.js (if using Node.js scripts)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Ruby (if using Ruby scripts)
+*.gem
+*.rbc
+/.config
+/coverage/
+/InstalledFiles
+/pkg/
+/spec/reports/
+/spec/examples.txt
+/test/tmp/
+/test/version_tmp/
+/tmp/
+
+# Go (if using Go scripts)
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+go.work
+
+# Java (if using Java scripts)
+*.class
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.rar
+hs_err_pid*
+
+# Maven
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
+
+# Gradle
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+# IntelliJ IDEA
+.idea/
+*.iws
+*.iml
+*.ipr
+out/
+!**/src/main/**/out/
+!**/src/test/**/out/
+
+# Eclipse
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+bin/
+!**/src/main/**/bin/
+!**/src/test/**/bin/
+
+# NetBeans
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Vim
+*.swp
+*.swo
+*~
+
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+.\#*
+
+# macOS
+.AppleDouble
+.LSOverride
+Icon
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+Desktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+*.lnk
+
+# Linux
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
+
+# Helm specific patterns
+charts/*/charts/
+charts/*/requirements.lock
+charts/*/requirements.yaml
+
+# Kubernetes manifests (if generated)
+manifests/
+*.yaml.generated
+*.yml.generated
+
+# Certificates and keys
+*.pem
+*.key
+*.crt
+*.csr
+*.p12
+*.pfx
+*.jks
+
+# SSH keys
+id_rsa
+id_rsa.pub
+id_ed25519
+id_ed25519.pub
+known_hosts
+
+# GPG keys
+*.gpg
+*.asc
+
+# Passwords and tokens
+passwords.txt
+tokens.txt
+credentials.txt
+secrets.txt
+
+# Database dumps
+*.sql
+*.dump
+*.backup
+
+# Local configuration
+config.local.yaml
+config.local.yml
+values.local.yaml
+values.local.yml
+
+# Performance and profiling
+*.prof
+*.pprof
+*.trace
+
+# Security scans
+security-scan-results/
+vulnerability-reports/

@@ -1,0 +1,21 @@
+{{- if .Values.configMap.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "aws-mcp.fullname" . }}-config
+  labels:
+    {{- include "aws-mcp.labels" . | nindent 4 }}
+data:
+  {{- if .Values.configMap.files }}
+  {{- range $name, $content := .Values.configMap.files }}
+  {{ $name }}: |
+    {{- $content | nindent 4 }}
+  {{- end }}
+  {{- end }}
+  {{- if .Values.env.app }}
+  # Application environment variables as config
+  {{- range $key, $value := .Values.env.app }}
+  {{ $key }}: {{ $value | quote }}
+  {{- end }}
+  {{- end }}
+{{- end }} 

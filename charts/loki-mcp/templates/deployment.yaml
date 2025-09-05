@@ -1,0 +1,285 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "loki-mcp.fullname" . }}
+  labels:
+    {{- include "loki-mcp.labels" . | nindent 4 }}
+  {{- with .Values.podAnnotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "loki-mcp.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "loki-mcp.selectorLabels" . | nindent 8 }}
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    spec:
+      {{- $secretName := include "obliq-sre-agent.imagePullSecretName" $ }}
+      {{- if $secretName }}
+      imagePullSecrets:
+        - name: {{ $secretName }}
+      {{- end }}
+      serviceAccountName: {{ include "loki-mcp.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.global.imageRegistry | default "avesha.azurecr.io" }}/{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{- if .Values.command }}
+          command:
+            {{- toYaml .Values.command | nindent 12 }}
+          {{- end }}
+          {{- if .Values.args }}
+          args:
+            {{- toYaml .Values.args | nindent 12 }}
+          {{- end }}
+          ports:
+            {{- range .Values.ports }}
+            - name: {{ .name }}
+              containerPort: {{ .containerPort }}
+              protocol: {{ .protocol }}
+            {{- end }}
+          {{- if .Values.livenessProbe.enabled }}
+          livenessProbe:
+            httpGet:
+              path: {{ .Values.livenessProbe.path }}
+              port: {{ .Values.livenessProbe.port }}
+            initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
+            failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
+            successThreshold: {{ .Values.livenessProbe.successThreshold }}
+          {{- end }}
+          {{- if .Values.readinessProbe.enabled }}
+          readinessProbe:
+            httpGet:
+              path: {{ .Values.readinessProbe.path }}
+              port: {{ .Values.readinessProbe.port }}
+            initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
+            failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
+            successThreshold: {{ .Values.readinessProbe.successThreshold }}
+          {{- end }}
+
+
+          env:
+            # Environment variables from global Secret
+            {{- include "obliq-sre-agent.globalSecretEnv" $ | nindent 12 }}
+            
+            # Service-specific environment variables from main values.yaml
+            {{- include "obliq-sre-agent.serviceSpecificEnv" (dict "serviceName" "loki-mcp" "root" $) | nindent 12 }}
+            
+            # Local environment variables (override global)
+            {{- if .Values.env.common }}
+              {{- range $key, $value := .Values.env.common }}
+            - name: {{ $key }}
+              value: {{ $value | quote }}
+              {{- end }}
+            {{- end }}
+            {{- if .Values.env.app }}
+              {{- range $key, $value := .Values.env.app }}
+            - name: {{ $key }}
+              value: {{ $value | quote }}
+              {{- end }}
+            {{- end }}
+            
+
+            
+            # Database secret environment variables
+            {{- if .Values.secrets.database }}
+            {{- range $key, $value := .Values.secrets.database }}
+            {{- if $value }}
+            - name: {{ $key }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "loki-mcp.fullname" $ }}-secrets
+                  key: {{ $key }}
+            {{- end }}
+            {{- end }}
+            {{- end }}
+            
+            # API secret environment variables
+            {{- if .Values.secrets.api }}
+            {{- range $key, $value := .Values.secrets.api }}
+            {{- if $value }}
+            - name: {{ $key }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "loki-mcp.fullname" $ }}-secrets
+                  key: {{ $key }}
+            {{- end }}
+            {{- end }}
+            {{- end }}
+            
+            # External service secret environment variables
+            {{- if .Values.secrets.external }}
+            {{- range $key, $value := .Values.secrets.external }}
+            {{- if $value }}
+            - name: {{ $key }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "loki-mcp.fullname" $ }}-secrets
+                  key: {{ $key }}
+            {{- end }}
+            {{- end }}
+            {{- end }}
+            
+            # Kubernetes metadata as environment variables
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+            - name: NODE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+            - name: SERVICE_ACCOUNT
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.serviceAccountName
+          {{- if or .Values.volumes.persistent.enabled .Values.volumes.config.enabled .Values.volumes.emptyDir.enabled }}
+          volumeMounts:
+            {{- if .Values.volumes.persistent.enabled }}
+            - name: persistent-storage
+              mountPath: {{ .Values.volumes.persistent.mountPath }}
+            {{- end }}
+            {{- if .Values.volumes.config.enabled }}
+            - name: config-volume
+              mountPath: {{ .Values.volumes.config.mountPath }}
+              {{- if .Values.volumes.config.subPath }}
+              subPath: {{ .Values.volumes.config.subPath }}
+              {{- end }}
+            {{- end }}
+            {{- if .Values.volumes.emptyDir.enabled }}
+            - name: temp-storage
+              mountPath: {{ .Values.volumes.emptyDir.mountPath }}
+            {{- end }}
+          {{- end }}
+          {{- with .Values.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+      {{- if or .Values.volumes.persistent.enabled .Values.volumes.config.enabled .Values.volumes.emptyDir.enabled }}
+      volumes:
+        {{- if .Values.volumes.persistent.enabled }}
+        - name: persistent-storage
+          persistentVolumeClaim:
+            claimName: {{ include "loki-mcp.fullname" . }}-pvc
+        {{- end }}
+        {{- if .Values.volumes.config.enabled }}
+        - name: config-volume
+          configMap:
+            name: {{ include "loki-mcp.fullname" . }}-config
+        {{- end }}
+        {{- if .Values.volumes.emptyDir.enabled }}
+        - name: temp-storage
+          emptyDir:
+            {{- if .Values.volumes.emptyDir.medium }}
+            medium: {{ .Values.volumes.emptyDir.medium }}
+            {{- end }}
+            {{- if .Values.volumes.emptyDir.sizeLimit }}
+            sizeLimit: {{ .Values.volumes.emptyDir.sizeLimit }}
+            {{- end }}
+        {{- end }}
+      {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+{{- if .Values.autoscaling.enabled }}
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ include "loki-mcp.fullname" . }}
+  labels:
+    {{- include "loki-mcp.labels" . | nindent 4 }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ include "loki-mcp.fullname" . }}
+  minReplicas: {{ .Values.autoscaling.minReplicas }}
+  maxReplicas: {{ .Values.autoscaling.maxReplicas }}
+  metrics:
+    {{- if .Values.autoscaling.targetCPUUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.autoscaling.targetCPUUtilizationPercentage }}
+    {{- end }}
+    {{- if .Values.autoscaling.targetMemoryUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.autoscaling.targetMemoryUtilizationPercentage }}
+    {{- end }}
+{{- end }}
+{{- if .Values.hpa.enabled }}
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ include "loki-mcp.fullname" . }}-hpa
+  labels:
+    {{- include "loki-mcp.labels" . | nindent 4 }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ include "loki-mcp.fullname" . }}
+  minReplicas: {{ .Values.hpa.minReplicas }}
+  maxReplicas: {{ .Values.hpa.maxReplicas }}
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.hpa.targetCPUUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.hpa.targetMemoryUtilizationPercentage }}
+  {{- if .Values.hpa.behavior }}
+  behavior:
+    {{- toYaml .Values.hpa.behavior | nindent 4 }}
+  {{- end }}
+{{- end }}
+# PodDisruptionBudget section removed - configuration removed from values 

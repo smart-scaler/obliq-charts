@@ -1,0 +1,18 @@
+{{- if .Values.networkPolicy.enabled -}}
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ include "aws-ec2-cloudwatch-alarms.fullname" . }}
+  labels:
+    {{- include "aws-ec2-cloudwatch-alarms.labels" . | nindent 4 }}
+spec:
+  podSelector:
+    matchLabels:
+      {{- include "aws-ec2-cloudwatch-alarms.selectorLabels" . | nindent 6 }}
+  policyTypes:
+    - Egress
+  {{- if .Values.networkPolicy.egress }}
+  egress:
+    {{- toYaml .Values.networkPolicy.egress | nindent 4 }}
+  {{- end }}
+{{- end }}

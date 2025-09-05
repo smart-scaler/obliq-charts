@@ -1,0 +1,21 @@
+{{- if .Values.configMap.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "aws-ec2-cloudwatch-alarms.fullname" . }}-config
+  labels:
+    {{- include "aws-ec2-cloudwatch-alarms.labels" . | nindent 4 }}
+data:
+  {{- if .Values.configMap.files }}
+  {{- range $name, $content := .Values.configMap.files }}
+  {{ $name }}: |
+    {{- $content | nindent 4 }}
+  {{- end }}
+  {{- end }}
+  {{- if .Values.env.app }}
+  # Application environment variables as config
+  {{- range $key, $value := .Values.env.app }}
+  {{ $key }}: {{ $value | quote }}
+  {{- end }}
+  {{- end }}
+{{- end }}

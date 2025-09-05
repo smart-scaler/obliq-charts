@@ -1,0 +1,18 @@
+{{- if .Values.networkPolicy.enabled -}}
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ include "auto-remediation.fullname" . }}
+  labels:
+    {{- include "auto-remediation.labels" . | nindent 4 }}
+spec:
+  podSelector:
+    matchLabels:
+      {{- include "auto-remediation.selectorLabels" . | nindent 6 }}
+  policyTypes:
+    - Egress
+  {{- if .Values.networkPolicy.egress }}
+  egress:
+    {{- toYaml .Values.networkPolicy.egress | nindent 4 }}
+  {{- end }}
+{{- end }} 

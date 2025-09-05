@@ -1,0 +1,1011 @@
+# ========================================
+# OBLIQ SRE AGENT - HELM VALUES CONFIGURATION
+# ========================================
+# 
+# Full comprehensive values for obliq-sre-agent umbrella chart
+# Exhaustive configuration for production deployments with all options
+#
+# 📖 USAGE GUIDE:
+# 1. REQUIRED: Set global.env.openai.OPENAI_API_KEY for core AI services
+# 2. REQUIRED: Provide kubeconfig via --set-file global.kubeconfig.content=./kubeconfig
+# 3. REQUIRED: Create registry secret for image pulling (contact support@aveshasystems.com)
+# 4. OPTIONAL: Enable additional services by setting <service>.enabled=true
+# 5. OPTIONAL: Configure external integrations (AWS, DataDog, Slack, Jira) by setting credentials
+#
+# 🔧 COMMON INSTALLATION PATTERNS:
+# - Minimal: Only core services with OpenAI (default configuration)
+# - AWS Integration: Enable aws-mcp, cloudwatch-mcp with AWS credentials
+# - Full Integration: Enable all services with all external credentials
+#
+# 💡 PARAMETER OVERRIDE EXAMPLES:
+# helm install obliq-sre-agent ./obliq-sre-agent/ \
+#   --set-file global.kubeconfig.content=./kubeconfig \
+#   --set global.env.openai.OPENAI_API_KEY="sk-..." \
+#   --set aws-mcp.enabled=true \
+#   --set global.env.aws.AWS_ACCESS_KEY_ID="..." \
+#   --set global.env.aws.AWS_SECRET_ACCESS_KEY="..."
+
+# Centralized configuration
+x-imageRegistry: &imageRegistry "avesha.azurecr.io"
+
+# Centralized image paths for all services
+x-images:
+  backend: &backendImage "agents/release/backend"
+  avesha-unified-ui: &aveshaUnifiedUiImage "agents/release/obliq-ai-sre"
+  orchestrator: &orchestratorImage "agents/release/orchestrator"
+  rca-agent: &rcaAgentImage "agents/release/rca-agent"
+  anomaly-detection: &anomalyDetectionImage "agents/release/anomaly-detection"
+  auto-remediation: &autoRemediationImage "agents/release/auto-remediation"
+  incident-manager: &incidentManagerImage "agents/release/incident-manager"
+  service-graph-engine: &serviceGraphEngineImage "agents/release/service-graph-engine"
+  active-inventory: &activeInventoryImage "agents/release/active-inventory"
+  infra-agent: &infraAgentImage "agents/release/infra-agent"
+  aws-mcp: &awsMcpImage "agents/release/aws-mcp"
+  k8s-mcp: &k8sMcpImage "agents/release/k8s-mcp"
+  prometheus-mcp: &prometheusMcpImage "agents/release/prometheus-mcp"
+  loki-mcp: &lokiMcpImage "agents/release/loki-mcp"
+  neo4j-mcp: &neo4jMcpImage "agents/release/neo4j-mcp"
+  cloudwatch-mcp: &cloudwatchMcpImage "agents/release/cloudwatch-mcp"
+  kubernetes-events-ingester: &kubernetesEventsIngesterImage "agents/release/kubernetes-events-ingester"
+  slack-ingester: &slackIngesterImage "agents/release/slack-ingester"
+  aws-ec2-cloudwatch-alarms: &awsEc2CloudwatchAlarmsImage "agents/release/aws-ec2-cloudwatch-alarms"
+
+# Common service configuration templates
+x-commonConfig: &commonServiceConfig
+  replicaCount: 1
+  resources:
+    limits:
+      cpu: 1000m
+      memory: 1Gi
+    requests:
+      cpu: 500m
+      memory: 512Mi
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 3
+    targetCPUUtilizationPercentage: 70
+    targetMemoryUtilizationPercentage: 80
+  volumes:
+    persistent:
+      enabled: false
+      storageClass: ""
+      size: 20Gi
+      mountPath: /data
+      accessMode: ReadWriteOnce
+  livenessProbe:
+    enabled: true
+    path: /health
+    initialDelaySeconds: 60
+    periodSeconds: 30
+    timeoutSeconds: 10
+    failureThreshold: 3
+    successThreshold: 1
+  readinessProbe:
+    enabled: true
+    path: /ready
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 3
+    successThreshold: 1
+  secrets:
+    database:
+      DB_PASSWORD: "admin123"
+    api:
+      API_KEY: "admin123"
+      JWT_SECRET: "admin123"
+    # external:
+    #   # DEPRECATED: Use global.env.aws.AWS_SECRET_ACCESS_KEY instead to avoid conflicts
+    #   AWS_SECRET_ACCESS_KEY: "admin123"
+
+# Common ingress annotations
+x-commonIngressAnnotations: &commonIngressAnnotations
+  kubernetes.io/ingress.class: nginx
+  nginx.ingress.kubernetes.io/ssl-redirect: "true"
+  nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+  nginx.ingress.kubernetes.io/proxy-body-size: "50m"
+  nginx.ingress.kubernetes.io/proxy-connect-timeout: "60"
+  nginx.ingress.kubernetes.io/proxy-send-timeout: "60"
+  nginx.ingress.kubernetes.io/proxy-read-timeout: "60"
+
+# ========================================
+# GLOBAL CONFIGURATION
+# ========================================
+# Global configuration for all sub-charts in the Obliq SRE Agent platform
+global:
+  # ----------------------------------------
+  # Image Registry Configuration
+  # ----------------------------------------
+  # Global image registry disabled to prevent third-party charts from using it
+  # In-house services use template defaults ({{ .Values.global.imageRegistry | default "avesha.azurecr.io" }})
+  # Set to null to force explicit registry configuration per service
+  imageRegistry: null
+  
+  # ----------------------------------------
+  # Kubernetes Configuration
+  # ----------------------------------------
+  # Global kubeconfig configuration for Kubernetes API access
+  # Required for k8s-mcp service and other Kubernetes integrations
+  kubeconfig:
+    # Kubeconfig file content (provide via --set-file global.kubeconfig.content=./kubeconfig)
+    # Example: helm install --set-file global.kubeconfig.content=./kubeconfig
+    content: ""
+  
+  # ----------------------------------------
+  # Container Registry Authentication
+  # ----------------------------------------
+  # Global image pull secrets configuration
+  # Required for pulling images from private Avesha registry (avesha.azurecr.io)
+  imagePullSecrets:
+    # Use existing secret by name (must be created beforehand)
+    # kubectl create secret docker-registry registry --docker-server=avesha.azurecr.io --docker-username=... --docker-password=...
+    - name: registry
+  
+  # Image pull secret creation configuration (alternative to manual creation)
+  imagePullSecretConfig:
+    # Enable automatic creation of image pull secret (requires credentials)
+    create:
+      enabled: false  # Set to true if you want chart to create the secret
+      name: "registry"
+      # Docker registry credentials (contact support@aveshasystems.com for access)
+      registry: "avesha.azurecr.io"
+      username: ""  # Provide via --set or values override
+      password: ""  # Provide via --set or values override
+    # Use existing pre-created image pull secret (if provided)
+    # When existing.enabled is true, the chart will use the existing secret
+    # instead of creating a new one or using the default global imagePullSecrets
+    existing:
+      enabled: false
+      name: ""
+
+  # ----------------------------------------
+  # Global Secret Management
+  # ----------------------------------------
+  # Global secret configuration for storing sensitive environment variables
+  globalSecret:
+    # Enable creation of new global secret containing all environment variables
+    create:
+      enabled: true  # Recommended: let chart manage the global secret
+      name: "obliq-sre-agent-global-secret"
+    # Use existing pre-created secret (advanced use case)
+    # When existing.enabled is true, the chart will use the existing secret
+    # instead of creating a new one. Make sure the existing secret contains
+    # all required environment variables defined in global.env sections below.
+    existing:
+      enabled: false
+      name: ""
+
+  # ----------------------------------------
+  # Infrastructure Configuration
+  # ----------------------------------------
+  # Global storage class for persistent volumes (leave empty for cluster default)
+  storageClass: ""
+
+  # Global namespace where all services will be deployed
+  namespace: "avesha"
+
+  # ========================================
+  # ENVIRONMENT VARIABLES
+  # ========================================
+  # Global environment variables shared across all services
+  # These are automatically injected into all service containers
+  env:
+    # ----------------------------------------
+    # Common Runtime Configuration
+    # ----------------------------------------
+    common:
+      # Application environment settings
+      NODE_ENV: "production"                    # Node.js environment mode
+      LOG_LEVEL: "INFO"                        # Global logging level (DEBUG, INFO, WARN, ERROR)
+      LOGURU_LEVEL: "INFO"                     # Python Loguru logging level
+      TZ: "UTC"                                # Timezone for all services
+      ENVIRONMENT: "production"                # Deployment environment identifier
+      CLUSTER_NAME: "obliq-cluster"            # Kubernetes cluster identifier
+      # NAMESPACE - Now dynamically generated by helper functions
+      
+      # Automation and execution settings
+      AUTOMATIC_EXECUTION_ENABLED: "true"      # Enable automated remediation actions
+      KUBECONFIG: "/etc/kubeconfig/config"     # Path to mounted kubeconfig file
+      DEBUG: "false"                           # Enable debug mode across services
+      
+      # SSL/TLS Configuration for internal service communication
+      # Disabled for internal cluster communication (services behind ClusterIP)
+      SSL_VERIFY: "false"                      # Disable SSL verification for internal calls
+      TLS_VERIFY: "false"                      # Disable TLS verification for internal calls
+      DISABLE_SSL_VERIFICATION: "true"        # Global SSL verification disable
+      # PORT is service-specific and defined in each service's env.app section
+    
+    # ----------------------------------------
+    # Database Configuration
+    # ----------------------------------------
+    # Internal database credentials for Neo4j and MongoDB
+    # These databases are deployed as part of the Obliq platform
+    database:
+      # Neo4j Graph Database (stores relationships and topology data)
+      NEO4J_USER: "neo4j"                     # Neo4j username
+      NEO4J_PASSWORD: "admin123"              # Neo4j password (change for production)
+      NEO4J_AUTH: "neo4j/admin123"            # Neo4j auth string format
+      NEO4J_DATABASE: "neo4j"                 # Neo4j database name
+      # Neo4j URLs are dynamically generated by helper functions
+      
+      # MongoDB Document Database (stores metrics and infrastructure data)
+      MONGO_ROOT_USERNAME: "admin"            # MongoDB root username
+      MONGO_ROOT_PASSWORD: "admin123"         # MongoDB root password (change for production)
+      MONGODB_DATABASE: "infra_db"            # MongoDB database name for infrastructure data
+      MONGODB_USERNAME: "admin"               # MongoDB application username
+      MONGODB_PASSWORD: "admin123"            # MongoDB application password (change for production)
+    
+    # ----------------------------------------
+    # AWS Configuration
+    # ----------------------------------------
+    # AWS credentials and configuration for cloud integrations
+    # Required for: aws-mcp, cloudwatch-mcp, aws-ec2-cloudwatch-alarms services
+    aws:
+      # IAM Role ARNs for different AWS integrations
+      AWS_ROLE_ARN_AWS_MCP: ""                        # IAM role for aws-mcp service (EC2, S3, etc.)
+      AWS_ROLE_ARN_EC2_CLOUDWATCH_ALARMS: ""          # IAM role for CloudWatch alarms service
+      
+      # AWS API credentials (alternative to IAM roles)
+      AWS_ACCESS_KEY_ID: ""                           # AWS access key ID (provide via --set)
+      AWS_SECRET_ACCESS_KEY: ""                       # AWS secret access key (provide via --set)
+      AWS_REGION: "us-east-1"                         # Default AWS region
+      
+      # AWS MCP service credentials (internal authentication)
+      AWS_MCP_USERNAME: "admin"                       # Username for AWS MCP service
+      AWS_MCP_PASSWORD: "admin123"                    # Password for AWS MCP service
+      
+      # EKS service account token (for EKS IRSA authentication)
+      AWS_WEB_IDENTITY_TOKEN_FILE: "/var/run/secrets/eks.amazonaws.com/serviceaccount/token"
+      
+      # Metrics collection settings
+      METRICS_SAMPLING_INTERVAL_SECONDS: "300"        # Metrics collection interval (5 minutes)
+    
+    # ----------------------------------------
+    # AI/ML Service Configuration
+    # ----------------------------------------
+    # OpenAI Configuration (REQUIRED for core AI services)
+    # Used by: rca-agent, anomaly-detection, auto-remediation
+    openai:
+      OPENAI_API_KEY: ""                              # OpenAI API key (provide via --set)
+    
+    # ----------------------------------------
+    # Observability Integrations
+    # ----------------------------------------
+    # Prometheus Configuration (for prometheus-mcp service)
+    prometheus:
+      PROMETHEUS_URL: "http://prometheus:9090"        # External Prometheus server URL
+      PROMETHEUS_USER: "admin"                        # Prometheus username (if auth enabled)
+      PROMETHEUS_PASSWORD: "admin123"                 # Prometheus password (if auth enabled)
+      PROMETHEUS_MCP_USERNAME: "admin"                # Username for Prometheus MCP service
+      PROMETHEUS_MCP_PASSWORD: "admin123"             # Password for Prometheus MCP service
+    
+    # Loki Configuration (for loki-mcp service)
+    loki:
+      LOKI_URL: "http://loki:3100"                    # External Loki server URL
+      LOKI_TOKEN: ""                                  # Loki authentication token (if required)
+      LOKI_USERNAME: ""                               # Loki username (if auth enabled)
+      LOKI_PASSWORD: ""                               # Loki password (if auth enabled)
+    
+    # ----------------------------------------
+    # External Service Integrations
+    # ----------------------------------------
+    # Jira Configuration (OPTIONAL - for incident management integration)
+    jira:
+      JIRA_EMAIL: ""                                  # Jira user email (provide via --set)
+      JIRA_API_TOKEN: ""                              # Jira API token (provide via --set)
+      JIRA_BASE_URL: "https://avesha.atlassian.net"   # Jira instance URL
+      JIRA_PROJECT_KEY: ""                            # Jira project key for creating tickets
+      JIRA_PAT: ""                                    # Jira Personal Access Token (alternative to API token)
+    
+    # Slack Configuration (OPTIONAL - for notifications and slack-ingester)
+    slack:
+      SLACK_WEBHOOK_URL: ""                           # Slack webhook URL for notifications
+      SLACK_BOT_TOKEN: ""                             # Slack bot token (xoxb-...) for slack-ingester
+    
+    
+    # Note: Service URLs are dynamically generated by helper functions
+    # and passed via globalSecretEnv template for internal communication
+    
+    # ----------------------------------------
+    # MCP (Model Context Protocol) Configuration
+    # ----------------------------------------
+    # MCP servers provide AI model context for different data sources
+    # These define how AI services connect to various infrastructure components
+    mcp:
+      # Individual MCP server endpoints
+      MCP_SERVERS_AWS_EC2: "AWS_EC2:http://aws-mcp:8080"           # AWS EC2 integration
+      MCP_SERVERS_K8S: "K8s:http://k8s-mcp:8080"                   # Kubernetes integration
+      MCP_SERVERS_PROMETHEUS: "PROMETHEUS:http://prometheus-mcp:8041"  # Prometheus metrics
+      MCP_SERVERS_NEO4J: "NEO4J:http://neo4j-mcp:8080"             # Neo4j graph data
+      MCP_SERVERS_LOKI: "LOKI:http://loki-mcp:8089"                # Loki logs
+      
+      # Combined MCP server configurations
+      MCP_SERVERS_FULL: "AWS_EC2:http://aws-mcp:8080,K8s:http://k8s-mcp:8080,PROMETHEUS:http://prometheus-mcp:8041,NEO4J:http://neo4j-mcp:8080,LOKI:http://loki-mcp:8089"
+      MCP_SERVERS: "AWS_EC2:http://aws-mcp:8080,K8s:http://k8s-mcp:8080,PROMETHEUS:http://prometheus-mcp:8041,NEO4J:http://neo4j-mcp:8080,LOKI:http://loki-mcp:8089"
+      
+      # Neo4j MCP specific configuration
+      NEO4J_MCP_URL: "http://neo4j-mcp:8080"                       # Neo4j MCP service URL
+      NEO4J_MCP_USERNAME: "admin"                                  # Neo4j MCP username
+      NEO4J_MCP_PASSWORD: "admin123"                               # Neo4j MCP password
+    
+
+    # ----------------------------------------
+    # DataDog Integration (OPTIONAL)
+    # ----------------------------------------
+    # Service Graph Engine Configuration (for service-graph-engine service)
+    # Used to pull service topology from DataDog APM
+    sg:
+      APM_PROVIDER: "datadog"                             # APM provider (currently only DataDog supported)
+      UPDATE_INTERVAL_SECONDS: "86400"                    # Service graph update interval (24 hours)
+      SG_APM_PROVIDER: "datadog"                          # SG prefixed APM provider (for compatibility)
+      SG_UPDATE_INTERVAL_SECONDS: "120"                   # SG prefixed update interval in seconds
+      DD_API_KEY: ""                                      # DataDog API key (provide via --set)
+      DD_APP_KEY: ""                                      # DataDog application key (provide via --set)
+      DD_SITE: "us5.datadoghq.com"                        # DataDog site (us1, us3, us5, eu1, etc.)
+      DD_ENVIRONMENTS: "production"                       # DataDog environments to monitor
+
+    # ----------------------------------------
+    # Observability/Telemetry Configuration
+    # ----------------------------------------
+    # OpenTelemetry configuration for metrics and tracing
+    observability:
+      OTEL_COLLECTOR_ENDPOINT: "opentelemetry-collector:4317"      # OTLP gRPC endpoint
+      OTEL_COLLECTOR_HTTP_ENDPOINT: "opentelemetry-collector:4318" # OTLP HTTP endpoint
+      OTEL_EXPORTER_OTLP_ENDPOINT: "http://opentelemetry-collector:4317"  # Full OTLP URL
+      OTEL_EXPORTER_OTLP_INSECURE: "true"                          # Allow insecure connections
+
+    # ----------------------------------------
+    # Kubernetes Integration
+    # ----------------------------------------
+    kubernetes:
+      kubeconfigFile: "files/kubeconfig"                  # Path to kubeconfig file (for reference)
+
+
+
+
+
+# ========================================
+# SERVICES CONFIGURATION
+# ========================================
+# Configuration for all Obliq SRE Agent services
+# 
+#
+# 🔧 Service Categories:
+# - Core Services: Always enabled (databases, backend, ui, orchestrator)
+# - AI Services: Enable based on use case (rca-agent, anomaly-detection, auto-remediation)  
+# - MCP Services: Enable based on integrations needed (aws-mcp, k8s-mcp, prometheus-mcp, etc.)
+# - Optional Services: Enable based on external integrations (slack-ingester, service-graph-engine)
+
+# ----------------------------------------
+# Database Services
+# ----------------------------------------
+# Graph Database - stores relationships and topology data for AI/SRE services
+neo4j:
+  enabled: true  # CORE SERVICE - Always required (no external credentials needed)
+  fullnameOverride: "neo4j"
+  neo4j:
+    name: "neo4j"
+    # Password must match the value in global.env.database.NEO4J_PASSWORD
+    password: "admin123"
+    
+  # Service configuration - SECURITY: Use ClusterIP instead of LoadBalancer
+  # Neo4j should NEVER be exposed externally for security reasons
+  # All access should go through the Obliq SRE Agent backend services
+  services:
+    neo4j:
+      enabled: true
+      spec:
+        type: ClusterIP  # SECURITY: Internal access only, not exposed externally
+    admin:
+      enabled: true
+      spec:
+        type: ClusterIP  # SECURITY: Admin interface internal only
+    
+  # Volume configuration - required by Neo4j chart
+  volumes:
+    data:
+      mode: "defaultStorageClass"
+      defaultStorageClass:
+        requests:
+          storage: 10Gi
+
+# Document Database - stores application data and configurations
+mongodb:
+  enabled: true  # CORE SERVICE - Always required (no external credentials needed)
+  fullnameOverride: "mongodb"
+  
+  # Authentication values must match global.env.database configuration
+  auth:
+    enabled: true
+    rootPassword: "admin123"
+    username: "admin" 
+    database: "infra_db"
+    
+  # MongoDB deployment configuration - StatefulSet for persistence
+  architecture: standalone
+  useStatefulSet: true
+  
+  # Persistence with PVC retention
+  persistence:
+    enabled: true
+    size: 10Gi
+    resourcePolicy: "keep"
+
+# Observability Data Collection - collects and processes telemetry data
+opentelemetry-collector:
+  enabled: true  # CORE SERVICE - Always required (no external credentials needed)
+  fullnameOverride: "opentelemetry-collector"
+
+  # Completely override global section to prevent in-house registry usage
+  global:
+    imageRegistry: null  # Disable global registry override
+    
+  # OpenTelemetry Collector Service Configuration for Production Environment
+  
+  # Image configuration - Using official OpenTelemetry image (not affected by global registry)
+  image:
+    repository: "otel/opentelemetry-collector"
+    tag: "0.131.0"
+    pullPolicy: IfNotPresent
+    # Note: This uses the official OpenTelemetry image directly from Docker Hub
+    # and will NOT be overridden by the global imageRegistry setting
+
+  # Collector configuration
+  config:
+    receivers:
+      otlp:
+        protocols:
+          grpc:
+            endpoint: 0.0.0.0:4317
+          http:
+            endpoint: 0.0.0.0:4318
+    
+    processors:
+      batch:
+        timeout: 5s
+        send_batch_size: 10
+      memory_limiter:
+        check_interval: 1s
+        limit_percentage: 80
+        spike_limit_percentage: 25
+    
+    exporters:
+      debug:
+        verbosity: detailed
+      otlp:
+        endpoint: "http://localhost:4317"
+        tls:
+          insecure: true
+      otlphttp:
+        endpoint: "http://active-inventory:8065/api/"
+        compression: gzip  # Recommended for async
+        timeout: 60s  # Give async processing time
+        encoding: json
+        tls:
+          insecure: true 
+
+    service:
+      pipelines:
+        traces:
+          receivers: [otlp]
+          processors: [batch]
+          exporters: [debug, otlp]
+        metrics:
+          receivers: [otlp]
+          processors: [batch]
+          exporters: [debug, otlp]
+        logs:
+          receivers: [otlp]
+          processors: [batch]
+          exporters: [debug, otlphttp]
+
+  # Service configuration
+  service:
+    type: ClusterIP
+
+  # Deployment configuration
+  mode: "deployment"
+
+  # Resource limits
+  resources:
+    limits:
+      cpu: 500m
+      memory: 1Gi
+    requests:
+      cpu: 20m
+      memory: 100Mi
+
+  # Security context (container-level)
+  securityContext:
+    runAsNonRoot: true
+    runAsUser: 1000
+    # Note: fsGroup belongs in podSecurityContext, not securityContext
+
+  # Pod security context
+  podSecurityContext:
+    runAsNonRoot: true
+    runAsUser: 1000
+    fsGroup: 1000
+
+  # Service account
+  serviceAccount:
+    create: true
+    name: "opentelemetry-collector"
+
+  # Network policy
+  networkPolicy:
+    enabled: false
+
+  # Pod disruption budget
+  podDisruptionBudget:
+    enabled: false
+
+  # Horizontal pod autoscaler
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 1
+    targetCPUUtilizationPercentage: 70
+    targetMemoryUtilizationPercentage: 80
+
+# Core Application Services
+# Main API Server - provides REST API and core backend functionality
+backend:
+  enabled: true  # CORE SERVICE - Always required (requires OpenAI API key)
+  fullnameOverride: "backend"
+  image:
+    repository: *backendImage
+    tag: "1.1.1"
+    pullPolicy: IfNotPresent
+  
+  # Use common service configuration
+  <<: *commonServiceConfig
+  
+
+  
+  # Override common config with service-specific values
+  livenessProbe:
+    enabled: false  # Disabled: app doesn't expose /health endpoint
+    path: /health
+    port: 8000
+    initialDelaySeconds: 60
+    periodSeconds: 30
+    timeoutSeconds: 10
+    failureThreshold: 3
+    successThreshold: 1
+  
+  readinessProbe:
+    enabled: false  # Disabled: app doesn't expose /ready endpoint
+    path: /ready
+    port: 8000
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 3
+    successThreshold: 1
+  
+  service:
+    port: 8000
+  
+  ingress:
+    enabled: true
+    className: "nginx"
+    annotations:
+      <<: *commonIngressAnnotations
+    hosts:
+      - host: api.avesha.local
+        paths:
+          - path: /
+            pathType: Prefix
+    tls:
+      - secretName: api-tls
+        hosts:
+          - api.avesha.local
+  
+  env:
+    app:
+      AGENT_TYPE: "backend"
+      PORT: "8000"
+      INFRA_AGENT_HOST: infra-agent
+      INFRA_AGENT_PORT: 8051
+
+# Web User Interface - provides frontend dashboard and user interface
+avesha-unified-ui:
+  enabled: true  # CORE SERVICE - Always required (no external credentials needed)
+  fullnameOverride: "avesha-unified-ui"
+  image:
+    repository: *aveshaUnifiedUiImage
+    tag: "1.1.1"
+    pullPolicy: IfNotPresent
+  
+  # Use common service configuration
+  <<: *commonServiceConfig
+  
+
+  
+  # Override common config with service-specific values
+  livenessProbe:
+    enabled: true
+    path: /health
+    port: 80
+    initialDelaySeconds: 60
+    periodSeconds: 30
+    timeoutSeconds: 10
+    failureThreshold: 3
+    successThreshold: 1
+  
+  readinessProbe:
+    enabled: true
+    path: /ready
+    port: 80
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 3
+    successThreshold: 1
+  
+  service:
+    port: 80
+  
+  ingress:
+    enabled: true
+    className: "nginx"
+    annotations:
+      <<: *commonIngressAnnotations
+    hosts:
+      - host: ui.avesha.local
+        paths:
+          - path: /
+            pathType: Prefix
+    tls:
+      - secretName: ui-tls
+        hosts:
+          - ui.avesha.local
+  
+  env:
+    app:
+      AGENT_TYPE: "avesha_unified_ui"
+      PORT: "3000"
+
+# Workflow Orchestration Engine - manages and coordinates AI/SRE workflows
+orchestrator:
+  enabled: true  # CORE SERVICE - Always required (requires OpenAI API key)
+  fullnameOverride: "orchestrator"
+  image:
+    repository: *orchestratorImage
+    tag: "1.1.1"
+    pullPolicy: IfNotPresent
+  
+  # Use common service configuration
+  <<: *commonServiceConfig
+  
+
+  
+  # Override common config with service-specific values
+  livenessProbe:
+    enabled: false  # Disabled in favor of individual chart configuration
+  
+  readinessProbe:
+    enabled: false  # Configured in individual chart with correct port
+  
+  service:
+    port: 8060  # Fixed to match actual service port
+  
+  env:
+    app:
+      AGENT_TYPE: "orchestrator"
+      PORT: "8060"  # Service-specific port override
+
+      # Note: OPENAI_API_KEY and service URLs are provided via globalSecretEnv
+      # Note: Common environment variables (NODE_ENV, LOG_LEVEL, TZ) are provided via globalSecretEnv
+
+# AI/ML Services
+# Root Cause Analysis Engine - AI-powered analysis and recommendations
+rca-agent:
+  enabled: true  # CORE SERVICE - Always required (requires OpenAI API key)
+  fullnameOverride: "rca-agent"
+  image:
+    repository: *rcaAgentImage
+    tag: "1.1.1"
+  service:
+    port: 8062
+  env:
+    app:
+      AGENT_TYPE: "rca_agent"
+      PORT: "8062"
+      # Note: OPENAI_API_KEY, MCP_SERVERS, and service URLs are provided via globalSecretEnv
+
+
+# Anomaly Detection Engine - AI-powered anomaly detection and alerting
+anomaly-detection:
+  enabled: true  # CORE SERVICE - Always required (requires OpenAI API key)
+  fullnameOverride: "anomaly-detection"
+  image:
+    repository: *anomalyDetectionImage
+    tag: "1.1.1"
+  service:
+    port: 8061
+  env:
+    app:
+      AGENT_TYPE: "anomaly_detection"
+      PORT: "8061"
+
+
+# Automated Remediation Engine - AI-powered automated fixes and responses
+auto-remediation:
+  enabled: true  # CORE SERVICE - Always required (requires OpenAI API key)
+  fullnameOverride: "auto-remediation"
+  image:
+    repository: *autoRemediationImage
+    tag: "1.1.1"
+  service:
+    port: 8063
+  env:
+    app:
+      AGENT_TYPE: "auto_remediation"
+      PORT: "8063"
+
+# Incident Management System - manages and tracks incidents and responses
+incident-manager:
+  enabled: true  # CORE SERVICE - Always required (requires OpenAI API key)
+  fullnameOverride: "incident-manager"
+  image:
+    repository: *incidentManagerImage
+    tag: "1.1.1"
+  service:
+    port: 8064
+  env:
+    app:
+      AGENT_TYPE: "incident_manager"
+      PORT: "8064"
+
+
+# Service Topology Mapping - DataDog integration for service graphs and monitoring
+service-graph-engine:
+  enabled: false  # OPTIONAL SERVICE - Enable for DataDog integration (requires DD_API_KEY, DD_APP_KEY)
+  fullnameOverride: "service-graph-engine"
+  image:
+    repository: *serviceGraphEngineImage
+    tag: "1.1.1"
+  service:
+    port: 8074
+  env:
+    app:
+      AGENT_TYPE: "service_graph_engine"
+      PORT: "8074"
+      # Note: APM_PROVIDER, UPDATE_INTERVAL_SECONDS, DD_* variables are provided via globalSecretEnv
+      # Note: LOG_LEVEL is provided via globalSecretEnv
+
+
+# Infrastructure Services
+# Infrastructure Inventory - discovers and tracks infrastructure components
+active-inventory:
+  enabled: true  # CORE SERVICE - Always required (no external credentials needed)
+  fullnameOverride: "active-inventory"
+  image:
+    repository: *activeInventoryImage
+    tag: "1.1.1"
+  service:
+    port: 8065
+  env:
+    app:
+      AGENT_TYPE: "active_inventory"
+      PORT: "8065"
+
+
+# Infrastructure Monitoring Agent - monitors infrastructure health and metrics
+infra-agent:
+  enabled: true  # CORE SERVICE - Always required (no external credentials needed)
+  fullnameOverride: "infra-agent"
+  image:
+    repository: *infraAgentImage
+    tag: "1.1.1"
+  service:
+    port: 8051
+  ingress:
+    enabled: false
+  env:
+    app:
+      AGENT_TYPE: "infra_agent"
+      PORT: "8051"
+
+
+# MCP Integration Services (Model Context Protocol)
+# AWS Model Context Protocol Server - provides AWS EC2/CloudWatch integration
+aws-mcp:
+  enabled: false  # OPTIONAL MCP - Enable for AWS integration (requires AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_ROLE_ARN_AWS_MCP)
+  fullnameOverride: "aws-mcp"
+  image:
+    repository: *awsMcpImage
+    tag: "1.1.1"
+  service:
+    port: 8080
+  env:
+    app:
+      AGENT_TYPE: "aws_mcp"
+      PORT: "8080"
+
+
+# Kubernetes Model Context Protocol Server - provides Kubernetes cluster integration
+k8s-mcp:
+  enabled: true  # CORE MCP SERVICE - Always required (requires kubeconfig file)
+  fullnameOverride: "k8s-mcp"
+  image:
+    repository: *k8sMcpImage
+    tag: "1.1.1"
+  service:
+    port: 8080
+  # Kubeconfig configuration (inherits from global.kubeconfig.content)
+  env:
+    app:
+      AGENT_TYPE: "k8s_mcp"
+      PORT: "8080"
+      # Note: KUBECONFIG is provided via globalSecretEnv
+
+
+# Prometheus Model Context Protocol Server - provides Prometheus metrics integration
+prometheus-mcp:
+  enabled: false  # OPTIONAL MCP - Enable for Prometheus integration (requires PROMETHEUS_URL, PROMETHEUS_MCP_USERNAME, PROMETHEUS_MCP_PASSWORD)
+  fullnameOverride: "prometheus-mcp"
+  image:
+    repository: *prometheusMcpImage
+    tag: "1.1.1"
+  service:
+    port: 8041
+  env:
+    app:
+      AGENT_TYPE: "prometheus_mcp"
+      PORT: "8041"
+      # Note: PROMETHEUS_MCP_USERNAME and PROMETHEUS_MCP_PASSWORD are provided via globalSecretEnv
+
+
+# Neo4j Model Context Protocol Server - provides graph database integration
+neo4j-mcp:
+  enabled: true  # CORE MCP SERVICE - Enabled by default (connects to internal neo4j, optional NEO4J_MCP_USERNAME, NEO4J_MCP_PASSWORD)
+  fullnameOverride: "neo4j-mcp"
+  image:
+    repository: *neo4jMcpImage
+    tag: "1.1.1"
+  service:
+    port: 8080
+  env:
+    app:
+      AGENT_TYPE: "neo4j_mcp"
+      PORT: "8080"
+      MCP_SERVER_PORT: "8080"
+      # Note: LOG_LEVEL is provided via globalSecretEnv
+
+
+# Loki Model Context Protocol Server - provides log aggregation integration
+loki-mcp:
+  enabled: false  # OPTIONAL MCP - Enable for Loki integration (requires LOKI_URL, optional LOKI_USERNAME, LOKI_PASSWORD, LOKI_TOKEN)
+  fullnameOverride: "loki-mcp"
+  image:
+    repository: *lokiMcpImage
+    tag: "1.1.1"
+  service:
+    port: 8089
+  env:
+    app:
+      AGENT_TYPE: "loki_mcp"
+      PORT: "8089"
+      LOKI_ORG_ID: "${LOKI_ORG_ID}"
+      LOKI_TENANT_ID: "default"
+      QUERY_TIMEOUT: "30s"
+      MAX_QUERY_LENGTH: "10000"
+      ENABLE_LOGS_TAILING: "true"
+      MCP_SERVER_PORT: "8089"
+      MCP_SERVER_HOST: "0.0.0.0"
+      MCP_LOG_LEVEL: "INFO"
+      MCP_ENABLE_METRICS: "true"
+      # Note: LOG_LEVEL is provided via globalSecretEnv
+
+
+# CloudWatch Model Context Protocol Server - provides AWS CloudWatch integration
+cloudwatch-mcp:
+  enabled: false  # OPTIONAL MCP - Enable for AWS CloudWatch integration (requires AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, CloudWatch permissions)
+  fullnameOverride: "cloudwatch-mcp"
+  image:
+    repository: *cloudwatchMcpImage
+    tag: "1.1.1"
+  service:
+    port: 8000
+  env:
+    app:
+      AGENT_TYPE: "cloudwatch_mcp"
+      SERVER_TRANSPORT: "sse"
+      HOST: "0.0.0.0"
+      SERVER_PORT: "8000"
+      FASTMCP_LOG_LEVEL: "DEBUG"
+
+
+# Data Ingestion Services
+# Kubernetes Events Collection - ingests and processes Kubernetes cluster events
+kubernetes-events-ingester:
+  enabled: true  # OPTIONAL SERVICE - Enable for K8s event monitoring (requires kubeconfig file)
+  fullnameOverride: "kubernetes-events-ingester"
+  image:
+    repository: *kubernetesEventsIngesterImage
+    tag: "1.1.1"
+  service:
+    port: 8065
+  # Kubeconfig configuration (uses global kubeconfig secret)
+  kubeconfig:
+    secretRef:
+      enabled: true
+      name: "kubeconfig-secret"
+      key: "config"
+  env:
+    app:
+      AGENT_TYPE: "kubernetes_events_ingester"
+      PORT: "8065"
+      EVENTS_NAMESPACE: "default"
+      EVENTS_FILTER: "Warning,Error"
+      INGESTION_INTERVAL: "30"
+      OTEL_SERVICE_NAME: "kubernetes-events-ingester"
+      # Note: LOG_LEVEL and KUBECONFIG are provided via globalSecretEnv
+
+
+# Slack Message Ingestion - ingests and processes Slack messages and notifications
+slack-ingester:
+  enabled: false  # OPTIONAL SERVICE - Enable for Slack integration (requires SLACK_BOT_TOKEN, optional SLACK_WEBHOOK_URL)
+  fullnameOverride: "slack-ingester"
+  image:
+    repository: *slackIngesterImage
+    tag: "1.1.1"
+  service:
+    port: 8065
+  env:
+    app:
+      AGENT_TYPE: "slack_ingester"
+      PORT: "8065"
+      SLACK_CHANNELS: "#avesha-agent-alerts"
+      NOTIFICATION_INTERVAL: "300"
+      SLACK_AFTER_TS_UTC: "2025-07-24 07:00:00"
+      SLACK_PARSER_CONFIG: "/home/appuser/config/slack_parser_config.json"
+      # Note: SLACK_BOT_TOKEN is provided via globalSecretEnv
+      # Note: OTEL_COLLECTOR_ENDPOINT, OTEL_SERVICE_NAME are provided via globalSecretEnv
+      # Note: LOG_LEVEL is provided via globalSecretEnv
+  volumes:
+    config:
+      enabled: true
+      mountPath: /home/appuser/config
+      subPath: ""
+  configMap:
+    enabled: true
+    files:
+      slack_parser_config.json: |
+        {
+          "application": "^(.*) was deployed",
+          "syncRevision": "Revision: (.*)$",
+          "syncStatus": "in (.*) status",
+          "details": "https://localhost:4000/applications/(.*)",
+          "repo": "Repo: (.*)$",
+          "path": "Path: (.*)$",
+          "revision": "^Revision: (.*)$",
+          "severity": "Type: (Warning|Error)"
+        }
+
+
+# AWS CloudWatch Alarms Monitoring - monitors and processes AWS CloudWatch alarms
+aws-ec2-cloudwatch-alarms:
+  enabled: false  # OPTIONAL SERVICE - Enable for AWS CloudWatch monitoring (requires AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_ROLE_ARN_EC2_CLOUDWATCH_ALARMS)
+  fullnameOverride: "aws-ec2-cloudwatch-alarms"
+  image:
+    repository: *awsEc2CloudwatchAlarmsImage
+    tag: "1.1.1"
+  service:
+    port: 8065
+  env:
+    app:
+      AGENT_TYPE: "aws_ec2_cloudwatch_alarms"
+      PORT: "8065"
+      CLOUDWATCH_NAMESPACE: "AWS/EC2"
+      ALARM_CHECK_INTERVAL: "300"
+      INSTANCE_TAG_FILTER: "Environment=production"
+      OTEL_SERVICE_NAME: "aws-ec2-cloudwatch-alarms"
+      SLO_CONFIG_FILE: "/home/appuser/slo-config.json"
+      INVENTORY_SAMPLING_INTERVAL_SECONDS: "120"
+      # Note: METRICS_SAMPLING_INTERVAL_SECONDS and LOG_LEVEL are provided via globalSecretEnv
+

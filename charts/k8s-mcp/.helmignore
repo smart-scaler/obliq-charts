@@ -1,0 +1,96 @@
+# Patterns to ignore when building packages.
+# This supports shell glob matching, relative path matching, and
+# negation (prefixed with !). Only one pattern per line.
+.DS_Store
+# Common VCS dirs
+.git/
+.gitignore
+.bzr/
+.bzrignore
+.hg/
+.hgignore
+.svn/
+# Common backup files
+*.swp
+*.bak
+*.tmp
+*.orig
+*~
+# Various IDEs
+.project
+.idea/
+*.tmproj
+.vscode/
+# OS generated files
+Thumbs.db
+ehthumbs.db
+# Kubernetes generated files
+*.yaml.bak
+*.yml.bak
+# Helm generated files
+charts/*.tgz
+# Documentation
+README.md
+docs/
+# Test files
+test/
+tests/
+*.test.yaml
+*.test.yml
+# CI/CD files
+.github/
+.gitlab-ci.yml
+.travis.yml
+.circleci/
+# Development files
+Makefile
+Dockerfile*
+docker-compose*
+.dockerignore
+# Logs
+*.log
+logs/
+# Temporary files
+tmp/
+temp/
+# Node.js (if applicable)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+# Python (if applicable)
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+# Java (if applicable)
+*.class
+*.jar
+*.war
+*.ear
+target/
+# Go (if applicable)
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+vendor/
+# Ruby (if applicable)
+*.gem
+*.rbc
+/.config
+/coverage/
+/InstalledFiles
+/pkg/
+/spec/reports/
+/spec/examples.txt
+/test/tmp/
+/test/version_tmp/
+/tmp/ 

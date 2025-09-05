@@ -1,0 +1,27 @@
+apiVersion: v2
+name: neo4j-mcp
+description: A Helm chart for deploying the Neo4j Model Context Protocol service
+type: application
+version: 0.1.0
+appVersion: "1.0.0"
+keywords:
+  - neo4j-mcp
+  - neo4j
+  - mcp
+  - model-context-protocol
+  - graph-database
+  - application
+  - container
+  - deployment
+maintainers:
+  - name: support@avesha.io
+    email: support@avesha.io
+home: https://avesha.io
+sources:
+  - https://github.com
+icon: https://avesha.com/favicon.ico
+annotations:
+  category: Infrastructure
+  licenses: Apache-2.0
+  support: Avesha
+  vendor: Avesha

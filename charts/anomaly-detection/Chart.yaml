@@ -1,0 +1,22 @@
+apiVersion: v2
+name: anomaly-detection
+description: A Helm chart for deploying the anomaly detection service with multiple environment variables
+type: application
+version: 0.1.0
+appVersion: "1.0.0"
+keywords:
+  - anomaly-detection
+  - ml
+  - application
+  - container
+  - deployment
+maintainers:
+  - name: support@avesha.io
+    email: support@avesha.io
+home: https://avesha.io
+sources:
+  - https://github.com
+icon: https://via.placeholder.com/150x150.png?text=AnomalyDetection
+annotations:
+  category: Application
+  licenses: Apache-2.0 
