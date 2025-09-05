@@ -1,6 +1,15 @@
+---
+layout: default
+title: Prerequisites
+parent: Documentation
+nav_order: 1
+---
+
 # Prerequisites
+{: .fs-8 }
 
 System requirements needed before installing the Obliq SRE Agent chart.
+{: .fs-6 .fw-300 }
 
 ## Required
 

@@ -1,6 +1,15 @@
+---
+layout: default
+title: Parameters Reference
+parent: Documentation
+nav_order: 2
+---
+
 # Parameters Reference Guide
+{: .fs-8 }
 
 This comprehensive guide covers all Helm chart parameters for the Obliq SRE Agent platform, including parameter architecture, configuration flow, and complete deployment examples.
+{: .fs-6 .fw-300 }
 
 ## 🎯 Quick Navigation
 

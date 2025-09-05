@@ -1,6 +1,15 @@
+---
+layout: default
+title: Services Configuration
+parent: Documentation
+nav_order: 3
+---
+
 # Services Configuration Reference
+{: .fs-8 }
 
 This document provides a comprehensive reference for all services in the Obliq SRE Agent platform, including core services, optional services, and external tools.
+{: .fs-6 .fw-300 }
 
 ## 📋 Service Categories
 

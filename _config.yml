@@ -1,0 +1,63 @@
+# Jekyll configuration for GitHub Pages
+theme: minima
+title: "Obliq AI SRE Agent Platform"
+description: "A comprehensive AI-powered Site Reliability Engineering platform deployed as a single Helm chart"
+url: "https://smart-scaler.github.io"
+baseurl: "/obliq-charts"
+
+# Author information
+author:
+  name: "Avesha Systems"
+  email: "support@aveshasystems.com"
+
+# GitHub repository info
+github:
+  repository_url: "https://github.com/smart-scaler/obliq-charts"
+  repository_name: "obliq-charts"
+
+# Enable plugins
+plugins:
+  - jekyll-feed
+  - jekyll-sitemap
+  - jekyll-seo-tag
+
+# Markdown settings
+markdown: kramdown
+highlighter: rouge
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
+
+# Collections (for organizing docs)
+collections:
+  docs:
+    output: true
+    permalink: /:collection/:name/
+
+# Navigation
+navigation:
+  - title: "Home"
+    url: "/"
+  - title: "Documentation"
+    url: "/docs/"
+  - title: "Helm Repository"
+    url: "/#helm-repository-installation"
+  - title: "GitHub"
+    url: "https://github.com/smart-scaler/obliq-charts"
+
+# SEO and social
+social:
+  - platform: github
+    user_url: "https://github.com/smart-scaler"
+  - platform: email
+    user_url: "mailto:support@aveshasystems.com"
+
+# Exclude files from Jekyll processing
+exclude:
+  - "*.tgz"
+  - index.yaml
+  - vendor/
+  - Gemfile
+  - Gemfile.lock
+  - node_modules/
+  - README.md.backup

@@ -1,6 +1,24 @@
+---
+layout: default
+title: Home
+nav_order: 1
+description: "A comprehensive AI-powered Site Reliability Engineering platform deployed as a single Helm chart"
+permalink: /
+---
+
 # Obliq AI SRE Agent Platform
+{: .fs-9 }
 
 A comprehensive AI-powered Site Reliability Engineering platform deployed as a single Helm chart.
+{: .fs-6 .fw-300 }
+
+[![Helm Chart](https://img.shields.io/badge/Helm-Chart-blue?style=flat-square&logo=helm)](https://helm.sh/)
+[![Kubernetes](https://img.shields.io/badge/Kubernetes-v1.19+-blue?style=flat-square&logo=kubernetes)](https://kubernetes.io/)
+[![AI/SRE](https://img.shields.io/badge/AI-SRE%20Platform-green?style=flat-square)](https://avesha.io)
+[![Support](https://img.shields.io/badge/Support-Avesha-orange?style=flat-square)](mailto:support@aveshasystems.com)
+
+[Get Started Now](#-quick-install){: .btn .btn-primary .fs-5 .mb-4 .mb-md-0 .mr-2 }
+[View on GitHub](https://github.com/smart-scaler/obliq-charts){: .btn .fs-5 .mb-4 .mb-md-0 }
 
 ## 📖 Documentation
 
