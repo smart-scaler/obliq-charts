@@ -1,12 +1,503 @@
 apiVersion: v1
 entries:
+  active-inventory:
+  - annotations:
+      category: Application
+      licenses: Apache-2.0
+    apiVersion: v2
+    appVersion: 1.0.0
+    created: "2025-09-05T15:17:26.836754273+05:30"
+    description: A Helm chart for deploying the active inventory service with multiple
+      environment variables
+    digest: ccbc63ed4e0529609b091fee963b6d2b63075dd64ae95c653785e13958145a52
+    home: https://avesha.io
+    icon: https://via.placeholder.com/150x150.png?text=ActiveInventory
+    keywords:
+    - active-inventory
+    - inventory
+    - application
+    - container
+    - deployment
+    maintainers:
+    - email: support@avesha.io
+      name: support@avesha.io
+    name: active-inventory
+    sources:
+    - https://github.com
+    type: application
+    urls:
+    - https://smart-scaler.github.io/obliq-charts/charts/active-inventory-0.1.0.tgz
+    version: 0.1.0
+  anomaly-detection:
+  - annotations:
+      category: Application
+      licenses: Apache-2.0
+    apiVersion: v2
+    appVersion: 1.0.0
+    created: "2025-09-05T15:17:26.837281866+05:30"
+    description: A Helm chart for deploying the anomaly detection service with multiple
+      environment variables
+    digest: 0967d3006672b29bcbcfaf99cab4bca1d2cbd84def8f7505135d09e9f3063822
+    home: https://avesha.io
+    icon: https://via.placeholder.com/150x150.png?text=AnomalyDetection
+    keywords:
+    - anomaly-detection
+    - ml
+    - application
+    - container
+    - deployment
+    maintainers:
+    - email: support@avesha.io
+      name: support@avesha.io
+    name: anomaly-detection
+    sources:
+    - https://github.com
+    type: application
+    urls:
+    - https://smart-scaler.github.io/obliq-charts/charts/anomaly-detection-0.1.0.tgz
+    version: 0.1.0
+  auto-remediation:
+  - annotations:
+      category: Application
+      licenses: Apache-2.0
+    apiVersion: v2
+    appVersion: 1.0.0
+    created: "2025-09-05T15:17:26.837776999+05:30"
+    description: A Helm chart for deploying the auto remediation service with multiple
+      environment variables
+    digest: e82071325cc01ec6f22b96eb0508523fadafd0031187b114a21cae9a9692ca37
+    home: https://avesha.io
+    icon: https://via.placeholder.com/150x150.png?text=AutoRemediation
+    keywords:
+    - auto-remediation
+    - remediation
+    - automation
+    - application
+    - container
+    - deployment
+    maintainers:
+    - email: support@avesha.io
+      name: support@avesha.io
+    name: auto-remediation
+    sources:
+    - https://github.com
+    type: application
+    urls:
+    - https://smart-scaler.github.io/obliq-charts/charts/auto-remediation-0.1.0.tgz
+    version: 0.1.0
+  avesha-unified-ui:
+  - annotations:
+      category: Application
+      licenses: Apache-2.0
+    apiVersion: v2
+    appVersion: 1.0.0
+    created: "2025-09-05T15:17:26.838286174+05:30"
+    description: A Helm chart for deploying the Avesha unified UI service with multiple
+      environment variables
+    digest: e0c9972a17092b9d41971f16e2a39f2d1c7318ef42ecdd8bd8b2e7df51e3ff09
+    home: https://avesha.io
+    icon: https://via.placeholder.com/150x150.png?text=AveshaUI
+    keywords:
+    - avesha-unified-ui
+    - ui
+    - frontend
+    - web
+    - application
+    - container
+    - deployment
+    maintainers:
+    - email: support@avesha.io
+      name: support@avesha.io
+    name: avesha-unified-ui
+    sources:
+    - https://github.com
+    type: application
+    urls:
+    - https://smart-scaler.github.io/obliq-charts/charts/avesha-unified-ui-0.1.0.tgz
+    version: 0.1.0
+  aws-ec2-cloudwatch-alarms:
+  - annotations:
+      category: Application
+      licenses: Apache-2.0
+    apiVersion: v2
+    appVersion: 1.0.0
+    created: "2025-09-05T15:17:26.838793827+05:30"
+    description: A Helm chart for deploying the AWS EC2 CloudWatch alarms service
+      with multiple environment variables
+    digest: 6ba1ad10accea4b7a8e931e6dcd9731d6aea3c23f82721cdb09a0561bd57d9ee
+    home: https://avesha.io
+    icon: https://via.placeholder.com/150x150.png?text=EC2CloudWatch
+    keywords:
+    - aws-ec2-cloudwatch-alarms
+    - aws
+    - ec2
+    - cloudwatch
+    - alarms
+    - monitoring
+    - application
+    - container
+    - deployment
+    maintainers:
+    - email: support@avesha.io
+      name: support@avesha.io
+    name: aws-ec2-cloudwatch-alarms
+    sources:
+    - https://github.com
+    type: application
+    urls:
+    - https://smart-scaler.github.io/obliq-charts/charts/aws-ec2-cloudwatch-alarms-0.1.0.tgz
+    version: 0.1.0
+  aws-mcp:
+  - annotations:
+      category: Application
+      licenses: Apache-2.0
+    apiVersion: v2
+    appVersion: 1.0.0
+    created: "2025-09-05T15:17:26.839241334+05:30"
+    description: A Helm chart for deploying the AWS MCP (Model Context Protocol) service
+      with multiple environment variables
+    digest: e1439e7fa3496496e7f07da459ff1d17cc1f33ec042ab1917ee3723dd89cdd84
+    home: https://avesha.io
+    icon: https://via.placeholder.com/150x150.png?text=AWSMCP
+    keywords:
+    - aws-mcp
+    - aws
+    - mcp
+    - model-context-protocol
+    - application
+    - container
+    - deployment
+    maintainers:
+    - email: support@avesha.io
+      name: support@avesha.io
+    name: aws-mcp
+    sources:
+    - https://github.com
+    type: application
+    urls:
+    - https://smart-scaler.github.io/obliq-charts/charts/aws-mcp-0.1.0.tgz
+    version: 0.1.0
+  backend:
+  - annotations:
+      category: Application
+      licenses: Apache-2.0
+    apiVersion: v2
+    appVersion: 1.0.0
+    created: "2025-09-05T15:17:26.839727855+05:30"
+    description: A Helm chart for deploying the backend service with multiple environment
+      variables
+    digest: 2fdeb29cd489f365b62769377c847d0e98ba5d66d37b77de545e73a7b72ab682
+    home: https://avesha.io
+    icon: https://via.placeholder.com/150x150.png?text=Backend
+    keywords:
+    - backend
+    - application
+    - container
+    - deployment
+    maintainers:
+    - email: support@avesha.io
+      name: support@avesha.io
+    name: backend
+    sources:
+    - https://github.com
+    type: application
+    urls:
+    - https://smart-scaler.github.io/obliq-charts/charts/backend-0.1.0.tgz
+    version: 0.1.0
+  cloudwatch-mcp:
+  - annotations:
+      category: Application
+      licenses: Apache-2.0
+    apiVersion: v2
+    appVersion: 1.0.0
+    created: "2025-09-05T15:17:26.840210601+05:30"
+    description: A Helm chart for deploying the CloudWatch Model Context Protocol
+      service with multiple environment variables
+    digest: fc28d1863462fec74ee5946ed4e348af8d99b713480776223fb2cf7a3b9bddaa
+    home: https://avesha.io
+    icon: https://via.placeholder.com/150x150.png?text=CloudWatchMCP
+    keywords:
+    - cloudwatch-mcp
+    - cloudwatch
+    - mcp
+    - model-context-protocol
+    - aws
+    - monitoring
+    - metrics
+    - application
+    - container
+    - deployment
+    maintainers:
+    - email: support@avesha.io
+      name: support@avesha.io
+    name: cloudwatch-mcp
+    sources:
+    - https://github.com
+    type: application
+    urls:
+    - https://smart-scaler.github.io/obliq-charts/charts/cloudwatch-mcp-0.1.0.tgz
+    version: 0.1.0
+  incident-manager:
+  - annotations:
+      category: Application
+      licenses: Apache-2.0
+    apiVersion: v2
+    appVersion: 1.0.0
+    created: "2025-09-05T15:17:26.840704227+05:30"
+    description: A Helm chart for deploying the incident manager service with multiple
+      environment variables
+    digest: 5fdae9096e001a62cff3e04751f0a1532dada28859770ba2a84cb35fdc0742e8
+    home: https://avesha.io
+    icon: https://via.placeholder.com/150x150.png?text=IncidentManager
+    keywords:
+    - incident-manager
+    - incident
+    - management
+    - application
+    - container
+    - deployment
+    maintainers:
+    - email: support@avesha.io
+      name: support@avesha.io
+    name: incident-manager
+    sources:
+    - https://github.com
+    type: application
+    urls:
+    - https://smart-scaler.github.io/obliq-charts/charts/incident-manager-0.1.0.tgz
+    version: 0.1.0
+  infra-agent:
+  - annotations:
+      category: Application
+      licenses: Apache-2.0
+    apiVersion: v2
+    appVersion: 1.0.0
+    created: "2025-09-05T15:17:26.841236349+05:30"
+    description: A Helm chart for deploying the infrastructure agent service with
+      multiple environment variables
+    digest: eb29e3e710aad753ae10be1fc13bb5e0957fe7f2adf94d1b0a0d665b786deed9
+    home: https://avesha.io
+    icon: https://via.placeholder.com/150x150.png?text=InfraAgent
+    keywords:
+    - infra-agent
+    - infrastructure
+    - agent
+    - monitoring
+    - application
+    - container
+    - deployment
+    maintainers:
+    - email: support@avesha.io
+      name: support@avesha.io
+    name: infra-agent
+    sources:
+    - https://github.com
+    type: application
+    urls:
+    - https://smart-scaler.github.io/obliq-charts/charts/infra-agent-0.1.0.tgz
+    version: 0.1.0
+  k8s-mcp:
+  - annotations:
+      category: Application
+      licenses: Apache-2.0
+    apiVersion: v2
+    appVersion: 1.0.0
+    created: "2025-09-05T15:17:26.841859174+05:30"
+    description: A Helm chart for deploying the Kubernetes MCP (Model Context Protocol)
+      service with multiple environment variables
+    digest: debca535501641bf78f5c72c275c0f2784d1f7b048ff378f9adc6fd1aedb7493
+    home: https://avesha.io
+    icon: https://via.placeholder.com/150x150.png?text=K8SMCP
+    keywords:
+    - k8s-mcp
+    - kubernetes
+    - mcp
+    - model-context-protocol
+    - application
+    - container
+    - deployment
+    maintainers:
+    - email: support@avesha.io
+      name: support@avesha.io
+    name: k8s-mcp
+    sources:
+    - https://github.com
+    type: application
+    urls:
+    - https://smart-scaler.github.io/obliq-charts/charts/k8s-mcp-0.1.0.tgz
+    version: 0.1.0
+  kubernetes-events-ingester:
+  - annotations:
+      category: Application
+      licenses: Apache-2.0
+    apiVersion: v2
+    appVersion: 1.0.0
+    created: "2025-09-05T15:17:26.84245383+05:30"
+    description: A Helm chart for deploying the Kubernetes events ingester service
+      with multiple environment variables
+    digest: cd79ec1315240fc7b584dc21ce025e8315ea305a4c17e32247dfffda7eaa85a8
+    home: https://avesha.io
+    icon: https://via.placeholder.com/150x150.png?text=K8sEvents
+    keywords:
+    - kubernetes-events-ingester
+    - kubernetes
+    - events
+    - ingester
+    - monitoring
+    - application
+    - container
+    - deployment
+    maintainers:
+    - email: support@avesha.io
+      name: support@avesha.io
+    name: kubernetes-events-ingester
+    sources:
+    - https://github.com
+    type: application
+    urls:
+    - https://smart-scaler.github.io/obliq-charts/charts/kubernetes-events-ingester-0.1.0.tgz
+    version: 0.1.0
+  loki-mcp:
+  - annotations:
+      category: Application
+      licenses: Apache-2.0
+    apiVersion: v2
+    appVersion: 1.0.0
+    created: "2025-09-05T15:17:26.842918925+05:30"
+    description: A Helm chart for deploying the Loki Model Context Protocol service
+      with multiple environment variables
+    digest: a47e3b08f421b9fbe6d25cadb4917d171b8e0eda513b34203bb696f1465c6b4b
+    home: https://avesha.io
+    icon: https://via.placeholder.com/150x150.png?text=LokiMCP
+    keywords:
+    - loki-mcp
+    - loki
+    - mcp
+    - model-context-protocol
+    - logging
+    - observability
+    - application
+    - container
+    - deployment
+    maintainers:
+    - email: support@avesha.io
+      name: support@avesha.io
+    name: loki-mcp
+    sources:
+    - https://github.com
+    type: application
+    urls:
+    - https://smart-scaler.github.io/obliq-charts/charts/loki-mcp-0.1.0.tgz
+    version: 0.1.0
+  mongodb:
+  - annotations:
+      category: Database
+      images: |
+        - name: kubectl
+          image: docker.io/bitnami/kubectl:1.25.12-debian-11-r26
+        - name: mongodb-exporter
+          image: docker.io/bitnami/mongodb-exporter:0.39.0-debian-11-r73
+        - name: mongodb
+          image: docker.io/bitnami/mongodb:6.0.8-debian-11-r20
+        - name: nginx
+          image: docker.io/bitnami/nginx:1.25.2-debian-11-r0
+        - name: os-shell
+          image: docker.io/bitnami/os-shell:11-debian-11-r40
+      licenses: Apache-2.0
+    apiVersion: v2
+    appVersion: 6.0.8
+    created: "2025-09-05T15:17:26.847298343+05:30"
+    dependencies:
+    - name: common
+      repository: oci://registry-1.docker.io/bitnamicharts
+      tags:
+      - bitnami-common
+      version: 2.x.x
+    description: MongoDB(R) is a relational open source NoSQL database. Easy to use,
+      it stores data in JSON-like documents. Automated scalability and high-performance.
+      Ideal for developing cloud native applications.
+    digest: f9a74bbe245ff7b46982a3a94842233f4457a2e7d8be40e44e3c1b1bacbd8f45
+    home: https://bitnami.com
+    icon: https://bitnami.com/assets/stacks/mongodb/img/mongodb-stack-220x234.png
+    keywords:
+    - mongodb
+    - database
+    - nosql
+    - cluster
+    - replicaset
+    - replication
+    maintainers:
+    - name: VMware, Inc.
+      url: https://github.com/bitnami/charts
+    name: mongodb
+    sources:
+    - https://github.com/bitnami/charts/tree/main/bitnami/mongodb
+    urls:
+    - https://smart-scaler.github.io/obliq-charts/charts/mongodb-13.17.0.tgz
+    version: 13.17.0
+  neo4j:
+  - apiVersion: v1
+    appVersion: 5.26.10
+    created: "2025-09-05T15:17:26.849680423+05:30"
+    description: Neo4j is the world's leading graph database
+    digest: fba33bff97758d7bd496ab13db66cd7767a1d3efcb9608fef5efebf0b8430a60
+    home: https://www.neo4j.com
+    icon: http://info.neo4j.com/rs/773-GON-065/images/neo4j_logo.png
+    keywords:
+    - graph
+    - database
+    - cypher
+    maintainers:
+    - email: bledi.feshti@neotechnology.com
+      name: bfeshti
+    - email: rigert.alekaj@neo4j.com
+      name: Rigert Alekaj
+    name: neo4j
+    sources:
+    - https://github.com/neo4j/neo4j
+    - https://github.com/neo4j/docker-neo4j
+    urls:
+    - https://smart-scaler.github.io/obliq-charts/charts/neo4j-5.26.10.tgz
+    version: 5.26.10
+  neo4j-mcp:
+  - annotations:
+      category: Infrastructure
+      licenses: Apache-2.0
+      support: Avesha
+      vendor: Avesha
+    apiVersion: v2
+    appVersion: 1.0.0
+    created: "2025-09-05T15:17:26.850373896+05:30"
+    description: A Helm chart for deploying the Neo4j Model Context Protocol service
+    digest: 51a22a50af0ef96e1603c84a04c632f592ccf3450371fa20ffff4398cffafefc
+    home: https://avesha.io
+    icon: https://avesha.com/favicon.ico
+    keywords:
+    - neo4j-mcp
+    - neo4j
+    - mcp
+    - model-context-protocol
+    - graph-database
+    - application
+    - container
+    - deployment
+    maintainers:
+    - email: support@avesha.io
+      name: support@avesha.io
+    name: neo4j-mcp
+    sources:
+    - https://github.com
+    type: application
+    urls:
+    - https://smart-scaler.github.io/obliq-charts/charts/neo4j-mcp-0.1.0.tgz
+    version: 0.1.0
   obliq-sre-agent:
   - annotations:
       category: Application
       licenses: Apache-2.0
     apiVersion: v2
     appVersion: 1.1.1
-    created: "2025-09-05T09:28:20.436995686Z"
+    created: "2025-09-05T15:17:26.836174471+05:30"
     dependencies:
     - condition: opentelemetry-collector.enabled
       name: opentelemetry-collector
@@ -98,7 +589,7 @@ entries:
       version: 0.1.0
     description: A comprehensive umbrella Helm chart for deploying the Avesha Obliq
       AI SRE Agent platform
-    digest: 9309deb6aa032998996119ff4984cafbb9e7a851fde531a86232f2ad14c3aa51
+    digest: bcb412c087a7a4a27f1312371c6ec9158b8aeec6659aec777ac38b27b3a5a677
     home: https://avesha.io
     icon: https://via.placeholder.com/150x150.png?text=Obliq+SRE
     keywords:
@@ -123,7 +614,7 @@ entries:
       licenses: Apache-2.0
     apiVersion: v2
     appVersion: 1.0.0
-    created: "2025-09-05T09:28:20.398270873Z"
+    created: "2025-09-05T15:17:26.788684319+05:30"
     dependencies:
     - condition: opentelemetry-collector.enabled
       name: opentelemetry-collector
@@ -235,4 +726,170 @@ entries:
     urls:
     - https://smart-scaler.github.io/obliq-charts/obliq-sre-agent-0.1.0.tgz
     version: 0.1.0
-generated: "2025-09-05T09:28:20.358581979Z"
+  opentelemetry-collector:
+  - apiVersion: v2
+    appVersion: 0.131.0
+    created: "2025-09-05T15:17:26.851939142+05:30"
+    description: OpenTelemetry Collector Helm chart for Kubernetes
+    digest: 540f03f3dd2fb60785be6e8ec73fcd0a420206426561e6ef78ee0a82ffdab300
+    home: https://opentelemetry.io/
+    icon: https://opentelemetry.io/img/logos/opentelemetry-logo-nav.png
+    maintainers:
+    - name: dmitryax
+    - name: jaronoff97
+    - name: TylerHelmuth
+    name: opentelemetry-collector
+    sources:
+    - https://github.com/open-telemetry/opentelemetry-collector
+    - https://github.com/open-telemetry/opentelemetry-collector-contrib
+    type: application
+    urls:
+    - https://smart-scaler.github.io/obliq-charts/charts/opentelemetry-collector-0.130.2.tgz
+    version: 0.130.2
+  orchestrator:
+  - annotations:
+      category: Application
+      licenses: Apache-2.0
+    apiVersion: v2
+    appVersion: 1.0.0
+    created: "2025-09-05T15:17:26.852457962+05:30"
+    description: A Helm chart for deploying a single container application with multiple
+      environment variables
+    digest: fd91ad5859b3a6d2bde1056250d518f24905e982da789c7098719dfca74ff6ae
+    home: https://avesha.io
+    icon: https://via.placeholder.com/150x150.png?text=Orchestrator
+    keywords:
+    - application
+    - container
+    - deployment
+    maintainers:
+    - email: support@avesha.io
+      name: support@avesha.io
+    name: orchestrator
+    sources:
+    - https://github.com
+    type: application
+    urls:
+    - https://smart-scaler.github.io/obliq-charts/charts/orchestrator-0.1.0.tgz
+    version: 0.1.0
+  prometheus-mcp:
+  - annotations:
+      category: Application
+      licenses: Apache-2.0
+    apiVersion: v2
+    appVersion: 1.0.0
+    created: "2025-09-05T15:17:26.852943215+05:30"
+    description: A Helm chart for deploying the Prometheus MCP (Model Context Protocol)
+      service with multiple environment variables
+    digest: 6f838b9ae865421438a97d7499f69a95ac29cd45f2d8d28d804a8aedb6103828
+    home: https://avesha.io
+    icon: https://via.placeholder.com/150x150.png?text=PrometheusMCP
+    keywords:
+    - prometheus-mcp
+    - prometheus
+    - mcp
+    - model-context-protocol
+    - monitoring
+    - application
+    - container
+    - deployment
+    maintainers:
+    - email: support@avesha.io
+      name: support@avesha.io
+    name: prometheus-mcp
+    sources:
+    - https://github.com
+    type: application
+    urls:
+    - https://smart-scaler.github.io/obliq-charts/charts/prometheus-mcp-0.1.0.tgz
+    version: 0.1.0
+  rca-agent:
+  - annotations:
+      category: Application
+      licenses: Apache-2.0
+    apiVersion: v2
+    appVersion: 1.0.0
+    created: "2025-09-05T15:17:26.85342426+05:30"
+    description: A Helm chart for deploying the root cause analysis agent service
+      with multiple environment variables
+    digest: b68144f1f865cbfe77ae393be1ce8ca01e16748fd1e742010b8a1de77b31f20f
+    home: https://avesha.io
+    icon: https://via.placeholder.com/150x150.png?text=RCAAgent
+    keywords:
+    - rca-agent
+    - root-cause-analysis
+    - agent
+    - application
+    - container
+    - deployment
+    maintainers:
+    - email: support@avesha.io
+      name: support@avesha.io
+    name: rca-agent
+    sources:
+    - https://github.com
+    type: application
+    urls:
+    - https://smart-scaler.github.io/obliq-charts/charts/rca-agent-0.1.0.tgz
+    version: 0.1.0
+  service-graph-engine:
+  - annotations:
+      category: Application
+      licenses: Apache-2.0
+    apiVersion: v2
+    appVersion: 1.0.0
+    created: "2025-09-05T15:17:26.854586316+05:30"
+    description: A Helm chart for deploying the service graph engine service with
+      multiple environment variables
+    digest: bad886dc3b342e08e35083b1f519b5f3b1b8370e9ef8e1b5167e6a00a317bcbb
+    home: https://avesha.io
+    icon: https://via.placeholder.com/150x150.png?text=ServiceGraphEngine
+    keywords:
+    - service-graph-engine
+    - graph
+    - engine
+    - application
+    - container
+    - deployment
+    maintainers:
+    - email: support@avesha.io
+      name: support@avesha.io
+    name: service-graph-engine
+    sources:
+    - https://github.com
+    type: application
+    urls:
+    - https://smart-scaler.github.io/obliq-charts/charts/service-graph-engine-0.1.0.tgz
+    version: 0.1.0
+  slack-ingester:
+  - annotations:
+      category: Application
+      licenses: Apache-2.0
+    apiVersion: v2
+    appVersion: 1.0.0
+    created: "2025-09-05T15:17:26.855153951+05:30"
+    description: A Helm chart for deploying the Slack ingester service with multiple
+      environment variables
+    digest: f1279dcf32dd9d00ab665289ecb2d286689cfd4d18f14dfc5843607166b36cb1
+    home: https://avesha.io
+    icon: https://via.placeholder.com/150x150.png?text=SlackIngester
+    keywords:
+    - slack-ingester
+    - slack
+    - ingester
+    - messaging
+    - notifications
+    - application
+    - container
+    - deployment
+    maintainers:
+    - email: support@avesha.io
+      name: support@avesha.io
+    name: slack-ingester
+    sources:
+    - https://github.com
+    type: application
+    urls:
+    - https://smart-scaler.github.io/obliq-charts/charts/slack-ingester-0.1.0.tgz
+    version: 0.1.0
+generated: "2025-09-05T15:17:26.744480142+05:30"
