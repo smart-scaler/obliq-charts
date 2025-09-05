@@ -1,0 +1,121 @@
+apiVersion: v1
+entries:
+  obliq-sre-agent:
+  - annotations:
+      category: Application
+      licenses: Apache-2.0
+    apiVersion: v2
+    appVersion: 1.0.0
+    created: "2025-09-05T07:42:19.285712376Z"
+    dependencies:
+    - condition: opentelemetry-collector.enabled
+      name: opentelemetry-collector
+      repository: file://./charts/opentelemetry-collector
+      version: 0.130.2
+    - condition: neo4j.enabled
+      name: neo4j
+      repository: file://./charts/neo4j
+      version: 5.26.10
+    - condition: mongodb.enabled
+      name: mongodb
+      repository: file://./charts/mongodb
+      version: 13.17.0
+    - condition: loki-mcp.enabled
+      name: loki-mcp
+      repository: file://./charts/loki-mcp
+      version: 0.1.0
+    - condition: cloudwatch-mcp.enabled
+      name: cloudwatch-mcp
+      repository: file://./charts/cloudwatch-mcp
+      version: 0.1.0
+    - condition: aws-mcp.enabled
+      name: aws-mcp
+      repository: file://./charts/aws-mcp
+      version: 0.1.0
+    - condition: k8s-mcp.enabled
+      name: k8s-mcp
+      repository: file://./charts/k8s-mcp
+      version: 0.1.0
+    - condition: prometheus-mcp.enabled
+      name: prometheus-mcp
+      repository: file://./charts/prometheus-mcp
+      version: 0.1.0
+    - condition: aws-ec2-cloudwatch-alarms.enabled
+      name: aws-ec2-cloudwatch-alarms
+      repository: file://./charts/aws-ec2-cloudwatch-alarms
+      version: 0.1.0
+    - condition: kubernetes-events-ingester.enabled
+      name: kubernetes-events-ingester
+      repository: file://./charts/kubernetes-events-ingester
+      version: 0.1.0
+    - condition: slack-ingester.enabled
+      name: slack-ingester
+      repository: file://./charts/slack-ingester
+      version: 0.1.0
+    - condition: neo4j-mcp.enabled
+      name: neo4j-mcp
+      repository: file://./charts/neo4j-mcp
+      version: 0.1.0
+    - condition: anomaly-detection.enabled
+      name: anomaly-detection
+      repository: file://./charts/anomaly-detection
+      version: 0.1.0
+    - condition: active-inventory.enabled
+      name: active-inventory
+      repository: file://./charts/active-inventory
+      version: 0.1.0
+    - condition: incident-manager.enabled
+      name: incident-manager
+      repository: file://./charts/incident-manager
+      version: 0.1.0
+    - condition: rca-agent.enabled
+      name: rca-agent
+      repository: file://./charts/rca-agent
+      version: 0.1.0
+    - condition: auto-remediation.enabled
+      name: auto-remediation
+      repository: file://./charts/auto-remediation
+      version: 0.1.0
+    - condition: backend.enabled
+      name: backend
+      repository: file://./charts/backend
+      version: 0.1.0
+    - condition: service-graph-engine.enabled
+      name: service-graph-engine
+      repository: file://./charts/service-graph-engine
+      version: 0.1.0
+    - condition: infra-agent.enabled
+      name: infra-agent
+      repository: file://./charts/infra-agent
+      version: 0.1.0
+    - condition: avesha-unified-ui.enabled
+      name: avesha-unified-ui
+      repository: file://./charts/avesha-unified-ui
+      version: 0.1.0
+    - condition: orchestrator.enabled
+      name: orchestrator
+      repository: file://./charts/orchestrator
+      version: 0.1.0
+    description: A comprehensive umbrella Helm chart for deploying the Avesha Obliq
+      AI SRE Agent platform
+    digest: b40ec390bcfb437ec297a0c6c0f2e3cbdf827eab87748ec271681086947c2045
+    home: https://avesha.io
+    icon: https://via.placeholder.com/150x150.png?text=Obliq+SRE
+    keywords:
+    - sre
+    - ai
+    - observability
+    - incident-management
+    - kubernetes
+    - helm
+    maintainers:
+    - email: support@avesha.io
+      name: Avesha Team
+    name: obliq-sre-agent
+    sources:
+    - https://github.com/avesha/obliq-sre-agent-charts
+    type: application
+    urls:
+    - https://smart-scaler.github.io/obliq-charts/obliq-sre-agent-0.1.0.tgz
+    version: 0.1.0
+generated: "2025-09-05T07:42:19.245582875Z"
