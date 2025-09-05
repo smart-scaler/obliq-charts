@@ -255,8 +255,7 @@ helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
   --create-namespace \
   --set-file global.kubeconfig.content=./kubeconfig \
   --set global.env.openai.OPENAI_API_KEY="${OPENAI_API_KEY}" \
-  --set backend.ingress.enabled=true \
-  --set avesha-unified-ui.ingress.enabled=true
+  --set avesha-unified-ui.service.type=LoadBalancer
 ```
 
 ### AWS Integration Deployment
@@ -275,8 +274,7 @@ helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
   --set global.env.aws.AWS_SECRET_ACCESS_KEY="${AWS_SECRET_ACCESS_KEY}" \
   --set global.env.aws.AWS_ROLE_ARN_AWS_MCP="${AWS_ROLE_ARN_AWS_MCP}" \
   --set global.env.aws.AWS_ROLE_ARN_EC2_CLOUDWATCH_ALARMS="${AWS_ROLE_ARN_EC2_CLOUDWATCH}" \
-  --set backend.ingress.enabled=true \
-  --set avesha-unified-ui.ingress.enabled=true
+  --set avesha-unified-ui.service.type=LoadBalancer
 ```
 
 ### Full Integration Deployment
@@ -312,8 +310,7 @@ helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
   --set global.env.jira.JIRA_BASE_URL="${JIRA_BASE_URL}" \
   --set global.env.jira.JIRA_EMAIL="${JIRA_EMAIL}" \
   --set global.env.jira.JIRA_API_TOKEN="${JIRA_API_TOKEN}" \
-  --set backend.ingress.enabled=true \
-  --set avesha-unified-ui.ingress.enabled=true
+  --set avesha-unified-ui.service.type=LoadBalancer
 ```
 
 ---
