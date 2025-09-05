@@ -258,9 +258,16 @@ Each service supports these common configuration options:
 
 ## 📋 Complete Deployment Examples
 
+Before running any of the examples below, ensure you have added the Helm repository:
+
+```bash
+helm repo add obliq-charts https://smart-scaler.github.io/obliq-charts/
+helm repo update
+```
+
 ### Minimal Deployment (Core Services Only)
 ```bash
-helm install obliq-sre-agent . \
+helm install obliq-sre-agent obliq-charts/obliq \
   --namespace avesha \
   --create-namespace \
   --set-file global.kubeconfig.content=./kubeconfig \
@@ -269,7 +276,7 @@ helm install obliq-sre-agent . \
 
 ### AWS Integration Deployment
 ```bash
-helm install obliq-sre-agent . \
+helm install obliq-sre-agent obliq-charts/obliq \
   --namespace avesha \
   --create-namespace \
   --set-file global.kubeconfig.content=./kubeconfig \
@@ -287,7 +294,7 @@ helm install obliq-sre-agent . \
 
 ### Full Integration Deployment
 ```bash
-helm install obliq-sre-agent . \
+helm install obliq-sre-agent obliq-charts/obliq \
   --namespace avesha \
   --create-namespace \
   --set-file global.kubeconfig.content=./kubeconfig \
@@ -355,7 +362,7 @@ helm install obliq-sre-agent . \
 ### Pre-deployment Validation
 ```bash
 # Dry run to validate configuration
-helm install obliq-sre-agent . \
+helm install obliq-sre-agent obliq-charts/obliq \
   --namespace avesha \
   --dry-run \
   --set-file global.kubeconfig.content=./kubeconfig \

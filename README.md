@@ -2,6 +2,13 @@
 
 A comprehensive AI-powered Site Reliability Engineering platform deployed as a single Helm chart.
 
+## 📦 Helm Repository
+```bash
+helm repo add obliq-charts https://smart-scaler.github.io/obliq-charts/
+helm repo update
+helm install my-obliq obliq-charts/obliq
+```
+
 ## 📖 Documentation
 
 - **[🚀 Getting Started](#-quick-install)** - Installation guide
@@ -19,11 +26,11 @@ A comprehensive AI-powered Site Reliability Engineering platform deployed as a s
 - **Container Registry Access** - Contact support@aveshasystems.com for ACR credentials
 - **kubeconfig** file for cluster access
 
-### 1. Clone Repository
+### 1. Add Helm Repository
 ```bash
-# Clone the Obliq Charts repository
-git clone https://github.com/avesha-io/obliq-charts.git
-cd obliq-charts
+# Add the Obliq Charts Helm repository
+helm repo add obliq-charts https://smart-scaler.github.io/obliq-charts/
+helm repo update
 ```
 
 ### 2. Create Registry Secret
@@ -44,13 +51,15 @@ kubectl create secret docker-registry registry \
 
 💡 **Optional: For easier environment variable management, see [.env file setup](./docs/prerequisites.md#environment-variables-with-env-file).**
 
+📋 **Note:** If you need to create a custom kubeconfig file, you can download it from your Kubernetes cluster or cloud provider.
+
 #### Minimal (Core AI Services)
 ```bash
 # Set your OpenAI API key (get from https://platform.openai.com/api-keys)
 export OPENAI_API_KEY="sk-your-openai-api-key"
 
 # Install with LoadBalancer for external UI access
-helm install obliq-sre-agent . \
+helm install obliq-sre-agent obliq-charts/obliq \
   --namespace avesha \
   --create-namespace \
   --set-file global.kubeconfig.content=./kubeconfig `# Path to your kubeconfig file` \
@@ -69,7 +78,7 @@ export AWS_ROLE_ARN_AWS_MCP="arn:aws:iam::123456789012:role/your-aws-mcp-role"  
 export AWS_REGION="us-west-2"  # AWS region for resources
 
 # Install with AWS integration and LoadBalancer UI access
-helm install obliq-sre-agent . \
+helm install obliq-sre-agent obliq-charts/obliq \
   --namespace avesha \
   --create-namespace \
   --set-file global.kubeconfig.content=./kubeconfig `# Path to your kubeconfig` \

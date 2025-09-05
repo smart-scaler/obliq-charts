@@ -103,8 +103,15 @@ global:
 
 ### Step 3: Install with Pre-existing Secret
 
+First, add the Helm repository:
 ```bash
-helm install obliq-sre-agent ./obliq-sre-agent \
+helm repo add obliq-charts https://smart-scaler.github.io/obliq-charts/
+helm repo update
+```
+
+Then install with the pre-existing secret:
+```bash
+helm install obliq-sre-agent obliq-charts/obliq \
   --namespace avesha \
   --create-namespace \
   --set-file global.kubeconfig.content=./kubeconfig \
