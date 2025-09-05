@@ -54,8 +54,6 @@ social:
 
 # Exclude files from Jekyll processing
 exclude:
-  - "*.tgz"
-  - index.yaml
   - vendor/
   - Gemfile
   - Gemfile.lock
