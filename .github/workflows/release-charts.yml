@@ -71,7 +71,7 @@ jobs:
         working-directory: dest
         run: |
           # Generate/update the repository index
-          helm repo index . --url https://smart-scaler.github.io/obliq-charts/
+          helm repo index . --url https://repo.obliq.avesha.io/
           
           # Configure Git
           git config --global user.email "avesha-bot@aveshasystems.com"

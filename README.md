@@ -32,7 +32,7 @@ A comprehensive AI-powered Site Reliability Engineering platform deployed as a s
 ### 1. Add Helm Repository
 ```bash
 # Add the Obliq Charts Helm repository
-helm repo add obliq-charts https://smart-scaler.github.io/obliq-charts/
+helm repo add obliq-charts https://repo.obliq.avesha.io/
 helm repo update
 ```
 

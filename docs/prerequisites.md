@@ -240,7 +240,7 @@ EOF
 source .env
 
 # Add the Helm repository (if not already added)
-helm repo add obliq-charts https://smart-scaler.github.io/obliq-charts/
+helm repo add obliq-charts https://repo.obliq.avesha.io/
 helm repo update
 
 # Now run any of the installation commands from the main README
