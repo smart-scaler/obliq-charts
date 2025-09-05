@@ -158,19 +158,21 @@ helm install --set backend.env.app.LOG_LEVEL="DEBUG"  # Highest priority
 |`global.env.jira.JIRA_PROJECT_KEY` | JIRA project key | `""` | For JIRA integration | `"PROJ"` |
 
 ### External Tools (Optional)
-|Parameter | Description | Default | Required | Example |
+
+| Parameter | Description | Default | Required | Example |
 |-----------|-------------|---------|----------|---------|
-|**cert-manager** | **OPTIONAL ADD-ON - Install separately** | N/A | No | Install from upstream |
-|**ingress-nginx** | **OPTIONAL ADD-ON - Install separately** | N/A | No | Install from upstream |
+| **cert-manager** | **OPTIONAL ADD-ON - Install separately** | N/A | No | Install from upstream |
+| **ingress-nginx** | **OPTIONAL ADD-ON - Install separately** | N/A | No | Install from upstream |
 
 ---
 
 ## ⚙️ Service Configuration
 
 ### Service Enable/Disable Flags
-|Service | Default | Purpose | Dependencies |
+
+| Service | Default | Purpose | Dependencies |
 |---------|---------|---------|-------------|
-|**Core Services (Always Enabled)** |
+| **Core Services (Always Enabled)** | | | |
 |`neo4j.enabled` | `true` | Graph database | None |
 |`mongodb.enabled` | `true` | Document database | None |
 |`opentelemetry-collector.enabled` | `true` | Observability | None |
