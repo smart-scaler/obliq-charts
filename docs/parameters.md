@@ -394,7 +394,7 @@ helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
 |Parameter | Required For | Error Message |
 |-----------|-------------|---------------|
 |`global.env.openai.OPENAI_API_KEY` | Core AI services | "OpenAI API key is required for AI services" |
-|`global.kubeconfig.content` | k8s-mcp, kubernetes-events-ingester | "kubeconfig is required for Kubernetes integration" |
+| `global.kubeconfig.content` | k8s-mcp, kubernetes-events-ingester | "kubeconfig is required for Kubernetes integration" |
 |`global.env.sg.DD_API_KEY` | service-graph-engine | "DataDog API key required for service graph engine" |
 |`global.env.slack.SLACK_BOT_TOKEN` | slack-ingester | "Slack bot token required for Slack integration" |
 
