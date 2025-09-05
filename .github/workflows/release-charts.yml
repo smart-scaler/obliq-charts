@@ -40,10 +40,18 @@ jobs:
           version: v3.12.0
 
       # Package master chart
+      - name: Update Chart Dependencies
+        shell: bash
+        if: ${{ github.event.inputs.obliq-chart == 'Yes' }}
+        working-directory: src
+        run: |
+          # Update dependencies for all charts that have them
+          helm dependency update
+          
       - name: Package Obliq Master Helm Chart
         shell: bash
         if: ${{ github.event.inputs.obliq-chart == 'Yes' }}
-        run: helm package "src/" -u -d dest
+        run: helm package "src/" -d dest
 
       - name: Update Helm Repository Index and Push Changes
         shell: bash
