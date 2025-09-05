@@ -105,7 +105,7 @@ global:
 
 First, add the Helm repository:
 ```bash
-helm repo add obliq-charts https://smart-scaler.github.io/obliq-charts/
+helm repo add obliq-charts https://repo.obliq.avesha.io/
 helm repo update
 ```
 

@@ -1,0 +1,92 @@
+name: Release Obliq Helm Chart to gh-pages Branch
+
+on:
+  workflow_dispatch:
+    # Inputs the workflow accepts.
+    inputs:
+      obliq-chart:
+        type: choice
+        description: 'Release Obliq Master Helm Chart'
+        default: 'Yes'
+        required: true
+        options:
+        - 'Yes'
+        - 'No'
+        
+permissions:
+  contents: write
+  pages: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          path: 'src'
+          fetch-depth: 0
+          
+      - name: Checkout gh-pages Branch
+        uses: actions/checkout@v4
+        with:
+          path: 'dest'
+          ref: 'gh-pages'
+          fetch-depth: 0
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v3
+        with:
+          version: v3.12.0
+
+      # Package master chart
+      - name: Update Chart Dependencies
+        shell: bash
+        if: ${{ github.event.inputs.obliq-chart == 'Yes' }}
+        working-directory: src
+        run: |
+          echo "Updating dependencies for all charts..."
+          
+          # Update dependencies for the main chart
+          helm dependency update .
+          
+          # Update dependencies for all sub-charts that have them
+          for chart_dir in charts/*/; do
+            if [[ -f "${chart_dir}Chart.yaml" ]]; then
+              echo "Checking dependencies for ${chart_dir}"
+              if grep -q "^dependencies:" "${chart_dir}Chart.yaml"; then
+                echo "Updating dependencies for ${chart_dir}"
+                helm dependency update "${chart_dir}"
+              fi
+            fi
+          done
+          
+      - name: Package Obliq Master Helm Chart
+        shell: bash
+        if: ${{ github.event.inputs.obliq-chart == 'Yes' }}
+        run: helm package "src/" -d dest
+
+      - name: Update Helm Repository Index and Push Changes
+        shell: bash
+        working-directory: dest
+        run: |
+          # Generate/update the repository index
+          helm repo index . --url https://repo.obliq.avesha.io/
+          
+          # Configure Git
+          git config --global user.email "avesha-bot@aveshasystems.com"
+          git config --global user.name "Avesha Bot"
+          
+          # Add new files and changes
+          git add $(git ls-files -o --exclude-standard)
+          git add index.yaml
+          
+          # Check if there are any changes to commit
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+            exit 0
+          fi
+          
+          # Commit and push changes
+          git commit -m "Update Helm chart releases - $(date '+%Y-%m-%d %H:%M:%S UTC')"
+          git push origin gh-pages
