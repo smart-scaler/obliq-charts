@@ -128,7 +128,11 @@ If running Avesha Agents on EC2 instances:
 
 ### **For EKS Service Accounts (IRSA)**
 
-For Kubernetes deployments using IAM Roles for Service Accounts:
+For Kubernetes deployments using IAM Roles for Service Accounts, create separate trust policies for each service:
+
+#### **CloudWatch Service Trust Policy**
+
+For the `aws-ec2-cloudwatch-alarms` service:
 
 ```json
 {
@@ -137,19 +141,49 @@ For Kubernetes deployments using IAM Roles for Service Accounts:
         {
             "Effect": "Allow",
             "Principal": {
-                "Federated": "arn:aws:iam::ACCOUNT-ID:oidc-provider/token.actions.githubusercontent.com"
+                "Federated": "arn:aws:iam::YOUR-ACCOUNT-ID:oidc-provider/oidc.eks.YOUR-REGION.amazonaws.com/id/YOUR-OIDC-ID"
             },
             "Action": "sts:AssumeRoleWithWebIdentity",
             "Condition": {
                 "StringEquals": {
-                    "token.actions.githubusercontent.com:aud": "sts.amazonaws.com",
-                    "token.actions.githubusercontent.com:sub": "repo:your-org/your-repo:ref:refs/heads/main"
+                    "oidc.eks.YOUR-REGION.amazonaws.com/id/YOUR-OIDC-ID:aud": "sts.amazonaws.com",
+                    "oidc.eks.YOUR-REGION.amazonaws.com/id/YOUR-OIDC-ID:sub": "system:serviceaccount:avesha:aws-ec2-cloudwatch-alarms"
                 }
             }
         }
     ]
 }
 ```
+
+#### **AWS MCP Service Trust Policy**
+
+For the `aws-mcp` service:
+
+```json
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Principal": {
+                "Federated": "arn:aws:iam::YOUR-ACCOUNT-ID:oidc-provider/oidc.eks.YOUR-REGION.amazonaws.com/id/YOUR-OIDC-ID"
+            },
+            "Action": "sts:AssumeRoleWithWebIdentity",
+            "Condition": {
+                "StringEquals": {
+                    "oidc.eks.YOUR-REGION.amazonaws.com/id/YOUR-OIDC-ID:aud": "sts.amazonaws.com",
+                    "oidc.eks.YOUR-REGION.amazonaws.com/id/YOUR-OIDC-ID:sub": "system:serviceaccount:avesha:aws-mcp"
+                }
+            }
+        }
+    ]
+}
+```
+
+**Note**: Replace the following placeholders with your actual values:
+- `YOUR-ACCOUNT-ID`: Your AWS account ID
+- `YOUR-REGION`: Your EKS cluster region (e.g., `us-east-1`)
+- `YOUR-OIDC-ID`: Your EKS cluster's OIDC provider ID
 
 ## Service-Specific Permissions
 
