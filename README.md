@@ -102,6 +102,7 @@ export OPENAI_API_KEY="sk-your-openai-api-key"  # Get from OpenAI platform
 export AWS_ACCESS_KEY_ID="your-aws-access-key"  # AWS IAM user access key
 export AWS_SECRET_ACCESS_KEY="your-aws-secret-key"  # AWS IAM user secret
 export AWS_ROLE_ARN_AWS_MCP="arn:aws:iam::123456789012:role/your-aws-mcp-role"  # IAM role for AWS MCP
+export AWS_ROLE_ARN_EC2_CLOUDWATCH_ALARMS="arn:aws:iam::123456789012:role/your-ec2-cloudwatch-role"  # IAM role for CloudWatch alarms
 export AWS_REGION="us-west-2"  # AWS region for resources
 
 # Install with AWS integration and LoadBalancer UI access
@@ -111,9 +112,12 @@ helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
   --set-file global.kubeconfig.content=./kubeconfig `# Path to your kubeconfig` \
   --set global.env.openai.OPENAI_API_KEY="${OPENAI_API_KEY}" `# Required for AI services` \
   --set aws-mcp.enabled=true `# Enable AWS MCP service` \
+  --set cloudwatch-mcp.enabled=true `# Enable AWS CloudWatch integration` \
+  --set aws-ec2-cloudwatch-alarms.enabled=true `# Enable AWS CloudWatch alarms monitoring` \
   --set global.env.aws.AWS_ACCESS_KEY_ID="${AWS_ACCESS_KEY_ID}" `# AWS API access` \
   --set global.env.aws.AWS_SECRET_ACCESS_KEY="${AWS_SECRET_ACCESS_KEY}" `# AWS API secret` \
   --set global.env.aws.AWS_ROLE_ARN_AWS_MCP="${AWS_ROLE_ARN_AWS_MCP}" `# AWS MCP role ARN` \
+  --set global.env.aws.AWS_ROLE_ARN_EC2_CLOUDWATCH_ALARMS="${AWS_ROLE_ARN_EC2_CLOUDWATCH_ALARMS}" `# CloudWatch alarms role ARN` \
   --set global.env.aws.AWS_REGION="${AWS_REGION}" `# AWS region` \
   --set avesha-unified-ui.service.type=LoadBalancer `# Expose UI externally` \
   --timeout 15m
