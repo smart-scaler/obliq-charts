@@ -1,0 +1,54 @@
+[
+  {
+    "ParameterKey": "CustomerName",
+    "ParameterValue": "acme-corp"
+  },
+  {
+    "ParameterKey": "ResourcePrefix",
+    "ParameterValue": "AcmeObliq"
+  },
+  {
+    "ParameterKey": "CreateEC2Role",
+    "ParameterValue": "true"
+  },
+  {
+    "ParameterKey": "CreateIRSARoles",
+    "ParameterValue": "false"
+  },
+  {
+    "ParameterKey": "CreateEnhancedPolicies",
+    "ParameterValue": "true"
+  },
+  {
+    "ParameterKey": "CreateIAMUser",
+    "ParameterValue": "false"
+  },
+  {
+    "ParameterKey": "CreateAccessKeys",
+    "ParameterValue": "false"
+  },
+  {
+    "ParameterKey": "AccountId",
+    "ParameterValue": ""
+  },
+  {
+    "ParameterKey": "Region",
+    "ParameterValue": ""
+  },
+  {
+    "ParameterKey": "EKSOIDCProviderID",
+    "ParameterValue": ""
+  },
+  {
+    "ParameterKey": "KubernetesNamespace",
+    "ParameterValue": "avesha"
+  },
+  {
+    "ParameterKey": "CloudWatchServiceAccount",
+    "ParameterValue": "aws-ec2-cloudwatch-alarms"
+  },
+  {
+    "ParameterKey": "AWSMCPServiceAccount",
+    "ParameterValue": "aws-mcp"
+  }
+]

@@ -1,0 +1,433 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'CloudFormation template for Obliq AI SRE Agent Platform IAM resources'
+
+Parameters:
+  # Account and Region Configuration
+  AccountId:
+    Type: String
+    Default: ''
+    Description: 'AWS Account ID for resource ARN construction (leave empty to use current account)'
+  
+  Region:
+    Type: String
+    Default: ''
+    Description: 'AWS Region for EKS OIDC provider (leave empty to use current region)'
+  
+  EKSOIDCProviderID:
+    Type: String
+    Default: ''
+    Description: 'EKS OIDC provider ID (leave empty to skip IRSA roles)'
+  
+  # Namespace Configuration
+  KubernetesNamespace:
+    Type: String
+    Default: 'avesha'
+    Description: 'Kubernetes namespace for service accounts'
+  
+  # Service Account Names
+  CloudWatchServiceAccount:
+    Type: String
+    Default: 'aws-ec2-cloudwatch-alarms'
+    Description: 'Service account name for CloudWatch alarms service'
+  
+  AWSMCPServiceAccount:
+    Type: String
+    Default: 'aws-mcp'
+    Description: 'Service account name for AWS MCP service'
+  
+  # Resource Naming
+  ResourcePrefix:
+    Type: String
+    Default: 'Obliq'
+    Description: 'Prefix for all IAM resource names'
+  
+  CustomerName:
+    Type: String
+    Default: 'customer-demo'
+    Description: 'Customer name for resource tagging and segregation'
+  
+  # Feature Toggles
+  CreateEC2Role:
+    Type: String
+    Default: 'true'
+    AllowedValues: ['true', 'false']
+    Description: 'Create IAM role for EC2 instances'
+  
+  CreateIRSARoles:
+    Type: String
+    Default: 'true'
+    AllowedValues: ['true', 'false']
+    Description: 'Create IRSA roles for EKS service accounts'
+  
+  CreateEnhancedPolicies:
+    Type: String
+    Default: 'true'
+    AllowedValues: ['true', 'false']
+    Description: 'Create enhanced policies for AWS MCP and CloudWatch MCP services'
+  
+  CreateIAMUser:
+    Type: String
+    Default: 'false'
+    AllowedValues: ['true', 'false']
+    Description: 'Create IAM user with access keys for programmatic access'
+  
+  CreateAccessKeys:
+    Type: String
+    Default: 'false'
+    AllowedValues: ['true', 'false']
+    Description: 'Create access keys for IAM user (requires CreateIAMUser=true)'
+
+Conditions:
+  # Condition to check if EKS OIDC provider ID is provided
+  HasOIDCProvider: !Not [!Equals [!Ref EKSOIDCProviderID, '']]
+  
+  # Conditions for parameter defaults
+  UseCurrentAccount: !Equals [!Ref AccountId, '']
+  UseCurrentRegion: !Equals [!Ref Region, '']
+  
+  # Feature toggle conditions
+  ShouldCreateEC2Role: !Equals [!Ref CreateEC2Role, 'true']
+  ShouldCreateIRSARoles: !And 
+    - !Equals [!Ref CreateIRSARoles, 'true']
+    - !Condition HasOIDCProvider
+  ShouldCreateEnhancedPolicies: !Equals [!Ref CreateEnhancedPolicies, 'true']
+  ShouldCreateIAMUser: !Equals [!Ref CreateIAMUser, 'true']
+  ShouldCreateAccessKeys: !And
+    - !Equals [!Ref CreateAccessKeys, 'true']
+    - !Condition ShouldCreateIAMUser
+
+Resources:
+  # Core Monitoring Policy - Basic permissions for all services
+  CoreMonitoringPolicy:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      ManagedPolicyName: !Sub '${ResourcePrefix}-CoreMonitoring'
+      Description: 'Core monitoring permissions for Obliq AI SRE Agent Platform'
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Action:
+              - 'ec2:DescribeInstances'
+              - 'ec2:DescribeRegions'
+              - 'ec2:DescribeAccountAttributes'
+              - 'cloudwatch:GetMetricStatistics'
+              - 'cloudwatch:ListMetrics'
+              - 'cloudwatch:GetMetricData'
+              - 'sts:AssumeRoleWithWebIdentity'
+            Resource: '*'
+
+  # Enhanced AWS MCP Policy - Additional permissions for AWS MCP service
+  AWSMCPPolicy:
+    Type: AWS::IAM::ManagedPolicy
+    Condition: ShouldCreateEnhancedPolicies
+    Properties:
+      ManagedPolicyName: !Sub '${ResourcePrefix}-AWSMCP'
+      Description: 'Enhanced permissions for AWS MCP service'
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Action:
+              - 'ec2:DescribeInstances'
+              - 'ec2:DescribeRegions'
+              - 'ec2:DescribeAccountAttributes'
+              - 'ec2:DescribeSecurityGroups'
+              - 'ec2:DescribeVpcs'
+              - 'ec2:DescribeSubnets'
+              - 'cloudwatch:GetMetricStatistics'
+              - 'cloudwatch:ListMetrics'
+              - 'cloudwatch:GetMetricData'
+              - 'cloudwatch:DescribeAlarms'
+              - 'sts:AssumeRoleWithWebIdentity'
+            Resource: '*'
+
+  # Enhanced CloudWatch MCP Policy - CloudWatch-specific monitoring permissions
+  CloudWatchMCPPolicy:
+    Type: AWS::IAM::ManagedPolicy
+    Condition: ShouldCreateEnhancedPolicies
+    Properties:
+      ManagedPolicyName: !Sub '${ResourcePrefix}-CloudWatchMCP'
+      Description: 'Enhanced CloudWatch permissions for monitoring services'
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Action:
+              - 'cloudwatch:GetMetricStatistics'
+              - 'cloudwatch:ListMetrics'
+              - 'cloudwatch:GetMetricData'
+              - 'cloudwatch:DescribeAlarms'
+              - 'cloudwatch:DescribeAlarmHistory'
+              - 'logs:DescribeLogGroups'
+              - 'logs:DescribeLogStreams'
+              - 'logs:GetLogEvents'
+            Resource: '*'
+
+  # EC2 Instance Role - For running Obliq agents on EC2 instances
+  EC2InstanceRole:
+    Type: AWS::IAM::Role
+    Condition: ShouldCreateEC2Role
+    Properties:
+      RoleName: !Sub '${ResourcePrefix}-EC2-Role'
+      Description: 'IAM role for EC2 instances running Obliq agents'
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: ec2.amazonaws.com
+            Action: 'sts:AssumeRole'
+      ManagedPolicyArns:
+        - !Ref CoreMonitoringPolicy
+      Tags:
+        - Key: 'Customer'
+          Value: !Ref CustomerName
+        - Key: 'Purpose'
+          Value: 'Obliq-EC2-Agent'
+        - Key: 'ManagedBy'
+          Value: 'CloudFormation'
+        - Key: 'Component'
+          Value: 'IAM-Role'
+
+  # EC2 Instance Profile - Required for EC2 instances to assume the role
+  EC2InstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Condition: ShouldCreateEC2Role
+    Properties:
+      InstanceProfileName: !Sub '${ResourcePrefix}-EC2-InstanceProfile'
+      Roles:
+        - !Ref EC2InstanceRole
+
+  # IRSA Role for CloudWatch Alarms Service
+  CloudWatchAlarmsRole:
+    Type: AWS::IAM::Role
+    Condition: ShouldCreateIRSARoles
+    Properties:
+      RoleName: !Sub '${ResourcePrefix}-CloudWatchAlarms-Role'
+      Description: 'IRSA role for aws-ec2-cloudwatch-alarms service account'
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Federated: !Sub 
+                - 'arn:aws:iam::${AccountId}:oidc-provider/oidc.eks.${Region}.amazonaws.com/id/${EKSOIDCProviderID}'
+                - AccountId: !If [UseCurrentAccount, !Ref 'AWS::AccountId', !Ref AccountId]
+                  Region: !If [UseCurrentRegion, !Ref 'AWS::Region', !Ref Region]
+            Action: 'sts:AssumeRoleWithWebIdentity'
+            Condition:
+              StringEquals:
+                'oidc.eks.REGION.amazonaws.com/id/OIDCPROVIDERID:aud': 'sts.amazonaws.com'
+                'oidc.eks.REGION.amazonaws.com/id/OIDCPROVIDERID:sub': !Sub 'system:serviceaccount:${KubernetesNamespace}:${CloudWatchServiceAccount}'
+      ManagedPolicyArns:
+        - !Ref CoreMonitoringPolicy
+        - !If 
+          - ShouldCreateEnhancedPolicies
+          - !Ref CloudWatchMCPPolicy
+          - !Ref 'AWS::NoValue'
+      Tags:
+        - Key: 'Customer'
+          Value: !Ref CustomerName
+        - Key: 'Purpose'
+          Value: 'Obliq-CloudWatch-IRSA'
+        - Key: 'ManagedBy'
+          Value: 'CloudFormation'
+        - Key: 'Component'
+          Value: 'IRSA-Role'
+
+  # IRSA Role for AWS MCP Service
+  AWSMCPRole:
+    Type: AWS::IAM::Role
+    Condition: ShouldCreateIRSARoles
+    Properties:
+      RoleName: !Sub '${ResourcePrefix}-AWSMCP-Role'
+      Description: 'IRSA role for aws-mcp service account'
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Federated: !Sub 
+                - 'arn:aws:iam::${AccountId}:oidc-provider/oidc.eks.${Region}.amazonaws.com/id/${EKSOIDCProviderID}'
+                - AccountId: !If [UseCurrentAccount, !Ref 'AWS::AccountId', !Ref AccountId]
+                  Region: !If [UseCurrentRegion, !Ref 'AWS::Region', !Ref Region]
+            Action: 'sts:AssumeRoleWithWebIdentity'
+            Condition:
+              StringEquals:
+                'oidc.eks.REGION.amazonaws.com/id/OIDCPROVIDERID:aud': 'sts.amazonaws.com'
+                'oidc.eks.REGION.amazonaws.com/id/OIDCPROVIDERID:sub': !Sub 'system:serviceaccount:${KubernetesNamespace}:${AWSMCPServiceAccount}'
+      ManagedPolicyArns:
+        - !Ref CoreMonitoringPolicy
+        - !If 
+          - ShouldCreateEnhancedPolicies
+          - !Ref AWSMCPPolicy
+          - !Ref 'AWS::NoValue'
+      Tags:
+        - Key: 'Customer'
+          Value: !Ref CustomerName
+        - Key: 'Purpose'
+          Value: 'Obliq-AWSMCP-IRSA'
+        - Key: 'ManagedBy'
+          Value: 'CloudFormation'
+        - Key: 'Component'
+          Value: 'IRSA-Role'
+
+  # IAM User for programmatic access with access keys
+  ObliqIAMUser:
+    Type: AWS::IAM::User
+    Condition: ShouldCreateIAMUser
+    Properties:
+      UserName: !Sub '${ResourcePrefix}-ProgrammaticUser'
+      ManagedPolicyArns:
+        - !Ref CoreMonitoringPolicy
+        - !If 
+          - ShouldCreateEnhancedPolicies
+          - !Ref AWSMCPPolicy
+          - !Ref 'AWS::NoValue'
+        - !If 
+          - ShouldCreateEnhancedPolicies
+          - !Ref CloudWatchMCPPolicy
+          - !Ref 'AWS::NoValue'
+      Tags:
+        - Key: 'Customer'
+          Value: !Ref CustomerName
+        - Key: 'Purpose'
+          Value: 'Obliq-Programmatic-Access'
+        - Key: 'ManagedBy'
+          Value: 'CloudFormation'
+        - Key: 'Component'
+          Value: 'IAM-User'
+
+  # Access Keys for IAM User
+  ObliqAccessKey:
+    Type: AWS::IAM::AccessKey
+    Condition: ShouldCreateAccessKeys
+    Properties:
+      UserName: !Ref ObliqIAMUser
+
+Outputs:
+  # Policy ARNs
+  CoreMonitoringPolicyArn:
+    Description: 'ARN of the core monitoring policy'
+    Value: !Ref CoreMonitoringPolicy
+    Export:
+      Name: !Sub '${AWS::StackName}-CoreMonitoringPolicy'
+
+  AWSMCPPolicyArn:
+    Condition: ShouldCreateEnhancedPolicies
+    Description: 'ARN of the AWS MCP policy'
+    Value: !Ref AWSMCPPolicy
+    Export:
+      Name: !Sub '${AWS::StackName}-AWSMCPPolicy'
+
+  CloudWatchMCPPolicyArn:
+    Condition: ShouldCreateEnhancedPolicies
+    Description: 'ARN of the CloudWatch MCP policy'
+    Value: !Ref CloudWatchMCPPolicy
+    Export:
+      Name: !Sub '${AWS::StackName}-CloudWatchMCPPolicy'
+
+  # EC2 Role Resources
+  EC2RoleArn:
+    Condition: ShouldCreateEC2Role
+    Description: 'ARN of the EC2 instance role'
+    Value: !GetAtt EC2InstanceRole.Arn
+    Export:
+      Name: !Sub '${AWS::StackName}-EC2Role'
+
+  EC2InstanceProfileArn:
+    Condition: ShouldCreateEC2Role
+    Description: 'ARN of the EC2 instance profile'
+    Value: !GetAtt EC2InstanceProfile.Arn
+    Export:
+      Name: !Sub '${AWS::StackName}-EC2InstanceProfile'
+
+  # IRSA Role ARNs
+  CloudWatchAlarmsRoleArn:
+    Condition: ShouldCreateIRSARoles
+    Description: 'ARN of the CloudWatch alarms IRSA role'
+    Value: !GetAtt CloudWatchAlarmsRole.Arn
+    Export:
+      Name: !Sub '${AWS::StackName}-CloudWatchAlarmsRole'
+
+  AWSMCPRoleArn:
+    Condition: ShouldCreateIRSARoles
+    Description: 'ARN of the AWS MCP IRSA role'
+    Value: !GetAtt AWSMCPRole.Arn
+    Export:
+      Name: !Sub '${AWS::StackName}-AWSMCPRole'
+
+  # IAM User Resources
+  IAMUserArn:
+    Condition: ShouldCreateIAMUser
+    Description: 'ARN of the IAM user for programmatic access'
+    Value: !GetAtt ObliqIAMUser.Arn
+    Export:
+      Name: !Sub '${AWS::StackName}-IAMUser'
+
+  AccessKeyId:
+    Condition: ShouldCreateAccessKeys
+    Description: 'Access Key ID for programmatic access'
+    Value: !Ref ObliqAccessKey
+    Export:
+      Name: !Sub '${AWS::StackName}-AccessKeyId'
+
+  SecretAccessKey:
+    Condition: ShouldCreateAccessKeys
+    Description: 'Secret Access Key for programmatic access (store securely)'
+    Value: !GetAtt ObliqAccessKey.SecretAccessKey
+    Export:
+      Name: !Sub '${AWS::StackName}-SecretAccessKey'
+
+  # Configuration Information
+  KubernetesServiceAccountAnnotations:
+    Condition: ShouldCreateIRSARoles
+    Description: 'Annotations to add to Kubernetes service accounts for IRSA'
+    Value: !Sub |
+      For ${CloudWatchServiceAccount} service account:
+      eks.amazonaws.com/role-arn: ${CloudWatchAlarmsRole.Arn}
+      
+      For ${AWSMCPServiceAccount} service account:
+      eks.amazonaws.com/role-arn: ${AWSMCPRole.Arn}
+
+  # Stack and Customer Information
+  StackInformation:
+    Description: 'CloudFormation stack deployment information'
+    Value: !Sub |
+      Stack Name: ${AWS::StackName}
+      Customer: ${CustomerName}
+      Resource Prefix: ${ResourcePrefix}
+      Region: ${AWS::Region}
+      Account ID: ${AWS::AccountId}
+      Deployment Timestamp: ${AWS::StackId}
+
+  CustomerName:
+    Description: 'Customer name used for resource tagging'
+    Value: !Ref CustomerName
+    Export:
+      Name: !Sub '${AWS::StackName}-CustomerName'
+
+  ResourcePrefix:
+    Description: 'Resource prefix used for naming'
+    Value: !Ref ResourcePrefix
+    Export:
+      Name: !Sub '${AWS::StackName}-ResourcePrefix'
+
+  # Deployment Summary
+  DeploymentSummary:
+    Description: 'Summary of created resources'
+    Value: !Sub |
+      ✅ Created Resources for Customer: ${CustomerName}
+      
+      📋 IAM Policies:
+      - Core Monitoring Policy: ${CoreMonitoringPolicy}
+      
+      🏷️ All resources tagged with Customer: ${CustomerName}
+      
+      📊 Template Features:
+      - EC2 Role Creation: ${CreateEC2Role}
+      - IRSA Roles Creation: ${CreateIRSARoles}
+      - Enhanced Policies: ${CreateEnhancedPolicies}
+      - IAM User Creation: ${CreateIAMUser}
+      - Access Keys Creation: ${CreateAccessKeys}
