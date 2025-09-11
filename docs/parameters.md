@@ -45,7 +45,8 @@ Parameters follow this precedence order (highest to lowest):
 5. **Global environment variables** (`global.env.*`)
 6. **Individual chart defaults** (lowest priority)
 
-### Example Parameter Flow:
+### Example Parameter Flow
+
 ```bash
 # 1. Global env var sets default
 global.env.common.LOG_LEVEL: "INFO"
@@ -66,6 +67,7 @@ helm install --set backend.env.app.LOG_LEVEL="DEBUG"  # Highest priority
 ## 🌐 Global Environment Variables
 
 ### Common Environment Variables
+
 | Parameter | Description | Default | Required | Example |
 |-----------|-------------|---------|----------|---------|
 | `global.env.common.NODE_ENV` | Node.js environment | `"production"` | No | `"development"` |
@@ -79,6 +81,7 @@ helm install --set backend.env.app.LOG_LEVEL="DEBUG"  # Highest priority
 | `global.env.common.AUTOMATIC_EXECUTION_ENABLED` | Enable automatic execution | `"true"` | No | `"false"` |
 
 ### AWS Configuration
+
 | Parameter | Description | Default | Required | Example |
 |-----------|-------------|---------|----------|---------|
 | `global.env.aws.AWS_ACCESS_KEY_ID` | AWS access key ID | `""` | Yes | `"AKIAIOSFODNN7EXAMPLE"` |
@@ -90,11 +93,13 @@ helm install --set backend.env.app.LOG_LEVEL="DEBUG"  # Highest priority
 | `global.env.aws.AWS_MCP_PASSWORD` | AWS MCP password | `"admin123"` | No | `"your-password"` |
 
 ### OpenAI Configuration
+
 | Parameter | Description | Default | Required | Example |
 |-----------|-------------|---------|----------|---------|
 | `global.env.openai.OPENAI_API_KEY` | OpenAI API key | `""` | Yes | `"sk-1234567890abcdef..."` |
 
 ### Database Configuration
+
 | Parameter | Description | Default | Required | Example |
 |-----------|-------------|---------|----------|---------|
 | `global.env.database.NEO4J_USER` | Neo4j username | `"neo4j"` | No | `"admin"` |
@@ -108,6 +113,7 @@ helm install --set backend.env.app.LOG_LEVEL="DEBUG"  # Highest priority
 | `global.env.database.MONGODB_PASSWORD` | MongoDB app password | `"admin123"` | No | `"changeme"` |
 
 ### Integration Services Configuration
+
 | Parameter | Description | Default | Required | Example |
 |-----------|-------------|---------|----------|---------|
 | `global.env.slack.SLACK_BOT_TOKEN` | Slack bot token | `""` | For slack-ingester | `"xoxb-your-token"` |
@@ -118,6 +124,7 @@ helm install --set backend.env.app.LOG_LEVEL="DEBUG"  # Highest priority
 | `global.env.sg.DD_ENVIRONMENTS` | DataDog environments | `"production"` | No | `"staging,production"` |
 
 ### MCP Services Configuration
+
 | Parameter | Description | Default | Required | Example |
 |-----------|-------------|---------|----------|---------|
 | `global.env.prometheus.PROMETHEUS_URL` | Prometheus URL | `""` | For prometheus-mcp | `"http://prometheus:9090"` |
@@ -131,6 +138,7 @@ helm install --set backend.env.app.LOG_LEVEL="DEBUG"  # Highest priority
 | `global.env.mcp.NEO4J_MCP_PASSWORD` | Neo4j MCP password | `"admin123"` | No | `"mcp-password"` |
 
 ### JIRA Integration Configuration
+
 | Parameter | Description | Default | Required | Example |
 |-----------|-------------|---------|----------|---------|
 | `global.env.jira.JIRA_BASE_URL` | JIRA base URL | `""` | For JIRA integration | `"https://company.atlassian.net"` |
@@ -139,6 +147,7 @@ helm install --set backend.env.app.LOG_LEVEL="DEBUG"  # Highest priority
 | `global.env.jira.JIRA_PROJECT_KEY` | JIRA project key | `""` | For JIRA integration | `"PROJ"` |
 
 ### External Tools (Optional)
+
 | Parameter | Description | Default | Required | Example |
 |-----------|-------------|---------|----------|---------|
 | **cert-manager** | **OPTIONAL ADD-ON - Install separately** | N/A | No | Install from upstream |
@@ -149,6 +158,7 @@ helm install --set backend.env.app.LOG_LEVEL="DEBUG"  # Highest priority
 ## ⚙️ Service Configuration
 
 ### Service Enable/Disable Flags
+
 | Service | Default | Purpose | Dependencies |
 |---------|---------|---------|-------------|
 | **Core Services (Always Enabled)** |
@@ -182,6 +192,7 @@ helm install --set backend.env.app.LOG_LEVEL="DEBUG"  # Highest priority
 Each service supports these common configuration options:
 
 #### Resource Management
+
 ```yaml
 <service-name>:
   resources:
@@ -191,9 +202,9 @@ Each service supports these common configuration options:
     requests:
       cpu: "500m"
       memory: "512Mi"
-  
+
   replicaCount: 1
-  
+
   autoscaling:
     enabled: false
     minReplicas: 1
@@ -202,13 +213,14 @@ Each service supports these common configuration options:
 ```
 
 #### Service Configuration
+
 ```yaml
 <service-name>:
   service:
     type: ClusterIP
     port: 8080
     targetPort: 8080
-  
+
   ingress:
     enabled: false
     annotations: {}
@@ -221,6 +233,7 @@ Each service supports these common configuration options:
 ```
 
 #### Health Checks
+
 ```yaml
 <service-name>:
   livenessProbe:
@@ -230,7 +243,7 @@ Each service supports these common configuration options:
       port: http
     initialDelaySeconds: 30
     periodSeconds: 10
-  
+
   readinessProbe:
     enabled: true
     httpGet:
@@ -241,13 +254,14 @@ Each service supports these common configuration options:
 ```
 
 #### Security Context
+
 ```yaml
 <service-name>:
   securityContext:
     runAsNonRoot: true
     runAsUser: 1000
     fsGroup: 1000
-  
+
   podSecurityContext:
     runAsNonRoot: true
     runAsUser: 1000
@@ -266,6 +280,7 @@ helm repo update
 ```
 
 ### Minimal Deployment (Core Services Only)
+
 ```bash
 helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
   --namespace avesha \
@@ -276,6 +291,7 @@ helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
 ```
 
 ### AWS Integration Deployment
+
 ```bash
 # Enable AWS services and credentials
 helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
@@ -294,6 +310,7 @@ helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
 ```
 
 ### Full Integration Deployment
+
 ```bash
 # Essential parameters
 helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
@@ -328,6 +345,7 @@ helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
 ```
 
 ### Environment-Specific Configuration
+
 ```bash
 # Production values
 --set global.env.common.NODE_ENV="production" \
@@ -351,6 +369,7 @@ helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
 ## 🔍 Parameter Validation
 
 ### Pre-deployment Validation
+
 ```bash
 # Dry run to validate configuration
 helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
@@ -362,6 +381,7 @@ helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
 ```
 
 ### Common Parameter Validation Errors
+
 - **Empty required parameters**: OpenAI API key, kubeconfig content
 - **Invalid ARN formats**: AWS role ARNs must follow proper format
 - **Missing service dependencies**: Enabling services without required credentials
@@ -382,6 +402,7 @@ helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
 ## 💡 Configuration Tips
 
 ### Parameter Organization
+
 1. **Start with minimal**: Begin with core services only
 2. **Add incrementally**: Enable optional services as needed
 3. **Environment-specific**: Use different parameter sets per environment
@@ -389,6 +410,7 @@ helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
 5. **Monitor resources**: Watch resource usage and adjust limits
 
 ### Common Patterns
+
 ```bash
 # Override global settings for specific service
 --set global.env.common.LOG_LEVEL="INFO" \
@@ -406,6 +428,7 @@ helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
 ```
 
 ### Configuration Dependencies
+
 - **Core AI Services**: All require `global.env.openai.OPENAI_API_KEY`
 - **AWS Services**: All require `global.env.aws.AWS_ACCESS_KEY_ID` and `global.env.aws.AWS_SECRET_ACCESS_KEY`
 - **Kubernetes Services**: `k8s-mcp` and `kubernetes-events-ingester` require kubeconfig
@@ -419,12 +442,14 @@ helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
 For parameter-related issues, see the main [README troubleshooting section](../README.md#-troubleshooting).
 
 Common parameter validation errors:
+
 - Empty required parameters
 - Invalid ARN formats
 - Missing service dependencies
 - Resource conflicts
 
 For additional help:
+
 - **Documentation**: [Services Configuration](services.md)
 - **Prerequisites**: [System Requirements](prerequisites.md)
-- **Support**: support@aveshasystems.com
+- **Support**: <support@aveshasystems.com>

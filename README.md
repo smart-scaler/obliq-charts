@@ -13,23 +13,27 @@ A comprehensive AI-powered Site Reliability Engineering platform deployed as a s
 ## ⚡ Quick Install
 
 ### Prerequisites
+
 - **Kubernetes cluster** (v1.19+)
-- **Helm** (v3.8+) 
-- **OpenAI API Key** - Get your own from https://platform.openai.com/api-keys
-- **Container Registry Access** - Contact support@aveshasystems.com for ACR credentials
+- **Helm** (v3.8+)
+- **OpenAI API Key** - Get your own from <https://platform.openai.com/api-keys>
+- **Container Registry Access** - Contact <support@aveshasystems.com> for ACR credentials
 - **kubeconfig** file for cluster access
 
 📚 **Important Setup Guides**:
+
 - **[Kubernetes Permissions](./docs/kubernetes-permissions.md)** - Required cluster permissions and RBAC setup
 - **[Prerequisites Details](./docs/prerequisites.md)** - Comprehensive system requirements and integrations
 
 💡 **For local development**: Run `./scripts/update-dependencies.sh` to ensure all chart dependencies are resolved before local installation.
 
 📋 **Note**: The `--set-file global.kubeconfig.content=./kubeconfig` parameter expects a kubeconfig file in the current directory. Make sure to:
+
 - Place your kubeconfig file in the same directory where you run the helm command, OR
 - Update the path to match your kubeconfig location (e.g., `--set-file global.kubeconfig.content=/path/to/your/kubeconfig`)
 
 ### 1. Add Helm Repository
+
 ```bash
 # Add the Obliq Charts Helm repository
 helm repo add obliq-charts https://repo.obliq.avesha.io/
@@ -37,6 +41,7 @@ helm repo update
 ```
 
 ### 2. Create Registry Secret
+
 ```bash
 # Get credentials from support@aveshasystems.com
 kubectl create namespace avesha --dry-run=client -o yaml | kubectl apply -f -
@@ -57,9 +62,12 @@ kubectl create secret docker-registry registry \
 📋 **Note:** If you need to create a custom kubeconfig file, you can download it from your Kubernetes cluster or cloud provider.
 
 #### Minimal (Core AI Services)
+
 ```bash
 # Set your OpenAI API key (get from https://platform.openai.com/api-keys)
 export OPENAI_API_KEY="sk-your-openai-api-key"
+export DEFAULT_ADMIN_EMAIL="admin@yourcompany.com"  # Custom admin email
+export DEFAULT_ADMIN_PASSWORD="your-secure-password"  # Custom admin password
 
 # Install with LoadBalancer for external UI access
 helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
@@ -67,6 +75,8 @@ helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
   --create-namespace \
   --set-file global.kubeconfig.content=./kubeconfig `# Path to your kubeconfig file` \
   --set global.env.openai.OPENAI_API_KEY="${OPENAI_API_KEY}" `# Required for AI services` \
+  --set global.env.backend.DEFAULT_ADMIN_EMAIL="${DEFAULT_ADMIN_EMAIL}" `# Custom admin email` \
+  --set global.env.backend.DEFAULT_ADMIN_PASSWORD="${DEFAULT_ADMIN_PASSWORD}" `# Custom admin password` \
   --set avesha-unified-ui.service.type=LoadBalancer `# Expose UI externally` \
   --timeout 15m
 ```
@@ -74,6 +84,7 @@ helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
 #### AWS Integration
 
 📋 **Prerequisites**: Before running AWS integration, ensure you have:
+
 - **[AWS IAM Policies](./docs/aws-iam-policies.md)** - Required IAM roles and policies setup
 - **[AWS Prerequisites](./docs/prerequisites.md#aws-integration)** - AWS account configuration and permissions
 - **Valid AWS credentials** - IAM user with appropriate permissions
@@ -86,6 +97,8 @@ export AWS_SECRET_ACCESS_KEY="your-aws-secret-key"  # AWS IAM user secret
 export AWS_ROLE_ARN_AWS_MCP="arn:aws:iam::123456789012:role/your-aws-mcp-role"  # IAM role for AWS MCP
 export AWS_ROLE_ARN_EC2_CLOUDWATCH_ALARMS="arn:aws:iam::123456789012:role/your-ec2-cloudwatch-role"  # IAM role for CloudWatch alarms
 export AWS_REGION="us-west-2"  # AWS region for resources
+export DEFAULT_ADMIN_EMAIL="admin@yourcompany.com"  # Custom admin email
+export DEFAULT_ADMIN_PASSWORD="your-secure-password"  # Custom admin password
 
 # Install with AWS integration and LoadBalancer UI access
 helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
@@ -93,6 +106,8 @@ helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
   --create-namespace \
   --set-file global.kubeconfig.content=./kubeconfig `# Path to your kubeconfig` \
   --set global.env.openai.OPENAI_API_KEY="${OPENAI_API_KEY}" `# Required for AI services` \
+  --set global.env.backend.DEFAULT_ADMIN_EMAIL="${DEFAULT_ADMIN_EMAIL}" `# Custom admin email` \
+  --set global.env.backend.DEFAULT_ADMIN_PASSWORD="${DEFAULT_ADMIN_PASSWORD}" `# Custom admin password` \
   --set aws-mcp.enabled=true `# Enable AWS MCP service` \
   --set cloudwatch-mcp.enabled=true `# Enable AWS CloudWatch integration` \
   --set aws-ec2-cloudwatch-alarms.enabled=true `# Enable AWS CloudWatch alarms monitoring` \
@@ -108,11 +123,13 @@ helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
 📋 **For full integration with all services:** See [Complete Deployment Examples](./docs/parameters.md#--complete-deployment-examples)
 
 ⚠️ **Important**: Full integration requires additional setup:
+
 - **[Kubernetes Permissions](./docs/kubernetes-permissions.md)** - Required RBAC and cluster permissions
 - **[Service Dependencies](./docs/services.md)** - Understanding service relationships and dependencies
 - **[Secret Management](./docs/secret-management.md)** - Advanced credential and secret handling
 
 ### 4. Verify Installation
+
 ```bash
 # Check pod status (all should be Running)
 kubectl get pods -n avesha
@@ -128,6 +145,7 @@ kubectl get events -n avesha --sort-by='.lastTimestamp' | tail -10
 ```
 
 ### 5. Access the UI
+
 ```bash
 # Get the external IP (may take a few minutes to provision)
 kubectl get service -n avesha avesha-unified-ui
@@ -136,10 +154,16 @@ kubectl get service -n avesha avesha-unified-ui
 ```
 
 🔐 **Default Login Credentials:**
-- **Username**: `admin@aveshasystems.com`
-- **Password**: `admin123`
+
+Use the username and password you provided earlier during installation, based on the following:
+
+```sh
+export DEFAULT_ADMIN_EMAIL="admin@yourcompany.com"  # Custom admin email
+export DEFAULT_ADMIN_PASSWORD="your-secure-password"  # Custom admin password
+```
 
 **Alternative access methods:**
+
 - **NodePort**: Add `--set avesha-unified-ui.service.type=NodePort` instead of LoadBalancer
 - **Port Forward** (ClusterIP): `kubectl port-forward -n avesha service/avesha-unified-ui 8080:80`
 
@@ -158,11 +182,13 @@ kubectl delete namespace avesha
 ## 🆘 Troubleshooting
 
 ### Common Issues
-- **ImagePullBackOff**: Get ACR credentials from support@aveshasystems.com
+
+- **ImagePullBackOff**: Get ACR credentials from <support@aveshasystems.com>
 - **Pod failures**: Check logs with `kubectl logs -n avesha <pod-name>`
 - **External access**: External HTTP/HTTPS access requires separate ingress controller installation
 
 ### Basic Debugging
+
 ```bash
 # Check pod status
 kubectl get pods -n avesha
@@ -176,7 +202,7 @@ kubectl get events -n avesha --sort-by='.lastTimestamp' | tail -10
 
 ## 📞 Support
 
-- **Email**: support@aveshasystems.com
+- **Email**: <support@aveshasystems.com>
 - **Documentation**: See linked guides above
 - **Issues**: Include pod logs and deployment details
 

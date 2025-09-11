@@ -5,15 +5,19 @@ This document provides a comprehensive reference for all services in the Obliq S
 ## 📋 Service Categories
 
 ### ✅ **Core Services** (Always Enabled)
+
 Essential services that cannot be disabled - they're required for platform functionality.
 
 ### 🔌 **MCP Services** (Optional)
+
 Model Context Protocol servers for integrating with external systems - disabled by default.
 
 ### 📊 **Integration Services** (Optional)
+
 Additional services for external integrations - disabled by default to reduce complexity.
 
 ### 🔧 **External Tools** (Not Included)
+
 External tools that can be installed separately for enhanced functionality.
 
 ---
@@ -81,6 +85,7 @@ Model Context Protocol services are **disabled by default** to reduce resource u
 ### MCP Configuration Examples
 
 #### AWS MCP Integration
+
 ```bash
 # Required credentials
 export AWS_ACCESS_KEY_ID="your-aws-access-key"
@@ -95,6 +100,7 @@ export AWS_ROLE_ARN_AWS_MCP="arn:aws:iam::123456789012:role/your-aws-mcp-role"
 ```
 
 #### Prometheus MCP Integration
+
 ```bash
 # Required credentials
 export PROMETHEUS_URL="http://your-prometheus:9090"
@@ -109,6 +115,7 @@ export PROMETHEUS_MCP_PASSWORD="your-password"
 ```
 
 #### Neo4j MCP Integration
+
 ```bash
 # Uses internal Neo4j by default
 --set neo4j-mcp.enabled=true
@@ -122,6 +129,7 @@ export PROMETHEUS_MCP_PASSWORD="your-password"
 ```
 
 #### Loki MCP Integration
+
 ```bash
 # Required credentials
 export LOKI_URL="http://your-loki:3100"
@@ -136,6 +144,7 @@ export LOKI_URL="http://your-loki:3100"
 ```
 
 #### CloudWatch MCP Integration
+
 ```bash
 # Required credentials
 export AWS_ACCESS_KEY_ID="your-aws-access-key"
@@ -163,6 +172,7 @@ Integration services are **disabled by default** to prevent deployment failures 
 ### Integration Configuration Examples
 
 #### DataDog Integration (service-graph-engine)
+
 ```bash
 # Required credentials
 export DD_API_KEY="your-datadog-api-key"
@@ -177,6 +187,7 @@ export DD_APP_KEY="your-datadog-app-key"
 ```
 
 #### Slack Integration (slack-ingester)
+
 ```bash
 # Required credentials
 export SLACK_BOT_TOKEN="xoxb-your-slack-bot-token"
@@ -188,6 +199,7 @@ export SLACK_BOT_TOKEN="xoxb-your-slack-bot-token"
 ```
 
 #### Kubernetes Events Ingestion
+
 ```bash
 # Enable command
 --set kubernetes-events-ingester.enabled=true \
@@ -195,6 +207,7 @@ export SLACK_BOT_TOKEN="xoxb-your-slack-bot-token"
 ```
 
 #### AWS CloudWatch Alarms
+
 ```bash
 # Required credentials
 export AWS_ACCESS_KEY_ID="your-aws-access-key"
@@ -219,7 +232,8 @@ These external tools are **NOT included** in the Obliq chart but can be installe
 | **cert-manager** | SSL certificate management | External Add-on | Install from upstream |
 | **ingress-nginx** | HTTP/HTTPS routing and load balancing | External Add-on | Install from upstream |
 
-#### External Installation Required:
+#### External Installation Required
+
 - **cert-manager**: Install separately if SSL is needed. See official cert-manager documentation.
 - **ingress-nginx**: Install separately for external access. See official ingress-nginx documentation.
 
@@ -249,6 +263,7 @@ helm repo update
 ```
 
 ### Minimal Deployment (Core Services Only)
+
 ```bash
 helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
   --namespace avesha \
@@ -259,6 +274,7 @@ helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
 ```
 
 ### AWS Integration Deployment
+
 ```bash
 helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
   --namespace avesha \
@@ -278,12 +294,17 @@ helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
 ```
 
 ### Full Integration Deployment
+
+#### Option 1: LoadBalancer Configuration
+
 ```bash
 helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
   --namespace avesha \
   --create-namespace \
   --set-file global.kubeconfig.content=./kubeconfig \
   --set global.env.openai.OPENAI_API_KEY="${OPENAI_API_KEY}" \
+  --set global.env.backend.DEFAULT_ADMIN_EMAIL="${DEFAULT_ADMIN_EMAIL}" \
+  --set global.env.backend.DEFAULT_ADMIN_PASSWORD="${DEFAULT_ADMIN_PASSWORD}" \
   # Enable optional MCP services
   --set aws-mcp.enabled=true \
   --set prometheus-mcp.enabled=true \
@@ -313,15 +334,96 @@ helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
   --set avesha-unified-ui.service.type=LoadBalancer
 ```
 
+#### Option 2: Ingress Configuration
+
+```bash
+helm install obliq-sre-agent ./obliq-sre-agent/ \
+  --namespace avesha \
+  --create-namespace \
+  --set-file global.kubeconfig.content=./kubeconfig \
+  --set global.env.openai.OPENAI_API_KEY="${OPENAI_API_KEY}" \
+  --set global.env.backend.DEFAULT_ADMIN_EMAIL="${DEFAULT_ADMIN_EMAIL}" \
+  --set global.env.backend.DEFAULT_ADMIN_PASSWORD="${DEFAULT_ADMIN_PASSWORD}" \
+  # Enable optional MCP services
+  --set aws-mcp.enabled=true \
+  --set prometheus-mcp.enabled=true \
+  --set neo4j-mcp.enabled=true \
+  --set loki-mcp.enabled=true \
+  --set cloudwatch-mcp.enabled=true \
+  # Enable optional integration services
+  --set service-graph-engine.enabled=true \
+  --set slack-ingester.enabled=true \
+  --set kubernetes-events-ingester.enabled=true \
+  --set aws-ec2-cloudwatch-alarms.enabled=true \
+  # Provide all required credentials
+  --set global.env.aws.AWS_ACCESS_KEY_ID="${AWS_ACCESS_KEY_ID}" \
+  --set global.env.aws.AWS_SECRET_ACCESS_KEY="${AWS_SECRET_ACCESS_KEY}" \
+  --set global.env.aws.AWS_ROLE_ARN_AWS_MCP="${AWS_ROLE_ARN_AWS_MCP}" \
+  --set global.env.aws.AWS_ROLE_ARN_EC2_CLOUDWATCH_ALARMS="${AWS_ROLE_ARN_EC2_CLOUDWATCH}" \
+  --set global.env.sg.DD_API_KEY="${DD_API_KEY}" \
+  --set global.env.sg.DD_APP_KEY="${DD_APP_KEY}" \
+  --set global.env.slack.SLACK_BOT_TOKEN="${SLACK_BOT_TOKEN}" \
+  --set global.env.prometheus.PROMETHEUS_URL="${PROMETHEUS_URL}" \
+  --set global.env.prometheus.PROMETHEUS_MCP_USERNAME="${PROMETHEUS_MCP_USERNAME}" \
+  --set global.env.prometheus.PROMETHEUS_MCP_PASSWORD="${PROMETHEUS_MCP_PASSWORD}" \
+  --set global.env.loki.LOKI_URL="${LOKI_URL}" \
+  --set global.env.jira.JIRA_BASE_URL="${JIRA_BASE_URL}" \
+  --set global.env.jira.JIRA_EMAIL="${JIRA_EMAIL}" \
+  --set global.env.jira.JIRA_API_TOKEN="${JIRA_API_TOKEN}" \
+  # Ingress configuration for external access
+  --set avesha-unified-ui.ingress.enabled=true \
+  --set avesha-unified-ui.ingress.hosts[0].host=ui.yourdomain.com \
+  --set avesha-unified-ui.ingress.hosts[0].paths[0].path=/ \
+  --set avesha-unified-ui.ingress.hosts[0].paths[0].pathType=Prefix
+```
+
+#### LoadBalancer vs Ingress Comparison
+
+| Feature | LoadBalancer | Ingress |
+|---------|-------------|---------|
+| **External Access** | Direct external IP | Domain-based routing |
+| **SSL/TLS** | Requires additional setup | Built-in SSL termination |
+| **Multiple Services** | One IP per service | Multiple services on one IP |
+| **Cost** | Higher (one LB per service) | Lower (shared ingress) |
+| **Complexity** | Simple setup | More configuration |
+| **Cloud Provider** | Native cloud LB | Requires ingress controller |
+| **Use Case** | Quick external access | Production with domains |
+
+#### Cloud Provider Specific LoadBalancer Examples
+
+**AWS (Network Load Balancer)**
+
+```bash
+# Add these annotations to LoadBalancer services
+--set avesha-unified-ui.service.annotations."service\.beta\.kubernetes\.io/aws-load-balancer-type"=nlb \
+--set avesha-unified-ui.service.annotations."service\.beta\.kubernetes\.io/aws-load-balancer-scheme"=internet-facing
+```
+
+**Google Cloud Platform**
+
+```bash
+# Add these annotations to LoadBalancer services
+--set avesha-unified-ui.service.annotations."cloud\.google\.com/load-balancer-type"=External
+```
+
+**Azure**
+
+```bash
+# Add these annotations to LoadBalancer services
+--set avesha-unified-ui.service.annotations."service\.beta\.kubernetes\.io/azure-load-balancer-internal"=false
+```
+
 ---
 
 ## 🔍 Service Dependencies
 
 ### Critical Dependencies
+
 - **OpenAI API Key**: Required for all AI/ML services (rca-agent, anomaly-detection, auto-remediation, incident-manager, orchestrator, backend)
 - **kubeconfig**: Required for k8s-mcp (core service) and kubernetes-events-ingester (optional)
 
 ### Optional Dependencies
+
 - **AWS Credentials**: Required for aws-mcp, cloudwatch-mcp, aws-ec2-cloudwatch-alarms
 - **DataDog Credentials**: Required for service-graph-engine
 - **Slack Token**: Required for slack-ingester
@@ -340,6 +442,7 @@ helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
 4. **Authentication failures**: Validate credential values and expiry
 
 ### Verification Commands
+
 ```bash
 # Check service status
 kubectl get pods -n avesha
@@ -355,6 +458,7 @@ helm get values obliq-sre-agent -n avesha
 ```
 
 ### Impact of Disabled Services
+
 - **service-graph-engine**: No DataDog service topology visualization
 - **slack-ingester**: No Slack notifications or message ingestion
 - **kubernetes-events-ingester**: No Kubernetes event monitoring
