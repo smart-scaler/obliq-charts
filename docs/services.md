@@ -295,8 +295,6 @@ helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
 
 ### Full Integration Deployment
 
-#### Option 1: LoadBalancer Configuration
-
 ```bash
 helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
   --namespace avesha \
@@ -333,61 +331,6 @@ helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
   --set global.env.jira.JIRA_API_TOKEN="${JIRA_API_TOKEN}" \
   --set avesha-unified-ui.service.type=LoadBalancer
 ```
-
-#### Option 2: Ingress Configuration
-
-```bash
-helm install obliq-sre-agent ./obliq-sre-agent/ \
-  --namespace avesha \
-  --create-namespace \
-  --set-file global.kubeconfig.content=./kubeconfig \
-  --set global.env.openai.OPENAI_API_KEY="${OPENAI_API_KEY}" \
-  --set global.env.backend.DEFAULT_ADMIN_EMAIL="${DEFAULT_ADMIN_EMAIL}" \
-  --set global.env.backend.DEFAULT_ADMIN_PASSWORD="${DEFAULT_ADMIN_PASSWORD}" \
-  # Enable optional MCP services
-  --set aws-mcp.enabled=true \
-  --set prometheus-mcp.enabled=true \
-  --set neo4j-mcp.enabled=true \
-  --set loki-mcp.enabled=true \
-  --set cloudwatch-mcp.enabled=true \
-  # Enable optional integration services
-  --set service-graph-engine.enabled=true \
-  --set slack-ingester.enabled=true \
-  --set kubernetes-events-ingester.enabled=true \
-  --set aws-ec2-cloudwatch-alarms.enabled=true \
-  # Provide all required credentials
-  --set global.env.aws.AWS_ACCESS_KEY_ID="${AWS_ACCESS_KEY_ID}" \
-  --set global.env.aws.AWS_SECRET_ACCESS_KEY="${AWS_SECRET_ACCESS_KEY}" \
-  --set global.env.aws.AWS_ROLE_ARN_AWS_MCP="${AWS_ROLE_ARN_AWS_MCP}" \
-  --set global.env.aws.AWS_ROLE_ARN_EC2_CLOUDWATCH_ALARMS="${AWS_ROLE_ARN_EC2_CLOUDWATCH}" \
-  --set global.env.sg.DD_API_KEY="${DD_API_KEY}" \
-  --set global.env.sg.DD_APP_KEY="${DD_APP_KEY}" \
-  --set global.env.slack.SLACK_BOT_TOKEN="${SLACK_BOT_TOKEN}" \
-  --set global.env.prometheus.PROMETHEUS_URL="${PROMETHEUS_URL}" \
-  --set global.env.prometheus.PROMETHEUS_MCP_USERNAME="${PROMETHEUS_MCP_USERNAME}" \
-  --set global.env.prometheus.PROMETHEUS_MCP_PASSWORD="${PROMETHEUS_MCP_PASSWORD}" \
-  --set global.env.loki.LOKI_URL="${LOKI_URL}" \
-  --set global.env.jira.JIRA_BASE_URL="${JIRA_BASE_URL}" \
-  --set global.env.jira.JIRA_EMAIL="${JIRA_EMAIL}" \
-  --set global.env.jira.JIRA_API_TOKEN="${JIRA_API_TOKEN}" \
-  # Ingress configuration for external access
-  --set avesha-unified-ui.ingress.enabled=true \
-  --set avesha-unified-ui.ingress.hosts[0].host=ui.yourdomain.com \
-  --set avesha-unified-ui.ingress.hosts[0].paths[0].path=/ \
-  --set avesha-unified-ui.ingress.hosts[0].paths[0].pathType=Prefix
-```
-
-#### LoadBalancer vs Ingress Comparison
-
-| Feature | LoadBalancer | Ingress |
-|---------|-------------|---------|
-| **External Access** | Direct external IP | Domain-based routing |
-| **SSL/TLS** | Requires additional setup | Built-in SSL termination |
-| **Multiple Services** | One IP per service | Multiple services on one IP |
-| **Cost** | Higher (one LB per service) | Lower (shared ingress) |
-| **Complexity** | Simple setup | More configuration |
-| **Cloud Provider** | Native cloud LB | Requires ingress controller |
-| **Use Case** | Quick external access | Production with domains |
 
 #### Cloud Provider Specific LoadBalancer Examples
 
