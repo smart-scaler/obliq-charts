@@ -336,6 +336,18 @@ This template provides all environment variables from the global secret
       key: DISABLE_SSL_VERIFICATION
 # PORT is service-specific and not included in global secrets
 
+# Backend Service Configuration from global Secret
+- name: DEFAULT_ADMIN_EMAIL
+  valueFrom:
+    secretKeyRef:
+      name: {{ include "obliq-sre-agent.globalSecretName" . }}
+      key: DEFAULT_ADMIN_EMAIL
+- name: DEFAULT_ADMIN_PASSWORD
+  valueFrom:
+    secretKeyRef:
+      name: {{ include "obliq-sre-agent.globalSecretName" . }}
+      key: DEFAULT_ADMIN_PASSWORD
+
 # Database configuration from global Secret
 - name: NEO4J_USER
   valueFrom:
