@@ -6,41 +6,40 @@ This repository contains production-ready CloudFormation templates for provision
 
 The Obliq AI SRE Agent Platform requires specific AWS IAM permissions to monitor EC2 instances, collect CloudWatch metrics, and manage AWS resources securely. This project provides:
 
-1. **Production-ready CloudFormation templates** - Supporting all three official access methods
-2. **Complete IAM access coverage** - User access keys, IAM roles, and EKS IRSA
-3. **JSON configuration reference** - Dynamic parameter specification for all scenarios
-4. **Deployment scenarios** - Templates for different environments and access patterns
+1. Production-ready CloudFormation templates supporting all three official access methods
+2. Complete IAM access coverage for user access keys, IAM roles, and EKS IRSA
+3. Parameter files for easy deployment configuration
+4. Customer-specific resource tagging and segregation
 
-## 🎯 **Complete Access Method Coverage**
+## Complete Access Method Coverage
 
 This template supports all three access methods specified in the [official Obliq AWS IAM Policies Guide](https://repo.obliq.avesha.io/docs/aws-iam-policies.html):
 
 | Access Method | Description | Use Case | CFT Support |
 |---------------|-------------|----------|-------------|
-| **🔑 IAM User + Access Keys** | Programmatic access with access keys | Applications, scripts, CLI tools | ✅ **Supported** |
-| **🖥️ IAM Roles (EC2)** | Instance-based access via IAM roles | EC2 instances running Obliq agents | ✅ **Supported** |
-| **☸️ EKS IRSA** | Kubernetes service account integration | EKS pods and containers | ✅ **Supported** |
+| **🔑 IAM User + Access Keys** | Programmatic access with access keys | Applications, scripts, CLI tools | Supported |
+| **🖥️ IAM Roles (EC2)** | Instance-based access via IAM roles | EC2 instances running Obliq agents | Supported |
+| **☸️ EKS IRSA** | Kubernetes service account integration | EKS pods and containers | Supported |
 
 ## Available Templates
 
-### 1. obliq-iam-template.yaml ✨ **PRODUCTION-READY & TESTED**
-- **Complete production template** with all three access methods
-- **Customer-specific tagging** for resource segregation
-- **IAM User + Access Keys** support for programmatic access
-- **EC2 IAM Roles** with instance profiles  
-- **EKS IRSA integration** with service account roles
-- **Enhanced outputs** with deployment summary and resource information
-- **Parameterized configuration** for maximum flexibility
-- **Conditional resources** with feature toggles (only one access method at a time)
-- **Comprehensive validation** with cfn-lint and AWS CloudFormation
-- **✅ Fully tested** with all three access methods
+### 1. obliq-iam-template.yaml
+- Complete production template with all three access methods
+- Customer-specific tagging for resource segregation
+- IAM User + Access Keys support for programmatic access
+- EC2 IAM Roles with instance profiles  
+- EKS IRSA integration with service account roles
+- Enhanced outputs with deployment summary and resource information
+- Parameterized configuration for maximum flexibility
+- Conditional resources with feature toggles (only one access method at a time)
+- Comprehensive validation with cfn-lint and AWS CloudFormation
 
 ### 2. Ready-to-Deploy Parameter Files
-- **parameters-ec2-role.json** - EC2 IAM Role deployment (✅ tested)
-- **parameters-eks-irsa.json** - EKS IRSA deployment (✅ tested)
-- **parameters-iam-user.json** - IAM User with Access Keys deployment (✅ tested)
+- **parameters-ec2-role.json** - EC2 IAM Role deployment
+- **parameters-eks-irsa.json** - EKS IRSA deployment
+- **parameters-iam-user.json** - IAM User with Access Keys deployment
 
-## 🏷️ **Customer Resource Segregation**
+## Customer Resource Segregation
 
 All resources are tagged with customer-specific information for clear segregation:
 
@@ -51,22 +50,22 @@ All resources are tagged with customer-specific information for clear segregatio
 | `ManagedBy` | Resource management method | `CloudFormation` |
 | `Component` | IAM resource type | `IAM-Role`, `IAM-Policy`, `IAM-User` |
 
-## 📁 **Repository Structure**
+## Repository Structure
 
 ```
 obliq-iam-cloudformation/
-├── obliq-iam-template.yaml          # Main CloudFormation template (✅ tested)
-├── parameters-ec2-role.json         # EC2 IAM Role parameters (✅ tested)
-├── parameters-eks-irsa.json         # EKS IRSA parameters (✅ tested)
-├── parameters-iam-user.json         # IAM User + Access Keys parameters (✅ tested)
+├── obliq-iam-template.yaml          # Main CloudFormation template
+├── parameters-ec2-role.json         # EC2 IAM Role parameters
+├── parameters-eks-irsa.json         # EKS IRSA parameters
+├── parameters-iam-user.json         # IAM User + Access Keys parameters
 └── README.md                        # Complete documentation
 ```
 
-**5 files total** - Clean, focused, and production-ready!
+**5 files total** - Clean, focused, and production-ready.
 
 ## Quick Start
 
-### 🔑 **Option 1: IAM User with Access Keys**
+### Option 1: IAM User with Access Keys
 
 For programmatic access (applications, CLI tools, scripts):
 
@@ -80,7 +79,7 @@ aws cloudformation create-stack \
   --tags Key=Customer,Value=acme-corp Key=AccessMethod,Value=IAM-User
 ```
 
-### 🖥️ **Option 2: EC2 IAM Roles**
+### Option 2: EC2 IAM Roles
 
 For EC2 instances running Obliq agents:
 
@@ -94,7 +93,7 @@ aws cloudformation create-stack \
   --tags Key=Customer,Value=acme-corp Key=AccessMethod,Value=EC2-Role
 ```
 
-### ☸️ **Option 3: EKS IRSA**
+### Option 3: EKS IRSA
 
 For Kubernetes service accounts in EKS:
 
@@ -108,29 +107,19 @@ aws cloudformation create-stack \
   --tags Key=Customer,Value=acme-corp Key=AccessMethod,Value=EKS-IRSA
 ```
 
-## ⚠️ **Important: Single Access Method Policy**
+## Important: Single Access Method Policy
 
-**Only one access method can be used per deployment.** The three access methods are mutually exclusive:
+Only one access method can be used per deployment. The three access methods are mutually exclusive:
 
-- **🔑 IAM User + Access Keys**: For programmatic access
-- **🖥️ EC2 IAM Roles**: For EC2 instances  
-- **☸️ EKS IRSA**: For Kubernetes service accounts
+- IAM User + Access Keys: For programmatic access
+- EC2 IAM Roles: For EC2 instances  
+- EKS IRSA: For Kubernetes service accounts
 
 Use the appropriate parameter file for your specific access method.
 
-## ✅ **Validation & Testing**
+## Validation & Testing
 
-All templates and parameter files have been thoroughly tested:
-
-| Test Type | Status | Details |
-|-----------|--------|---------|
-| **cfn-lint Validation** | ✅ PASSED | Template passes CloudFormation linting |
-| **AWS CloudFormation Validation** | ✅ PASSED | Template validated by AWS service |
-| **EC2 Role Deployment** | ✅ PASSED | Customer tags verified, resources created |
-| **EKS IRSA Deployment** | ✅ PASSED | Service account roles created with tags |
-| **IAM User + Access Keys** | ✅ PASSED | User created with access keys and tags |
-| **Customer Tagging** | ✅ VERIFIED | All resources properly tagged with customer info |
-| **Output Validation** | ✅ VERIFIED | All outputs provide correct resource information |
+All templates and parameter files have been thoroughly validated and tested with cfn-lint and AWS CloudFormation service.
 
 ## 📁 **Parameter Files**
 
@@ -560,7 +549,7 @@ aws cloudformation describe-change-set \
 ## Security Best Practices
 
 1. **Least Privilege**: Templates implement minimal required permissions
-2. **Access Key Security** ⚠️ **IMPORTANT**: 
+2. **Access Key Security** (Important): 
    - Store access keys securely (AWS Secrets Manager, environment variables)
    - Rotate access keys regularly
    - Never commit access keys to version control
@@ -570,7 +559,7 @@ aws cloudformation describe-change-set \
 5. **CloudTrail**: Enable CloudTrail for API monitoring
 6. **Cross-Account Access**: Use proper role assumption for multi-account setups
 
-### 🔐 **Access Key Management**
+### Access Key Management
 
 When using the IAM User + Access Keys option:
 
