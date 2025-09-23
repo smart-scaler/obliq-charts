@@ -148,7 +148,8 @@ volumes:
   kubeconfig:
     enabled: true
     mountPath: /etc/kubeconfig
-    secretName: kubeconfig-secret
+    secretName: ""  # Will be set to global secret name in template
+    secretKey: "KUBECONFIG_CONTENT"
   
   # Empty dir volumes
   emptyDir:

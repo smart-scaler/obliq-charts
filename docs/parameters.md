@@ -76,7 +76,7 @@ helm install --set backend.env.app.LOG_LEVEL="DEBUG"  # Highest priority
 | `global.env.common.TZ` | Timezone | `"UTC"` | No | `"America/New_York"` |
 | `global.env.common.ENVIRONMENT` | Environment name | `"production"` | No | `"staging"` |
 | `global.env.common.CLUSTER_NAME` | Kubernetes cluster name | `"obliq-cluster"` | No | `"my-cluster"` |
-| `global.env.common.KUBECONFIG` | Path to kubeconfig file | `"/etc/kubeconfig/config"` | No | `"/root/.kube/config"` |
+| `global.env.common.KUBECONFIG_FILE_PATH` | Path to kubeconfig file | `"/etc/kubeconfig/config"` | No | `"/root/.kube/config"` |
 | `global.env.common.DEBUG` | Enable debug mode | `"false"` | No | `"true"` |
 | `global.env.common.AUTOMATIC_EXECUTION_ENABLED` | Enable automatic execution | `"true"` | No | `"false"` |
 

@@ -8,13 +8,14 @@ This guide provides instructions for creating and managing Kubernetes secrets fo
 |-------------|---------|---------------|---------------------|
 | **Global Secret** | All environment variables | ✅ | ✅ |
 | **Image Pull Secret** | Container registry access | ✅ | ✅ |
-| **Kubeconfig Secret** | Kubernetes cluster access | ✅ | ✅ |
+| **Kubeconfig Content** | Kubernetes cluster access (stored in global secret) | ✅ | ✅ |
 
 ## 📋 Required Environment Variables
 
 ### Core Variables (Required)
 - `OPENAI_API_KEY` - OpenAI API key for AI services (required)
-- `KUBECONFIG` - Kubernetes configuration for cluster access (required)
+- `KUBECONFIG_FILE_PATH` - Kubernetes configuration for cluster access (required)
+- `KUBECONFIG_CONTENT` - Kubernetes configuration file content (stored in global secret)
 
 ### AWS Integration (Optional)
 - `AWS_ACCESS_KEY_ID` - AWS access key for cloud services

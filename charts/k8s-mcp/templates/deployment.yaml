@@ -212,7 +212,10 @@ spec:
         {{- if .Values.volumes.kubeconfig.enabled }}
         - name: kubeconfig-volume
           secret:
-            secretName: {{ .Values.volumes.kubeconfig.secretName }}
+            secretName: {{ .Values.volumes.kubeconfig.secretName | default (include "obliq-sre-agent.globalSecretName" .) }}
+            items:
+            - key: {{ .Values.volumes.kubeconfig.secretKey | default "KUBECONFIG_CONTENT" }}
+              path: config
             defaultMode: 0440
         {{- end }}
       {{- end }}

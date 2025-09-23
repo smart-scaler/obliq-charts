@@ -206,7 +206,7 @@ global:
       
       # Automation and execution settings
       AUTOMATIC_EXECUTION_ENABLED: "true"      # Enable automated remediation actions
-      KUBECONFIG: "/etc/kubeconfig/config"     # Path to mounted kubeconfig file
+      KUBECONFIG_FILE_PATH: "/etc/kubeconfig/config"     # Path to mounted kubeconfig file
       DEBUG: "false"                           # Enable debug mode across services
       
       # SSL/TLS Configuration for internal service communication
@@ -367,7 +367,6 @@ global:
     # Kubernetes Integration
     # ----------------------------------------
     kubernetes:
-      kubeconfigFile: "files/kubeconfig"                  # Path to kubeconfig file (for reference)
 
 
 
@@ -849,7 +848,7 @@ k8s-mcp:
     app:
       AGENT_TYPE: "k8s_mcp"
       PORT: "8080"
-      # Note: KUBECONFIG is provided via globalSecretEnv
+      # Note: KUBECONFIG_FILE_PATH is provided via globalSecretEnv
 
 
 # Prometheus Model Context Protocol Server - provides Prometheus metrics integration
@@ -938,12 +937,12 @@ kubernetes-events-ingester:
     tag: "1.1.2"
   service:
     port: 8065
-  # Kubeconfig configuration (uses global kubeconfig secret)
+  # Kubeconfig configuration (uses global secret with KUBECONFIG_CONTENT key)
   kubeconfig:
     secretRef:
       enabled: true
-      name: "kubeconfig-secret"
-      key: "config"
+      name: ""  # Will be set to global secret name in template
+      key: "KUBECONFIG_CONTENT"
   env:
     app:
       AGENT_TYPE: "kubernetes_events_ingester"
@@ -952,7 +951,7 @@ kubernetes-events-ingester:
       EVENTS_FILTER: "Warning,Error"
       INGESTION_INTERVAL: "30"
       OTEL_SERVICE_NAME: "kubernetes-events-ingester"
-      # Note: LOG_LEVEL and KUBECONFIG are provided via globalSecretEnv
+      # Note: LOG_LEVEL and KUBECONFIG_FILE_PATH are provided via globalSecretEnv
 
 
 # Slack Message Ingestion - ingests and processes Slack messages and notifications
