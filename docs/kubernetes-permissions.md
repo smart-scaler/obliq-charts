@@ -9,8 +9,7 @@ This document provides step-by-step instructions for setting up Kubernetes permi
 - [**Permission Breakdown**](#permission-breakdown) - Detailed permission explanations
 
 ### **2. Setup Methods**
-- [**Kubeconfig Generation**](#kubeconfig-generation) - Generate service account kubeconfig
-- [**RBAC Configuration**](#rbac-configuration) - Apply required permissions
+- [**End-to-End Setup**](#end-to-end-setup) - Complete setup with kubeconfig generation
 
 ## Overview
 
@@ -24,7 +23,7 @@ The Obliq SRE Agent platform requires specific Kubernetes permissions to monitor
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: kubernetes-mcp
+  name: obliq-sre-agent
 rules:
 # ───────── Core resources ─────────
 - apiGroups: [""]
@@ -71,14 +70,14 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: kubernetes-mcp
+  name: obliq-sre-agent
 subjects:
 - kind: ServiceAccount
   name: obliq-sre-agent
   namespace: avesha
 roleRef:
   kind: ClusterRole
-  name: kubernetes-mcp
+  name: obliq-sre-agent
   apiGroup: rbac.authorization.k8s.io
 ```
 
@@ -113,13 +112,11 @@ The RBAC configuration includes permissions for:
 - **Ingresses**: get, list, watch - Access to ingress information
 - **Network Policies**: get, list, watch - Access to network policy information
 
-## Setup Methods
-
-### **Kubeconfig Generation**
+## End-to-End Setup
 
 **Prerequisites**: Cluster admin access, kubectl configured.
 
-**Step 1: Create Namespace and Service Account**
+### **Step 1: Create Namespace and Service Account**
 ```bash
 # Create namespace
 kubectl create namespace avesha
@@ -128,14 +125,14 @@ kubectl create namespace avesha
 kubectl create serviceaccount obliq-sre-agent -n avesha
 ```
 
-**Step 2: Apply RBAC Configuration**
+### **Step 2: Apply RBAC Configuration**
 ```bash
 # Apply the complete RBAC configuration
 kubectl apply -f - << EOF
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: kubernetes-mcp
+  name: obliq-sre-agent
 rules:
 - apiGroups: [""]
   resources:
@@ -173,19 +170,19 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: kubernetes-mcp
+  name: obliq-sre-agent
 subjects:
 - kind: ServiceAccount
   name: obliq-sre-agent
   namespace: avesha
 roleRef:
   kind: ClusterRole
-  name: kubernetes-mcp
+  name: obliq-sre-agent
   apiGroup: rbac.authorization.k8s.io
 EOF
 ```
 
-**Step 3: Generate Service Account Token**
+### **Step 3: Generate Service Account Token**
 ```bash
 # Create token secret
 kubectl apply -f - << EOF
@@ -211,7 +208,7 @@ CLUSTER_ENDPOINT=$(kubectl config view --minify -o jsonpath='{.clusters[0].clust
 CLUSTER_CA=$(kubectl config view --raw -o jsonpath='{.clusters[0].cluster.certificate-authority-data}')
 ```
 
-**Step 4: Create Kubeconfig**
+### **Step 4: Create Kubeconfig**
 ```bash
 # Create kubeconfig file
 cat > obliq-sre-agent-kubeconfig.yaml << EOF
@@ -237,7 +234,7 @@ EOF
 echo "Kubeconfig created: obliq-sre-agent-kubeconfig.yaml"
 ```
 
-**Step 5: Test Kubeconfig**
+### **Step 5: Test Kubeconfig**
 ```bash
 # Test the kubeconfig
 kubectl --kubeconfig=obliq-sre-agent-kubeconfig.yaml get nodes
@@ -245,83 +242,13 @@ kubectl --kubeconfig=obliq-sre-agent-kubeconfig.yaml get pods -n avesha
 kubectl --kubeconfig=obliq-sre-agent-kubeconfig.yaml get deployments -n avesha
 ```
 
-### **RBAC Configuration**
-
-**Prerequisites**: Cluster admin access, kubectl configured.
-
-**Step 1: Create Namespace and Service Account**
-```bash
-# Create namespace
-kubectl create namespace avesha
-
-# Create service account
-kubectl create serviceaccount obliq-sre-agent -n avesha
-```
-
-**Step 2: Apply RBAC Configuration**
-```bash
-# Apply the complete RBAC configuration
-kubectl apply -f - << EOF
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
-metadata:
-  name: kubernetes-mcp
-rules:
-- apiGroups: [""]
-  resources:
-  - pods
-  - pods/log
-  - services
-  - endpoints
-  - nodes
-  - namespaces
-  - events
-  verbs: ["get", "list", "watch"]
-- apiGroups: ["apps"]
-  resources:
-  - deployments
-  - daemonsets
-  - statefulsets
-  - replicasets
-  verbs: ["get", "list", "watch"]
-- apiGroups: ["batch"]
-  resources:
-  - jobs
-  - cronjobs
-  verbs: ["get", "list", "watch"]
-- apiGroups: ["metrics.k8s.io"]
-  resources:
-  - pods
-  - nodes
-  verbs: ["get", "list"]
-- apiGroups: ["networking.k8s.io"]
-  resources:
-  - ingresses
-  - networkpolicies
-  verbs: ["get", "list", "watch"]
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
-metadata:
-  name: kubernetes-mcp
-subjects:
-- kind: ServiceAccount
-  name: obliq-sre-agent
-  namespace: avesha
-roleRef:
-  kind: ClusterRole
-  name: kubernetes-mcp
-  apiGroup: rbac.authorization.k8s.io
-EOF
-```
-
-**Step 3: Verify RBAC Configuration**
+### **Step 6: Verify RBAC Configuration**
 ```bash
 # Verify cluster role
-kubectl get clusterrole kubernetes-mcp
+kubectl get clusterrole obliq-sre-agent
 
 # Verify cluster role binding
-kubectl get clusterrolebinding kubernetes-mcp
+kubectl get clusterrolebinding obliq-sre-agent
 
 # Test permissions
 kubectl auth can-i get pods --as=system:serviceaccount:avesha:obliq-sre-agent
@@ -352,10 +279,10 @@ kubectl auth can-i get nodes.metrics.k8s.io --as=system:serviceaccount:avesha:ob
 kubectl auth can-i --list --as=system:serviceaccount:avesha:obliq-sre-agent
 
 # Check cluster role bindings
-kubectl get clusterrolebindings | grep kubernetes-mcp
+kubectl get clusterrolebindings | grep obliq-sre-agent
 
 # Check cluster roles
-kubectl get clusterroles | grep kubernetes-mcp
+kubectl get clusterroles | grep obliq-sre-agent
 ```
 
 ## Security Considerations
@@ -379,7 +306,7 @@ kubectl get clusterroles | grep kubernetes-mcp
 kubectl get serviceaccount obliq-sre-agent -n avesha
 
 # Check cluster role binding
-kubectl get clusterrolebinding kubernetes-mcp
+kubectl get clusterrolebinding obliq-sre-agent
 
 # Check permissions
 kubectl auth can-i --list --as=system:serviceaccount:avesha:obliq-sre-agent
