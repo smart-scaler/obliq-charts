@@ -169,12 +169,23 @@ aws iam create-user --user-name obliq-sre-agents-user
 aws iam get-user --user-name obliq-sre-agents-user
 ```
 
-**Step 2: Attach Policy**
+**Step 2: Create IAM Policy**
 ```bash
 # First, get your account ID
 ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
 echo "Account ID: $ACCOUNT_ID"
 
+# Create the comprehensive policy
+aws iam create-policy \
+    --policy-name ObliqSREAgentsComprehensive \
+    --policy-document file://obliq-sre-agents-policy.json
+
+# Verify policy creation
+aws iam get-policy --policy-arn arn:aws:iam::${ACCOUNT_ID}:policy/ObliqSREAgentsComprehensive
+```
+
+**Step 3: Attach Policy**
+```bash
 # Attach the comprehensive policy to the user
 aws iam attach-user-policy \
     --user-name obliq-sre-agents-user \
@@ -184,7 +195,7 @@ aws iam attach-user-policy \
 aws iam list-attached-user-policies --user-name obliq-sre-agents-user
 ```
 
-**Step 3: Generate Access Keys**
+**Step 4: Generate Access Keys**
 ```bash
 # Create access keys and save output
 aws iam create-access-key --user-name obliq-sre-agents-user > access-keys.json
@@ -199,7 +210,7 @@ echo "============================="
 echo "IMPORTANT: Save these credentials securely!"
 ```
 
-**Step 4: Verify Configuration**
+**Step 5: Verify Configuration**
 ```bash
 # Verify configuration
 aws sts get-caller-identity
@@ -220,19 +231,27 @@ aws sts get-caller-identity
 2. Under "Select AWS access type", check **"Programmatic access"**
 3. Click **"Next: Permissions"**
 
-**Step 3: Attach Policy**
-1. Select **"Attach policies directly"**
-2. In the search box, type: `ObliqSREAgentsComprehensive`
-3. Check the checkbox next to the policy (it should show "ObliqSREAgentsComprehensive")
-4. Click **"Next: Tags"** (you can skip this step)
-5. Click **"Next: Review"**
-6. Review the settings:
-   - User name: obliq-sre-agents-user
-   - Access type: Programmatic access
-   - Permissions: ObliqSREAgentsComprehensive
-7. Click **"Create user"**
+**Step 3: Create IAM Policy**
+1. In the left navigation panel, click **"Policies"**
+2. Click **"Create policy"**
+3. Click **"JSON"** tab
+4. Copy and paste the comprehensive policy from the [Complete IAM Policy](#complete-iam-policy-ready-to-copy) section
+5. Click **"Next: Tags"** (optional)
+6. Click **"Next: Review"**
+7. Enter policy name: `ObliqSREAgentsComprehensive`
+8. Enter description: `Comprehensive policy for Obliq SRE Agent platform`
+9. Click **"Create policy"**
 
-**Step 4: Generate Access Keys**
+**Step 4: Attach Policy**
+1. Go back to **"Users"** in the left navigation
+2. Click on **"obliq-sre-agents-user"** (if you haven't created it yet, go back to Step 2)
+3. Click **"Add permissions"** → **"Attach policies directly"**
+4. In the search box, type: `ObliqSREAgentsComprehensive`
+5. Check the checkbox next to the policy
+6. Click **"Next: Review"**
+7. Click **"Add permissions"**
+
+**Step 5: Generate Access Keys**
 1. **CRITICAL**: You will see a success page with access credentials
 2. **Copy the Access Key ID** (starts with AKIA...)
 3. **Copy the Secret Access Key** (long random string)
@@ -240,7 +259,7 @@ aws sts get-caller-identity
 5. **Save these credentials securely** - you cannot retrieve the secret key later
 6. Click **"Close"**
 
-**Step 5: Verify Configuration**
+**Step 6: Verify Configuration**
 ```bash
 # Verify the configuration
 aws sts get-caller-identity
@@ -251,7 +270,95 @@ aws sts get-caller-identity
 
 **Prerequisites**: AWS CLI installed and configured with CloudFormation permissions.
 
-**Step 1: Create CloudFormation Template**
+**Step 1: Prepare Policy Document**
+```bash
+# Save the comprehensive policy to a file
+cat > obliq-sre-agents-policy.json << 'EOF'
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "ec2:DescribeInstances",
+                "ec2:DescribeRegions",
+                "ec2:DescribeAccountAttributes",
+                "ec2:DescribeSecurityGroups",
+                "ec2:DescribeVpcs",
+                "ec2:DescribeSubnets",
+                "ec2:DescribeVolumes",
+                "ec2:DescribeTags",
+                "ec2:DescribeImages",
+                "ec2:DescribeInstanceTypes",
+                "ec2:DescribeAvailabilityZones",
+                "ec2:DescribeKeyPairs",
+                "ec2:DescribeNetworkAcls",
+                "ec2:DescribeRouteTables",
+                "ec2:DescribeInternetGateways",
+                "ec2:DescribeNatGateways",
+                "ec2:DescribeVpcEndpoints",
+                "ec2:DescribeSnapshots",
+                "ec2:DescribeVolumesModifications",
+                "ec2:DescribeReservedInstances",
+                "ec2:DescribeSpotInstances",
+                "ec2:DescribeSpotPriceHistory",
+                "elasticloadbalancing:DescribeLoadBalancers",
+                "elasticloadbalancing:DescribeTargetGroups",
+                "elasticloadbalancing:DescribeTargetHealth",
+                "elasticloadbalancing:DescribeListeners",
+                "elasticloadbalancing:DescribeRules",
+                "elasticloadbalancing:DescribeTags",
+                "autoscaling:DescribeAutoScalingGroups",
+                "autoscaling:DescribeLaunchConfigurations",
+                "autoscaling:DescribePolicies",
+                "autoscaling:DescribeScalingActivities",
+                "autoscaling:DescribeScheduledActions",
+                "autoscaling:DescribeTags",
+                "cloudwatch:GetMetricStatistics",
+                "cloudwatch:ListMetrics",
+                "cloudwatch:GetMetricData",
+                "cloudwatch:DescribeAlarms",
+                "cloudwatch:DescribeAlarmHistory",
+                "cloudwatch:GetDashboard",
+                "cloudwatch:ListDashboards",
+                "cloudwatch:GetInsightRuleReport",
+                "cloudwatch:ListInsightRules",
+                "cloudwatch:GetMetricWidgetImage",
+                "cloudwatch:GetMetricStream",
+                "cloudwatch:ListMetricStreams",
+                "cloudwatch:DescribeAnomalyDetectors",
+                "cloudwatch:ListAnomalyDetectors",
+                "logs:DescribeLogGroups",
+                "logs:DescribeLogStreams",
+                "logs:GetLogEvents",
+                "logs:FilterLogEvents",
+                "logs:StartQuery",
+                "logs:StopQuery",
+                "logs:GetQueryResults",
+                "logs:DescribeQueries",
+                "logs:DescribeResourcePolicies",
+                "logs:DescribeDestinations",
+                "logs:DescribeExportTasks",
+                "logs:DescribeMetricFilters",
+                "logs:DescribeSubscriptionFilters",
+                "logs:ListTagsLogGroup",
+                "sts:AssumeRoleWithWebIdentity",
+                "sts:GetCallerIdentity",
+                "iam:ListRoles",
+                "iam:GetRole",
+                "iam:PassRole"
+            ],
+            "Resource": "*"
+        }
+    ]
+}
+EOF
+
+# Verify the policy file was created
+ls -la obliq-sre-agents-policy.json
+```
+
+**Step 2: Create CloudFormation Template**
 ```bash
 # Create the CloudFormation template file
 cat > obliq-sre-user-template.yaml << 'EOF'
@@ -363,7 +470,7 @@ echo "Template created successfully:"
 ls -la obliq-sre-user-template.yaml
 ```
 
-**Step 2: Deploy CloudFormation Stack**
+**Step 3: Deploy CloudFormation Stack**
 ```bash
 # Deploy the stack
 aws cloudformation create-stack \
@@ -382,7 +489,7 @@ aws cloudformation describe-stacks \
     --output text
 ```
 
-**Step 3: Get Access Keys**
+**Step 4: Get Access Keys**
 ```bash
 # Get Access Key ID
 ACCESS_KEY_ID=$(aws cloudformation describe-stacks \
@@ -456,12 +563,23 @@ aws iam create-role \
 aws iam get-role --role-name obliq-sre-agents-ec2-role
 ```
 
-**Step 2: Attach Policy**
+**Step 2: Create IAM Policy**
 ```bash
 # Get account ID
 ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
 echo "Account ID: $ACCOUNT_ID"
 
+# Create the comprehensive policy
+aws iam create-policy \
+    --policy-name ObliqSREAgentsComprehensive \
+    --policy-document file://obliq-sre-agents-policy.json
+
+# Verify policy creation
+aws iam get-policy --policy-arn arn:aws:iam::${ACCOUNT_ID}:policy/ObliqSREAgentsComprehensive
+```
+
+**Step 3: Attach Policy**
+```bash
 # Attach the comprehensive policy to the role
 aws iam attach-role-policy \
     --role-name obliq-sre-agents-ec2-role \
@@ -471,7 +589,7 @@ aws iam attach-role-policy \
 aws iam list-attached-role-policies --role-name obliq-sre-agents-ec2-role
 ```
 
-**Step 3: Create Instance Profile**
+**Step 4: Create Instance Profile**
 ```bash
 # Create instance profile
 aws iam create-instance-profile \
@@ -486,7 +604,7 @@ aws iam add-role-to-instance-profile \
 aws iam get-instance-profile --instance-profile-name obliq-sre-agents-instance-profile
 ```
 
-**Step 4: Verify IAM Resources**
+**Step 5: Verify IAM Resources**
 ```bash
 # Verify role creation
 aws iam get-role --role-name obliq-sre-agents-ec2-role
