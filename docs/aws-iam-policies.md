@@ -158,7 +158,17 @@ For applications, scripts, and CLI tools that need programmatic access:
 
 #### **Approach A: AWS CLI Method**
 
-**Prerequisites**: Ensure you have AWS CLI installed and configured with admin permissions.
+**Prerequisites**: AWS CLI access with admin permissions.
+
+**Option 1: AWS CloudShell (Recommended)**
+1. Open [AWS CloudShell](https://console.aws.amazon.com/cloudshell/)
+2. Click **"Open CloudShell"** in the AWS Console
+3. Wait for the CloudShell environment to initialize
+4. All commands below can be run directly in CloudShell
+
+**Option 2: Local AWS CLI**
+- Ensure you have AWS CLI installed and configured with admin permissions
+- Run all commands below in your local terminal
 
 **Step 1: Create IAM User**
 ```bash
@@ -268,7 +278,17 @@ aws sts get-caller-identity
 
 #### **Approach C: CloudFormation Method**
 
-**Prerequisites**: AWS CLI installed and configured with CloudFormation permissions.
+**Prerequisites**: AWS CLI access with CloudFormation permissions.
+
+**Option 1: AWS CloudShell (Recommended)**
+1. Open [AWS CloudShell](https://console.aws.amazon.com/cloudshell/)
+2. Click **"Open CloudShell"** in the AWS Console
+3. Wait for the CloudShell environment to initialize
+4. All commands below can be run directly in CloudShell
+
+**Option 2: Local AWS CLI**
+- Ensure you have AWS CLI installed and configured with CloudFormation permissions
+- Run all commands below in your local terminal
 
 **Step 1: Prepare Policy Document**
 ```bash
@@ -539,7 +559,17 @@ For EC2 instances that need to assume roles automatically:
 
 #### **Approach A: AWS CLI Method**
 
-**Prerequisites**: AWS CLI installed and configured with IAM permissions.
+**Prerequisites**: AWS CLI access with IAM permissions.
+
+**Option 1: AWS CloudShell (Recommended)**
+1. Open [AWS CloudShell](https://console.aws.amazon.com/cloudshell/)
+2. Click **"Open CloudShell"** in the AWS Console
+3. Wait for the CloudShell environment to initialize
+4. All commands below can be run directly in CloudShell
+
+**Option 2: Local AWS CLI**
+- Ensure you have AWS CLI installed and configured with IAM permissions
+- Run all commands below in your local terminal
 
 **Step 1: Create IAM Role**
 ```bash
@@ -676,7 +706,17 @@ echo "Role ARN: $ROLE_ARN"
 
 #### **Approach C: CloudFormation Method**
 
-**Prerequisites**: AWS CLI installed and configured with CloudFormation permissions.
+**Prerequisites**: AWS CLI access with CloudFormation permissions.
+
+**Option 1: AWS CloudShell (Recommended)**
+1. Open [AWS CloudShell](https://console.aws.amazon.com/cloudshell/)
+2. Click **"Open CloudShell"** in the AWS Console
+3. Wait for the CloudShell environment to initialize
+4. All commands below can be run directly in CloudShell
+
+**Option 2: Local AWS CLI**
+- Ensure you have AWS CLI installed and configured with CloudFormation permissions
+- Run all commands below in your local terminal
 
 **Step 1: Create CloudFormation Template**
 ```bash
@@ -856,7 +896,18 @@ For Kubernetes deployments using IAM Roles for Service Accounts (IRSA):
 
 #### **Approach A: AWS CLI Method**
 
-**Prerequisites**: AWS CLI installed, EKS cluster with OIDC provider configured, kubectl configured.
+**Prerequisites**: AWS CLI access, EKS cluster with OIDC provider configured, kubectl configured.
+
+**Option 1: AWS CloudShell (Recommended)**
+1. Open [AWS CloudShell](https://console.aws.amazon.com/cloudshell/)
+2. Click **"Open CloudShell"** in the AWS Console
+3. Wait for the CloudShell environment to initialize
+4. Install kubectl if needed: `curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"`
+5. All commands below can be run directly in CloudShell
+
+**Option 2: Local AWS CLI**
+- Ensure you have AWS CLI and kubectl installed and configured
+- Run all commands below in your local terminal
 
 **Step 1: Get EKS Cluster Information**
 ```bash
@@ -974,7 +1025,18 @@ kubectl annotate serviceaccount obliq-sre-agent -n avesha \
 
 #### **Approach C: CloudFormation Method**
 
-**Prerequisites**: AWS CLI installed, EKS cluster with OIDC provider configured, kubectl configured.
+**Prerequisites**: AWS CLI access, EKS cluster with OIDC provider configured, kubectl configured.
+
+**Option 1: AWS CloudShell (Recommended)**
+1. Open [AWS CloudShell](https://console.aws.amazon.com/cloudshell/)
+2. Click **"Open CloudShell"** in the AWS Console
+3. Wait for the CloudShell environment to initialize
+4. Install kubectl if needed: `curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"`
+5. All commands below can be run directly in CloudShell
+
+**Option 2: Local AWS CLI**
+- Ensure you have AWS CLI and kubectl installed and configured
+- Run all commands below in your local terminal
 
 **Step 1: Create CloudFormation Template**
 ```bash
