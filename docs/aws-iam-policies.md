@@ -288,13 +288,7 @@ aws sts get-caller-identity
 - Ensure you have AWS CLI installed and configured with CloudFormation permissions
 - Run all commands below in your local terminal
 
-**Step 1: Create Policy File**
-```bash
-# Ensure the policy file exists (created in Policy File Creation section)
-ls -la obliq-sre-agents-policy.json
-```
-
-**Step 2: Create CloudFormation Template**
+**Step 1: Create CloudFormation Template**
 ```bash
 # Create the CloudFormation template file
 cat > obliq-sre-user-template.yaml << 'EOF'
@@ -362,7 +356,7 @@ echo "Template created successfully:"
 ls -la obliq-sre-user-template.yaml
 ```
 
-**Step 3: Deploy CloudFormation Stack**
+**Step 2: Deploy CloudFormation Stack**
 ```bash
 # Deploy the stack
 aws cloudformation create-stack \
@@ -552,16 +546,16 @@ echo "Role ARN: $ROLE_ARN"
 4. Verify the trust policy shows:
 ```json
 {
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Principal": {
-        "Service": "ec2.amazonaws.com"
-      },
-      "Action": "sts:AssumeRole"
-    }
-  ]
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Principal": {
+                "Service": "ec2.amazonaws.com"
+            },
+            "Action": "sts:AssumeRole"
+        }
+    ]
 }
 ```
 
@@ -583,13 +577,7 @@ echo "Role ARN: $ROLE_ARN"
 - Ensure you have AWS CLI installed and configured with CloudFormation permissions
 - Run all commands below in your local terminal
 
-**Step 1: Create Policy File**
-```bash
-# Ensure the policy file exists (created in Policy File Creation section)
-ls -la obliq-sre-agents-policy.json
-```
-
-**Step 2: Create CloudFormation Template**
+**Step 1: Create CloudFormation Template**
 ```bash
 # Create the CloudFormation template file
 cat > obliq-sre-ec2-role-template.yaml << 'EOF'
@@ -666,7 +654,7 @@ echo "Template created successfully:"
 ls -la obliq-sre-ec2-role-template.yaml
 ```
 
-**Step 3: Deploy CloudFormation Stack**
+**Step 2: Deploy CloudFormation Stack**
 ```bash
 # Deploy the stack
 aws cloudformation create-stack \
@@ -862,13 +850,7 @@ kubectl annotate serviceaccount obliq-sre-agent -n avesha \
 - Ensure you have AWS CLI and kubectl installed and configured
 - Run all commands below in your local terminal
 
-**Step 1: Create Policy File**
-```bash
-# Ensure the policy file exists (created in Policy File Creation section)
-ls -la obliq-sre-agents-policy.json
-```
-
-**Step 2: Create CloudFormation Template**
+**Step 1: Create CloudFormation Template**
 ```bash
 # Create the CloudFormation template file
 cat > obliq-sre-irsa-template.yaml << 'EOF'
@@ -946,7 +928,7 @@ EOF
 ls -la obliq-sre-irsa-template.yaml
 ```
 
-**Step 3: Deploy CloudFormation Stack**
+**Step 2: Deploy CloudFormation Stack**
 ```bash
 # Deploy the stack
 aws cloudformation create-stack \
