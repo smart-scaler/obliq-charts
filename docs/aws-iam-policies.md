@@ -511,15 +511,14 @@ echo "Role ARN: $ROLE_ARN"
 2. Click **"Roles"** in the left navigation
 3. Click **"Create role"**
 4. Select **"AWS service"** → **"EC2"**
-5. Click **"Next: Permissions"**
+5. Click **"Next"**
 
 **Step 2: Attach Policy**
 1. Search for **"ObliqSREAgentsComprehensive"**
 2. Check the checkbox next to the policy
-3. Click **"Next: Tags"** (optional)
-4. Click **"Next: Review"**
-5. Enter role name: `obliq-sre-agents-ec2-role`
-6. Click **"Create role"**
+3. Click **"Next"**
+4. Enter role name: `obliq-sre-agents-ec2-role`
+5. Click **"Create role"**
 
 **Step 3: Create Instance Profile**
 1. In the IAM Console, click **"Instance profiles"** in the left navigation
@@ -795,10 +794,9 @@ kubectl annotate serviceaccount obliq-sre-agent -n avesha \
 **Step 2: Attach Policy**
 1. Search for **"ObliqSREAgentsComprehensive"**
 2. Check the checkbox next to the policy
-3. Click **"Next: Tags"** (optional)
-4. Click **"Next: Review"**
-5. Enter role name: `obliq-sre-agents-role`
-6. Click **"Create role"**
+3. Click **"Next"**
+4. Enter role name: `obliq-sre-agents-role`
+5. Click **"Create role"**
 
 **Step 3: Update Trust Policy**
 1. Click on the created role
