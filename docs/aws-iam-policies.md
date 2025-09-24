@@ -49,23 +49,13 @@ The Obliq SRE Agent platform requires specific AWS IAM permissions to:
                 "ec2:DescribeAccountAttributes",
                 "ec2:DescribeSecurityGroups",
                 "ec2:DescribeVpcs",
-                "ec2:DescribeSubnets",
-                "ec2:DescribeVolumes",
-                "ec2:DescribeTags",
-                "ec2:DescribeImages",
-                "ec2:DescribeInstanceTypes",
-                "ec2:DescribeAvailabilityZones",
-                "ec2:DescribeKeyPairs",
-                "ec2:DescribeNetworkAcls",
-                "ec2:DescribeRouteTables",
-                "ec2:DescribeInternetGateways",
-                "ec2:DescribeNatGateways",
-                "ec2:DescribeVpcEndpoints",
-                "ec2:DescribeSnapshots",
-                "ec2:DescribeVolumesModifications",
-                "ec2:DescribeReservedInstances",
-                "ec2:DescribeSpotInstances",
-                "ec2:DescribeSpotPriceHistory",
+                "ecs:ListClusters",
+                "ecs:DescribeClusters",
+                "ecs:ListServices",
+                "ecs:DescribeServices",
+                "ecs:ListTasks",
+                "ecs:DescribeTasks",
+                "ecs:DescribeTaskDefinition",
                 "elasticloadbalancing:DescribeLoadBalancers",
                 "elasticloadbalancing:DescribeTargetGroups",
                 "elasticloadbalancing:DescribeTargetHealth",
@@ -73,44 +63,10 @@ The Obliq SRE Agent platform requires specific AWS IAM permissions to:
                 "elasticloadbalancing:DescribeRules",
                 "elasticloadbalancing:DescribeTags",
                 "autoscaling:DescribeAutoScalingGroups",
-                "autoscaling:DescribeLaunchConfigurations",
-                "autoscaling:DescribePolicies",
-                "autoscaling:DescribeScalingActivities",
-                "autoscaling:DescribeScheduledActions",
-                "autoscaling:DescribeTags",
                 "cloudwatch:GetMetricStatistics",
                 "cloudwatch:ListMetrics",
-                "cloudwatch:GetMetricData",
-                "cloudwatch:DescribeAlarms",
-                "cloudwatch:DescribeAlarmHistory",
-                "cloudwatch:GetDashboard",
-                "cloudwatch:ListDashboards",
-                "cloudwatch:GetInsightRuleReport",
-                "cloudwatch:ListInsightRules",
-                "cloudwatch:GetMetricWidgetImage",
-                "cloudwatch:GetMetricStream",
-                "cloudwatch:ListMetricStreams",
-                "cloudwatch:DescribeAnomalyDetectors",
-                "cloudwatch:ListAnomalyDetectors",
-                "logs:DescribeLogGroups",
-                "logs:DescribeLogStreams",
-                "logs:GetLogEvents",
-                "logs:FilterLogEvents",
-                "logs:StartQuery",
-                "logs:StopQuery",
-                "logs:GetQueryResults",
-                "logs:DescribeQueries",
-                "logs:DescribeResourcePolicies",
-                "logs:DescribeDestinations",
-                "logs:DescribeExportTasks",
-                "logs:DescribeMetricFilters",
-                "logs:DescribeSubscriptionFilters",
-                "logs:ListTagsLogGroup",
                 "sts:AssumeRoleWithWebIdentity",
-                "sts:GetCallerIdentity",
-                "iam:ListRoles",
-                "iam:GetRole",
-                "iam:PassRole"
+                "sts:GetCallerIdentity"
             ],
             "Resource": "*"
         }
@@ -124,30 +80,25 @@ The comprehensive policy above includes all necessary permissions for:
 
 ### **EC2 Permissions**
 - **Instance Management**: DescribeInstances, DescribeRegions, DescribeAccountAttributes
-- **Networking**: DescribeVpcs, DescribeSubnets, DescribeSecurityGroups, DescribeRouteTables, DescribeInternetGateways, DescribeNatGateways, DescribeVpcEndpoints
-- **Storage**: DescribeVolumes, DescribeSnapshots, DescribeVolumesModifications
-- **Images & Types**: DescribeImages, DescribeInstanceTypes, DescribeKeyPairs
-- **Advanced Features**: DescribeAvailabilityZones, DescribeNetworkAcls, DescribeReservedInstances, DescribeSpotInstances, DescribeSpotPriceHistory
-- **Tagging**: DescribeTags
+- **Networking**: DescribeVpcs, DescribeSecurityGroups
+- **Core Infrastructure**: Essential EC2 permissions for monitoring and management
+
+### **ECS Permissions**
+- **Cluster Management**: ListClusters, DescribeClusters
+- **Service Management**: ListServices, DescribeServices
+- **Task Management**: ListTasks, DescribeTasks, DescribeTaskDefinition
 
 ### **Load Balancing & Auto Scaling**
 - **ELB**: DescribeLoadBalancers, DescribeTargetGroups, DescribeTargetHealth, DescribeListeners, DescribeRules, DescribeTags
-- **Auto Scaling**: DescribeAutoScalingGroups, DescribeLaunchConfigurations, DescribePolicies, DescribeScalingActivities, DescribeScheduledActions, DescribeTags
+- **Auto Scaling**: DescribeAutoScalingGroups
 
 ### **CloudWatch Permissions**
-- **Metrics**: GetMetricStatistics, ListMetrics, GetMetricData
-- **Alarms**: DescribeAlarms, DescribeAlarmHistory
-- **Dashboards**: GetDashboard, ListDashboards
-- **Advanced Features**: GetInsightRuleReport, ListInsightRules, GetMetricWidgetImage, GetMetricStream, ListMetricStreams, DescribeAnomalyDetectors, ListAnomalyDetectors
-
-### **CloudWatch Logs Permissions**
-- **Basic Logs**: DescribeLogGroups, DescribeLogStreams, GetLogEvents, FilterLogEvents
-- **Log Insights**: StartQuery, StopQuery, GetQueryResults, DescribeQueries
-- **Advanced Features**: DescribeResourcePolicies, DescribeDestinations, DescribeExportTasks, DescribeMetricFilters, DescribeSubscriptionFilters, ListTagsLogGroup
+- **Metrics**: GetMetricStatistics, ListMetrics
+- **Core Monitoring**: Essential CloudWatch permissions for metrics collection
 
 ### **Security & Identity**
 - **STS**: AssumeRoleWithWebIdentity, GetCallerIdentity
-- **IAM**: ListRoles, GetRole, PassRole
+- **Cross-Account Access**: Essential permissions for role assumption
 
 
 ## Access Methods
