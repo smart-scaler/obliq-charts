@@ -116,6 +116,10 @@ The RBAC configuration includes permissions for:
 
 **Prerequisites**: Cluster admin access, kubectl configured.
 
+**Important Notes**:
+- **Cluster Name**: Replace `your-cluster-name` with your actual cluster name in the commands below
+- **Cluster Endpoint**: Ensure the Kubernetes cluster endpoint is accessible from where the Obliq setup is running. Make sure to configure any required firewall rules or network policies to allow access to the cluster API server
+
 ### **Step 1: Create Namespace and Service Account**
 ```bash
 # Create namespace
@@ -203,6 +207,7 @@ sleep 10
 TOKEN=$(kubectl get secret obliq-sre-agent-token -n avesha -o jsonpath='{.data.token}' | base64 -d)
 
 # Get cluster information
+# Note: Replace 'your-cluster-name' with your actual cluster name
 CLUSTER_NAME="your-cluster-name"
 CLUSTER_ENDPOINT=$(kubectl config view --minify -o jsonpath='{.clusters[0].cluster.server}')
 CLUSTER_CA=$(kubectl config view --raw -o jsonpath='{.clusters[0].cluster.certificate-authority-data}')
