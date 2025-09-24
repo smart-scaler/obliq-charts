@@ -251,18 +251,6 @@ export AWS_DEFAULT_REGION="us-east-1"
 aws sts get-caller-identity
 ```
 
-**Step 5: Test Access**
-```bash
-# Test EC2 permissions
-aws ec2 describe-instances --region us-east-1 --max-items 1
-
-# Test CloudWatch permissions
-aws cloudwatch list-metrics --namespace AWS/EC2 --max-items 1
-
-# Test IAM permissions
-aws iam list-roles --max-items 1
-```
-
 #### **Approach B: AWS Console Method**
 
 **Prerequisites**: Access to AWS Console with IAM permissions.
@@ -298,31 +286,12 @@ aws iam list-roles --max-items 1
 5. **Save these credentials securely** - you cannot retrieve the secret key later
 6. Click **"Close"**
 
-**Step 5: Configure Credentials**
+**Step 5: Verify Configuration**
 ```bash
-# Configure AWS CLI with the new credentials
-aws configure
-# When prompted, enter:
-# - AWS Access Key ID: [paste the Access Key ID from Step 4]
-# - AWS Secret Access Key: [paste the Secret Access Key from Step 4]
-# - Default region name: us-east-1
-# - Default output format: json
-
 # Verify the configuration
 aws sts get-caller-identity
 ```
 
-**Step 6: Test Access**
-```bash
-# Test EC2 permissions
-aws ec2 describe-instances --region us-east-1 --max-items 1
-
-# Test CloudWatch permissions
-aws cloudwatch list-metrics --namespace AWS/EC2 --max-items 1
-
-# Test IAM permissions
-aws iam list-roles --max-items 1
-```
 
 #### **Approach C: CloudFormation Method**
 
@@ -507,32 +476,12 @@ export AWS_DEFAULT_REGION="us-east-1"
 aws sts get-caller-identity
 ```
 
-**Step 5: Test Access**
-```bash
-# Test EC2 permissions
-aws ec2 describe-instances --region us-east-1 --max-items 1
-
-# Test CloudWatch permissions
-aws cloudwatch list-metrics --namespace AWS/EC2 --max-items 1
-
-# Test IAM permissions
-aws iam list-roles --max-items 1
-```
-
-**Step 6: Cleanup (Optional)**
+**Step 5: Cleanup (Optional)**
 ```bash
 # To delete the CloudFormation stack and user (if needed)
 # aws cloudformation delete-stack --stack-name obliq-sre-agents-user
 ```
 
-#### **Testing Access (All Approaches)**
-```bash
-# Test EC2 permissions
-aws ec2 describe-instances --region us-east-1
-
-# Test CloudWatch permissions
-aws cloudwatch list-metrics --namespace AWS/EC2
-```
 
 **Use Case**: Perfect for applications, CI/CD pipelines, and automated scripts that need direct AWS API access.
 
@@ -913,33 +862,6 @@ kubectl annotate serviceaccount obliq-sre-agent -n avesha \
     eks.amazonaws.com/role-arn=arn:aws:iam::${ACCOUNT_ID}:role/obliq-sre-agents-role
 ```
 
-**Step 4: Test IRSA Configuration**
-```bash
-# Create a test pod to verify IRSA
-cat > test-irsa-pod.yaml << EOF
-apiVersion: v1
-kind: Pod
-metadata:
-  name: test-irsa-pod
-  namespace: avesha
-spec:
-  serviceAccountName: obliq-sre-agent
-  containers:
-  - name: test-container
-    image: amazon/aws-cli:latest
-    command: ['sleep', '3600']
-EOF
-
-kubectl apply -f test-irsa-pod.yaml
-
-# Test AWS permissions from the pod
-kubectl exec -n avesha test-irsa-pod -- aws sts get-caller-identity
-kubectl exec -n avesha test-irsa-pod -- aws ec2 describe-instances --region us-east-1 --max-items 1
-kubectl exec -n avesha test-irsa-pod -- aws cloudwatch list-metrics --namespace AWS/EC2 --max-items 1
-
-# Clean up test pod
-kubectl delete pod test-irsa-pod -n avesha
-```
 
 **Use Case**: Perfect for Kubernetes pods running Obliq SRE agents that need automatic AWS access without storing credentials.
 
@@ -1167,10 +1089,6 @@ kubectl annotate serviceaccount obliq-sre-agent -n avesha \
 
 **Debug Commands:**
 ```bash
-# Test basic permissions
-aws ec2 describe-instances --region us-east-1
-aws cloudwatch list-metrics --namespace AWS/EC2
-
 # Check policy attachments
 aws iam list-attached-role-policies --role-name your-role-name
 ```
