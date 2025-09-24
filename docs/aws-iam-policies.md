@@ -6,6 +6,7 @@ This document provides comprehensive IAM resource provisioning for the Obliq SRE
 
 ### **1. Core Resources**
 - [**Complete IAM Policy**](#complete-iam-policy-ready-to-copy) - Ready-to-copy comprehensive policy
+- [**Policy File Creation**](#policy-file-creation) - Create policy file for CLI and CloudFormation
 - [**Permission Breakdown**](#permission-breakdown) - Detailed permission explanations
 
 ### **2. Authentication Methods**
@@ -72,6 +73,53 @@ The Obliq SRE Agent platform requires specific AWS IAM permissions to:
         }
     ]
 }
+```
+
+## Policy File Creation
+
+**Create the policy file for use in CLI and CloudFormation methods:**
+
+```bash
+# Create the comprehensive policy file
+cat > obliq-sre-agents-policy.json << 'EOF'
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "ec2:DescribeInstances",
+                "ec2:DescribeRegions",
+                "ec2:DescribeAccountAttributes",
+                "ec2:DescribeSecurityGroups",
+                "ec2:DescribeVpcs",
+                "ecs:ListClusters",
+                "ecs:DescribeClusters",
+                "ecs:ListServices",
+                "ecs:DescribeServices",
+                "ecs:ListTasks",
+                "ecs:DescribeTasks",
+                "ecs:DescribeTaskDefinition",
+                "elasticloadbalancing:DescribeLoadBalancers",
+                "elasticloadbalancing:DescribeTargetGroups",
+                "elasticloadbalancing:DescribeTargetHealth",
+                "elasticloadbalancing:DescribeListeners",
+                "elasticloadbalancing:DescribeRules",
+                "elasticloadbalancing:DescribeTags",
+                "autoscaling:DescribeAutoScalingGroups",
+                "cloudwatch:GetMetricStatistics",
+                "cloudwatch:ListMetrics",
+                "sts:AssumeRoleWithWebIdentity",
+                "sts:GetCallerIdentity"
+            ],
+            "Resource": "*"
+        }
+    ]
+}
+EOF
+
+# Verify the policy file was created
+ls -la obliq-sre-agents-policy.json
 ```
 
 ## Permission Breakdown
@@ -240,7 +288,13 @@ aws sts get-caller-identity
 - Ensure you have AWS CLI installed and configured with CloudFormation permissions
 - Run all commands below in your local terminal
 
-**Step 1: Create CloudFormation Template**
+**Step 1: Create Policy File**
+```bash
+# Ensure the policy file exists (created in Policy File Creation section)
+ls -la obliq-sre-agents-policy.json
+```
+
+**Step 2: Create CloudFormation Template**
 ```bash
 # Create the CloudFormation template file
 cat > obliq-sre-user-template.yaml << 'EOF'
@@ -308,7 +362,7 @@ echo "Template created successfully:"
 ls -la obliq-sre-user-template.yaml
 ```
 
-**Step 2: Deploy CloudFormation Stack**
+**Step 3: Deploy CloudFormation Stack**
 ```bash
 # Deploy the stack
 aws cloudformation create-stack \
@@ -529,7 +583,13 @@ echo "Role ARN: $ROLE_ARN"
 - Ensure you have AWS CLI installed and configured with CloudFormation permissions
 - Run all commands below in your local terminal
 
-**Step 1: Create CloudFormation Template**
+**Step 1: Create Policy File**
+```bash
+# Ensure the policy file exists (created in Policy File Creation section)
+ls -la obliq-sre-agents-policy.json
+```
+
+**Step 2: Create CloudFormation Template**
 ```bash
 # Create the CloudFormation template file
 cat > obliq-sre-ec2-role-template.yaml << 'EOF'
@@ -606,7 +666,7 @@ echo "Template created successfully:"
 ls -la obliq-sre-ec2-role-template.yaml
 ```
 
-**Step 2: Deploy CloudFormation Stack**
+**Step 3: Deploy CloudFormation Stack**
 ```bash
 # Deploy the stack
 aws cloudformation create-stack \
@@ -802,7 +862,13 @@ kubectl annotate serviceaccount obliq-sre-agent -n avesha \
 - Ensure you have AWS CLI and kubectl installed and configured
 - Run all commands below in your local terminal
 
-**Step 1: Create CloudFormation Template**
+**Step 1: Create Policy File**
+```bash
+# Ensure the policy file exists (created in Policy File Creation section)
+ls -la obliq-sre-agents-policy.json
+```
+
+**Step 2: Create CloudFormation Template**
 ```bash
 # Create the CloudFormation template file
 cat > obliq-sre-irsa-template.yaml << 'EOF'
@@ -880,7 +946,7 @@ EOF
 ls -la obliq-sre-irsa-template.yaml
 ```
 
-**Step 2: Deploy CloudFormation Stack**
+**Step 3: Deploy CloudFormation Stack**
 ```bash
 # Deploy the stack
 aws cloudformation create-stack \
