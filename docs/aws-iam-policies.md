@@ -199,21 +199,8 @@ echo "============================="
 echo "IMPORTANT: Save these credentials securely!"
 ```
 
-**Step 4: Configure Credentials**
+**Step 4: Verify Configuration**
 ```bash
-# Method 1: Configure AWS CLI
-aws configure
-# When prompted, enter:
-# - AWS Access Key ID: [paste from above]
-# - AWS Secret Access Key: [paste from above]
-# - Default region name: us-east-1
-# - Default output format: json
-
-# Method 2: Set environment variables
-export AWS_ACCESS_KEY_ID=$(cat access-keys.json | jq -r '.AccessKey.AccessKeyId')
-export AWS_SECRET_ACCESS_KEY=$(cat access-keys.json | jq -r '.AccessKey.SecretAccessKey')
-export AWS_DEFAULT_REGION="us-east-1"
-
 # Verify configuration
 aws sts get-caller-identity
 ```
@@ -424,21 +411,8 @@ EOF
 echo "Credentials saved to access-keys.txt"
 ```
 
-**Step 4: Configure Credentials**
+**Step 4: Verify Configuration**
 ```bash
-# Method 1: Configure AWS CLI
-aws configure
-# When prompted, enter:
-# - AWS Access Key ID: [paste the Access Key ID from above]
-# - AWS Secret Access Key: [paste the Secret Access Key from above]
-# - Default region name: us-east-1
-# - Default output format: json
-
-# Method 2: Set environment variables
-export AWS_ACCESS_KEY_ID="$ACCESS_KEY_ID"
-export AWS_SECRET_ACCESS_KEY="$SECRET_ACCESS_KEY"
-export AWS_DEFAULT_REGION="us-east-1"
-
 # Verify configuration
 aws sts get-caller-identity
 ```
