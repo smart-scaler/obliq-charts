@@ -9,7 +9,7 @@ This document provides step-by-step instructions for setting up Kubernetes permi
 - [**Permission Breakdown**](#permission-breakdown) - Detailed permission explanations
 
 ### **2. Setup Methods**
-- [**End-to-End Setup**](#end-to-end-setup) - Complete setup with kubeconfig generation
+- [**Generate Kubeconfig**](#generate-kubeconfig) - Complete setup with kubeconfig generation
 
 ## Overview
 
@@ -112,7 +112,7 @@ The RBAC configuration includes permissions for:
 - **Ingresses**: get, list, watch - Access to ingress information
 - **Network Policies**: get, list, watch - Access to network policy information
 
-## End-to-End Setup
+## Generate Kubeconfig
 
 **Prerequisites**: Cluster admin access, kubectl configured.
 
@@ -241,7 +241,3 @@ kubectl --kubeconfig=obliq-sre-agent-kubeconfig.yaml get nodes
 kubectl --kubeconfig=obliq-sre-agent-kubeconfig.yaml get pods -n avesha
 kubectl --kubeconfig=obliq-sre-agent-kubeconfig.yaml get deployments -n avesha
 ```
-
----
-
-**Note**: This document provides Kubernetes permission setup for the Obliq SRE Agent platform with the exact permissions required for monitoring and metrics collection.
