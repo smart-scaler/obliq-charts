@@ -7,7 +7,6 @@ This document provides comprehensive IAM resource provisioning for the Obliq SRE
 ### **1. Core Resources**
 - [**Complete IAM Policy**](#complete-iam-policy-ready-to-copy) - Ready-to-copy comprehensive policy
 - [**Permission Breakdown**](#permission-breakdown) - Detailed permission explanations
-- [**Implementation**](#implementation) - Basic implementation steps
 
 ### **2. Authentication Methods**
 
@@ -25,24 +24,6 @@ This document provides comprehensive IAM resource provisioning for the Obliq SRE
 - [**CLI Method**](#approach-a-aws-cli-method-2) - Command-line IRSA setup
 - [**Console Method**](#approach-b-aws-console-method-2) - Web interface IRSA configuration
 - [**CloudFormation Method**](#approach-c-cloudformation-method-2) - Automated IRSA deployment
-
-### **3. Support & Reference**
-
-#### **🛠️ Implementation Support**
-- [**Security Best Practices**](#security-best-practices) - Security guidelines and recommendations
-- [**Troubleshooting**](#troubleshooting) - Common issues and debugging
-- [**Monitoring and Auditing**](#monitoring-and-auditing) - Audit and monitoring setup
-
-#### **📚 Documentation**
-- [**References**](#references) - External documentation links
-- [**Overview**](#overview) - Platform requirements and permissions
-
-### **4. Quick Start Guide**
-1. [**Copy the IAM Policy**](#complete-iam-policy-ready-to-copy) - Get the comprehensive policy
-2. [**Choose Authentication Method**](#authentication-methods) - Select access keys, IAM roles, or EKS IRSA
-3. [**Select Deployment Approach**](#deployment-approaches) - Choose CLI, Console, or CloudFormation
-4. [**Follow Implementation Steps**](#implementation) - Execute the provisioning commands
-5. [**Review Security Guidelines**](#security-best-practices) - Ensure secure configuration
 
 ## Overview
 
@@ -168,21 +149,6 @@ The comprehensive policy above includes all necessary permissions for:
 - **STS**: AssumeRoleWithWebIdentity, GetCallerIdentity
 - **IAM**: ListRoles, GetRole, PassRole
 
-## Implementation
-
-Save the comprehensive policy above to a file (e.g., `obliq-sre-agents-policy.json`) and create it:
-
-```bash
-# Create the policy
-aws iam create-policy \
-    --policy-name ObliqSREAgentsComprehensive \
-    --policy-document file://obliq-sre-agents-policy.json
-
-# Attach to role
-aws iam attach-role-policy \
-    --role-name your-role-name \
-    --policy-arn arn:aws:iam::ACCOUNT-ID:policy/ObliqSREAgentsComprehensive
-```
 
 ## Access Methods
 
@@ -1074,41 +1040,3 @@ kubectl annotate serviceaccount obliq-sre-agent -n avesha \
     eks.amazonaws.com/role-arn=$ROLE_ARN
 ```
 
-## Security Best Practices
-
-- **Principle of Least Privilege**: Only grant the minimum permissions necessary
-- **Regular Audits**: Review and update permissions based on actual usage patterns
-- **Resource Restrictions**: Consider limiting access to specific instances, regions, or accounts
-- **Conditional Access**: Use IP restrictions, time-based access, or tag-based conditions when needed
-
-## Troubleshooting
-
-**Common Issues:**
-- **"Access Denied" errors**: Check if the IAM policy is properly attached
-- **Missing metrics**: Verify CloudWatch permissions are granted
-- **Cross-account access**: Ensure proper role assumption permissions
-
-**Debug Commands:**
-```bash
-# Check policy attachments
-aws iam list-attached-role-policies --role-name your-role-name
-```
-
-**IAM Policy Simulator**: Use [AWS IAM Policy Simulator](https://policysim.aws.amazon.com/) to test permissions.
-
-## Monitoring and Auditing
-
-**CloudTrail**: Enable CloudTrail to monitor API calls and track IAM policy usage.
-
-**IAM Access Analyzer**: Use IAM Access Analyzer to identify unused permissions and optimize your policy.
-
-## References
-
-- [AWS IAM Best Practices](https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html)
-- [IAM Policy Examples](https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_examples.html)
-- [CloudWatch Permissions](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/permissions-reference-cw.html)
-- [EC2 API Permissions](https://docs.aws.amazon.com/AWSEC2/latest/APIReference/ec2-api-permissions.html)
-
----
-
-**Note**: This document should be reviewed and updated as the Obliq SRE Agent platform evolves and new AWS permission requirements are identified.
