@@ -25,11 +25,10 @@ kind: ClusterRole
 metadata:
   name: obliq-sre-agent
 rules:
-# ───────── Core resources ─────────
 - apiGroups: [""]
   resources:
   - pods
-  - pods/log        # for log retrieval
+  - pods/log
   - services
   - endpoints
   - nodes
@@ -37,7 +36,6 @@ rules:
   - events
   verbs: ["get", "list", "watch"]
 
-# ───────── Workload APIs (apps) ─────────
 - apiGroups: ["apps"]
   resources:
   - deployments
@@ -46,21 +44,18 @@ rules:
   - replicasets
   verbs: ["get", "list", "watch"]
 
-# ───────── Batch APIs (CronJob / Job) ─────────
 - apiGroups: ["batch"]
   resources:
   - jobs
   - cronjobs
   verbs: ["get", "list", "watch"]
 
-# ───────── Metrics API ─────────
 - apiGroups: ["metrics.k8s.io"]
   resources:
   - pods
   - nodes
   verbs: ["get", "list"]
 
-# ───────── Optional extras used by generic resources_list ─────────
 - apiGroups: ["networking.k8s.io"]
   resources:
   - ingresses
