@@ -362,7 +362,7 @@ ls -la obliq-sre-user-template.yaml
 aws cloudformation create-stack \
     --stack-name obliq-sre-agents-user \
     --template-body file://obliq-sre-user-template.yaml \
-    --capabilities CAPABILITY_IAM
+    --capabilities CAPABILITY_NAMED_IAM
 
 # Wait for stack creation to complete
 echo "Waiting for stack creation to complete..."
@@ -660,7 +660,7 @@ ls -la obliq-sre-ec2-role-template.yaml
 aws cloudformation create-stack \
     --stack-name obliq-sre-agents-ec2-iam \
     --template-body file://obliq-sre-ec2-role-template.yaml \
-    --capabilities CAPABILITY_IAM
+    --capabilities CAPABILITY_NAMED_IAM
 
 # Wait for stack creation to complete
 echo "Waiting for stack creation to complete..."
