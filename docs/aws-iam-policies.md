@@ -255,23 +255,13 @@ cat > obliq-sre-agents-policy.json << 'EOF'
                 "ec2:DescribeAccountAttributes",
                 "ec2:DescribeSecurityGroups",
                 "ec2:DescribeVpcs",
-                "ec2:DescribeSubnets",
-                "ec2:DescribeVolumes",
-                "ec2:DescribeTags",
-                "ec2:DescribeImages",
-                "ec2:DescribeInstanceTypes",
-                "ec2:DescribeAvailabilityZones",
-                "ec2:DescribeKeyPairs",
-                "ec2:DescribeNetworkAcls",
-                "ec2:DescribeRouteTables",
-                "ec2:DescribeInternetGateways",
-                "ec2:DescribeNatGateways",
-                "ec2:DescribeVpcEndpoints",
-                "ec2:DescribeSnapshots",
-                "ec2:DescribeVolumesModifications",
-                "ec2:DescribeReservedInstances",
-                "ec2:DescribeSpotInstances",
-                "ec2:DescribeSpotPriceHistory",
+                "ecs:ListClusters",
+                "ecs:DescribeClusters",
+                "ecs:ListServices",
+                "ecs:DescribeServices",
+                "ecs:ListTasks",
+                "ecs:DescribeTasks",
+                "ecs:DescribeTaskDefinition",
                 "elasticloadbalancing:DescribeLoadBalancers",
                 "elasticloadbalancing:DescribeTargetGroups",
                 "elasticloadbalancing:DescribeTargetHealth",
@@ -279,44 +269,10 @@ cat > obliq-sre-agents-policy.json << 'EOF'
                 "elasticloadbalancing:DescribeRules",
                 "elasticloadbalancing:DescribeTags",
                 "autoscaling:DescribeAutoScalingGroups",
-                "autoscaling:DescribeLaunchConfigurations",
-                "autoscaling:DescribePolicies",
-                "autoscaling:DescribeScalingActivities",
-                "autoscaling:DescribeScheduledActions",
-                "autoscaling:DescribeTags",
                 "cloudwatch:GetMetricStatistics",
                 "cloudwatch:ListMetrics",
-                "cloudwatch:GetMetricData",
-                "cloudwatch:DescribeAlarms",
-                "cloudwatch:DescribeAlarmHistory",
-                "cloudwatch:GetDashboard",
-                "cloudwatch:ListDashboards",
-                "cloudwatch:GetInsightRuleReport",
-                "cloudwatch:ListInsightRules",
-                "cloudwatch:GetMetricWidgetImage",
-                "cloudwatch:GetMetricStream",
-                "cloudwatch:ListMetricStreams",
-                "cloudwatch:DescribeAnomalyDetectors",
-                "cloudwatch:ListAnomalyDetectors",
-                "logs:DescribeLogGroups",
-                "logs:DescribeLogStreams",
-                "logs:GetLogEvents",
-                "logs:FilterLogEvents",
-                "logs:StartQuery",
-                "logs:StopQuery",
-                "logs:GetQueryResults",
-                "logs:DescribeQueries",
-                "logs:DescribeResourcePolicies",
-                "logs:DescribeDestinations",
-                "logs:DescribeExportTasks",
-                "logs:DescribeMetricFilters",
-                "logs:DescribeSubscriptionFilters",
-                "logs:ListTagsLogGroup",
                 "sts:AssumeRoleWithWebIdentity",
-                "sts:GetCallerIdentity",
-                "iam:ListRoles",
-                "iam:GetRole",
-                "iam:PassRole"
+                "sts:GetCallerIdentity"
             ],
             "Resource": "*"
         }
@@ -352,23 +308,13 @@ Resources:
                   - ec2:DescribeAccountAttributes
                   - ec2:DescribeSecurityGroups
                   - ec2:DescribeVpcs
-                  - ec2:DescribeSubnets
-                  - ec2:DescribeVolumes
-                  - ec2:DescribeTags
-                  - ec2:DescribeImages
-                  - ec2:DescribeInstanceTypes
-                  - ec2:DescribeAvailabilityZones
-                  - ec2:DescribeKeyPairs
-                  - ec2:DescribeNetworkAcls
-                  - ec2:DescribeRouteTables
-                  - ec2:DescribeInternetGateways
-                  - ec2:DescribeNatGateways
-                  - ec2:DescribeVpcEndpoints
-                  - ec2:DescribeSnapshots
-                  - ec2:DescribeVolumesModifications
-                  - ec2:DescribeReservedInstances
-                  - ec2:DescribeSpotInstances
-                  - ec2:DescribeSpotPriceHistory
+                  - ecs:ListClusters
+                  - ecs:DescribeClusters
+                  - ecs:ListServices
+                  - ecs:DescribeServices
+                  - ecs:ListTasks
+                  - ecs:DescribeTasks
+                  - ecs:DescribeTaskDefinition
                   - elasticloadbalancing:DescribeLoadBalancers
                   - elasticloadbalancing:DescribeTargetGroups
                   - elasticloadbalancing:DescribeTargetHealth
@@ -376,44 +322,10 @@ Resources:
                   - elasticloadbalancing:DescribeRules
                   - elasticloadbalancing:DescribeTags
                   - autoscaling:DescribeAutoScalingGroups
-                  - autoscaling:DescribeLaunchConfigurations
-                  - autoscaling:DescribePolicies
-                  - autoscaling:DescribeScalingActivities
-                  - autoscaling:DescribeScheduledActions
-                  - autoscaling:DescribeTags
                   - cloudwatch:GetMetricStatistics
                   - cloudwatch:ListMetrics
-                  - cloudwatch:GetMetricData
-                  - cloudwatch:DescribeAlarms
-                  - cloudwatch:DescribeAlarmHistory
-                  - cloudwatch:GetDashboard
-                  - cloudwatch:ListDashboards
-                  - cloudwatch:GetInsightRuleReport
-                  - cloudwatch:ListInsightRules
-                  - cloudwatch:GetMetricWidgetImage
-                  - cloudwatch:GetMetricStream
-                  - cloudwatch:ListMetricStreams
-                  - cloudwatch:DescribeAnomalyDetectors
-                  - cloudwatch:ListAnomalyDetectors
-                  - logs:DescribeLogGroups
-                  - logs:DescribeLogStreams
-                  - logs:GetLogEvents
-                  - logs:FilterLogEvents
-                  - logs:StartQuery
-                  - logs:StopQuery
-                  - logs:GetQueryResults
-                  - logs:DescribeQueries
-                  - logs:DescribeResourcePolicies
-                  - logs:DescribeDestinations
-                  - logs:DescribeExportTasks
-                  - logs:DescribeMetricFilters
-                  - logs:DescribeSubscriptionFilters
-                  - logs:ListTagsLogGroup
                   - sts:AssumeRoleWithWebIdentity
                   - sts:GetCallerIdentity
-                  - iam:ListRoles
-                  - iam:GetRole
-                  - iam:PassRole
                 Resource: '*'
 
   ObliqSREAgentsAccessKey:
@@ -692,23 +604,13 @@ Resources:
                   - ec2:DescribeAccountAttributes
                   - ec2:DescribeSecurityGroups
                   - ec2:DescribeVpcs
-                  - ec2:DescribeSubnets
-                  - ec2:DescribeVolumes
-                  - ec2:DescribeTags
-                  - ec2:DescribeImages
-                  - ec2:DescribeInstanceTypes
-                  - ec2:DescribeAvailabilityZones
-                  - ec2:DescribeKeyPairs
-                  - ec2:DescribeNetworkAcls
-                  - ec2:DescribeRouteTables
-                  - ec2:DescribeInternetGateways
-                  - ec2:DescribeNatGateways
-                  - ec2:DescribeVpcEndpoints
-                  - ec2:DescribeSnapshots
-                  - ec2:DescribeVolumesModifications
-                  - ec2:DescribeReservedInstances
-                  - ec2:DescribeSpotInstances
-                  - ec2:DescribeSpotPriceHistory
+                  - ecs:ListClusters
+                  - ecs:DescribeClusters
+                  - ecs:ListServices
+                  - ecs:DescribeServices
+                  - ecs:ListTasks
+                  - ecs:DescribeTasks
+                  - ecs:DescribeTaskDefinition
                   - elasticloadbalancing:DescribeLoadBalancers
                   - elasticloadbalancing:DescribeTargetGroups
                   - elasticloadbalancing:DescribeTargetHealth
@@ -716,44 +618,10 @@ Resources:
                   - elasticloadbalancing:DescribeRules
                   - elasticloadbalancing:DescribeTags
                   - autoscaling:DescribeAutoScalingGroups
-                  - autoscaling:DescribeLaunchConfigurations
-                  - autoscaling:DescribePolicies
-                  - autoscaling:DescribeScalingActivities
-                  - autoscaling:DescribeScheduledActions
-                  - autoscaling:DescribeTags
                   - cloudwatch:GetMetricStatistics
                   - cloudwatch:ListMetrics
-                  - cloudwatch:GetMetricData
-                  - cloudwatch:DescribeAlarms
-                  - cloudwatch:DescribeAlarmHistory
-                  - cloudwatch:GetDashboard
-                  - cloudwatch:ListDashboards
-                  - cloudwatch:GetInsightRuleReport
-                  - cloudwatch:ListInsightRules
-                  - cloudwatch:GetMetricWidgetImage
-                  - cloudwatch:GetMetricStream
-                  - cloudwatch:ListMetricStreams
-                  - cloudwatch:DescribeAnomalyDetectors
-                  - cloudwatch:ListAnomalyDetectors
-                  - logs:DescribeLogGroups
-                  - logs:DescribeLogStreams
-                  - logs:GetLogEvents
-                  - logs:FilterLogEvents
-                  - logs:StartQuery
-                  - logs:StopQuery
-                  - logs:GetQueryResults
-                  - logs:DescribeQueries
-                  - logs:DescribeResourcePolicies
-                  - logs:DescribeDestinations
-                  - logs:DescribeExportTasks
-                  - logs:DescribeMetricFilters
-                  - logs:DescribeSubscriptionFilters
-                  - logs:ListTagsLogGroup
                   - sts:AssumeRoleWithWebIdentity
                   - sts:GetCallerIdentity
-                  - iam:ListRoles
-                  - iam:GetRole
-                  - iam:PassRole
                 Resource: '*'
 
   ObliqSREAgentsInstanceProfile:
@@ -1024,23 +892,13 @@ Resources:
                   - ec2:DescribeAccountAttributes
                   - ec2:DescribeSecurityGroups
                   - ec2:DescribeVpcs
-                  - ec2:DescribeSubnets
-                  - ec2:DescribeVolumes
-                  - ec2:DescribeTags
-                  - ec2:DescribeImages
-                  - ec2:DescribeInstanceTypes
-                  - ec2:DescribeAvailabilityZones
-                  - ec2:DescribeKeyPairs
-                  - ec2:DescribeNetworkAcls
-                  - ec2:DescribeRouteTables
-                  - ec2:DescribeInternetGateways
-                  - ec2:DescribeNatGateways
-                  - ec2:DescribeVpcEndpoints
-                  - ec2:DescribeSnapshots
-                  - ec2:DescribeVolumesModifications
-                  - ec2:DescribeReservedInstances
-                  - ec2:DescribeSpotInstances
-                  - ec2:DescribeSpotPriceHistory
+                  - ecs:ListClusters
+                  - ecs:DescribeClusters
+                  - ecs:ListServices
+                  - ecs:DescribeServices
+                  - ecs:ListTasks
+                  - ecs:DescribeTasks
+                  - ecs:DescribeTaskDefinition
                   - elasticloadbalancing:DescribeLoadBalancers
                   - elasticloadbalancing:DescribeTargetGroups
                   - elasticloadbalancing:DescribeTargetHealth
@@ -1048,44 +906,10 @@ Resources:
                   - elasticloadbalancing:DescribeRules
                   - elasticloadbalancing:DescribeTags
                   - autoscaling:DescribeAutoScalingGroups
-                  - autoscaling:DescribeLaunchConfigurations
-                  - autoscaling:DescribePolicies
-                  - autoscaling:DescribeScalingActivities
-                  - autoscaling:DescribeScheduledActions
-                  - autoscaling:DescribeTags
                   - cloudwatch:GetMetricStatistics
                   - cloudwatch:ListMetrics
-                  - cloudwatch:GetMetricData
-                  - cloudwatch:DescribeAlarms
-                  - cloudwatch:DescribeAlarmHistory
-                  - cloudwatch:GetDashboard
-                  - cloudwatch:ListDashboards
-                  - cloudwatch:GetInsightRuleReport
-                  - cloudwatch:ListInsightRules
-                  - cloudwatch:GetMetricWidgetImage
-                  - cloudwatch:GetMetricStream
-                  - cloudwatch:ListMetricStreams
-                  - cloudwatch:DescribeAnomalyDetectors
-                  - cloudwatch:ListAnomalyDetectors
-                  - logs:DescribeLogGroups
-                  - logs:DescribeLogStreams
-                  - logs:GetLogEvents
-                  - logs:FilterLogEvents
-                  - logs:StartQuery
-                  - logs:StopQuery
-                  - logs:GetQueryResults
-                  - logs:DescribeQueries
-                  - logs:DescribeResourcePolicies
-                  - logs:DescribeDestinations
-                  - logs:DescribeExportTasks
-                  - logs:DescribeMetricFilters
-                  - logs:DescribeSubscriptionFilters
-                  - logs:ListTagsLogGroup
                   - sts:AssumeRoleWithWebIdentity
                   - sts:GetCallerIdentity
-                  - iam:ListRoles
-                  - iam:GetRole
-                  - iam:PassRole
                 Resource: '*'
 
 Outputs:
