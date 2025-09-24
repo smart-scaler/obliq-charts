@@ -2,46 +2,47 @@
 
 This document provides comprehensive IAM resource provisioning for the Obliq SRE Agent platform with three authentication methods and three deployment approaches.
 
-## 📋 Quick Navigation
+## 📋 Table of Contents
 
-### **🔑 Access Keys (Programmatic Access)**
-| Method | Description | Quick Link |
-|--------|-------------|------------|
-| **AWS CLI** | Command-line provisioning | [CLI Method](#approach-a-aws-cli-method) |
-| **AWS Console** | Web interface provisioning | [Console Method](#approach-b-aws-console-method) |
-| **CloudFormation** | Infrastructure as code | [CloudFormation Method](#approach-c-cloudformation-method) |
-
-### **🖥️ IAM Roles (EC2 Instance Access)**
-| Method | Description | Quick Link |
-|--------|-------------|------------|
-| **AWS CLI** | Command-line role creation | [CLI Method](#approach-a-aws-cli-method-1) |
-| **AWS Console** | Web interface role setup | [Console Method](#approach-b-aws-console-method-1) |
-| **CloudFormation** | Automated role deployment | [CloudFormation Method](#approach-c-cloudformation-method-1) |
-
-### **☸️ EKS IRSA (Kubernetes Service Account Access)**
-| Method | Description | Quick Link |
-|--------|-------------|------------|
-| **AWS CLI** | Command-line IRSA setup | [CLI Method](#approach-a-aws-cli-method-2) |
-| **AWS Console** | Web interface IRSA configuration | [Console Method](#approach-b-aws-console-method-2) |
-| **CloudFormation** | Automated IRSA deployment | [CloudFormation Method](#approach-c-cloudformation-method-2) |
-
-### **📄 Core Resources**
+### **1. Core Resources**
 - [**Complete IAM Policy**](#complete-iam-policy-ready-to-copy) - Ready-to-copy comprehensive policy
 - [**Permission Breakdown**](#permission-breakdown) - Detailed permission explanations
 - [**Implementation**](#implementation) - Basic implementation steps
 
-### **🛠️ Support Sections**
+### **2. Authentication Methods**
+
+#### **🔑 Access Keys (Programmatic Access)**
+- [**CLI Method**](#approach-a-aws-cli-method) - Command-line provisioning
+- [**Console Method**](#approach-b-aws-console-method) - Web interface provisioning
+- [**CloudFormation Method**](#approach-c-cloudformation-method) - Infrastructure as code
+
+#### **🖥️ IAM Roles (EC2 Instance Access)**
+- [**CLI Method**](#approach-a-aws-cli-method-1) - Command-line role creation
+- [**Console Method**](#approach-b-aws-console-method-1) - Web interface role setup
+- [**CloudFormation Method**](#approach-c-cloudformation-method-1) - Automated role deployment
+
+#### **☸️ EKS IRSA (Kubernetes Service Account Access)**
+- [**CLI Method**](#approach-a-aws-cli-method-2) - Command-line IRSA setup
+- [**Console Method**](#approach-b-aws-console-method-2) - Web interface IRSA configuration
+- [**CloudFormation Method**](#approach-c-cloudformation-method-2) - Automated IRSA deployment
+
+### **3. Support & Reference**
+
+#### **🛠️ Implementation Support**
 - [**Security Best Practices**](#security-best-practices) - Security guidelines and recommendations
 - [**Troubleshooting**](#troubleshooting) - Common issues and debugging
 - [**Monitoring and Auditing**](#monitoring-and-auditing) - Audit and monitoring setup
-- [**References**](#references) - External documentation links
 
-### **🚀 Quick Start**
+#### **📚 Documentation**
+- [**References**](#references) - External documentation links
+- [**Overview**](#overview) - Platform requirements and permissions
+
+### **4. Quick Start Guide**
 1. [**Copy the IAM Policy**](#complete-iam-policy-ready-to-copy) - Get the comprehensive policy
-2. [**Choose Your Method**](#authentication-methods) - Select access keys, IAM roles, or EKS IRSA
-3. [**Pick Your Approach**](#deployment-approaches) - Choose CLI, Console, or CloudFormation
-4. [**Follow the Steps**](#implementation) - Execute the provisioning commands
-5. [**Test and Verify**](#troubleshooting) - Ensure everything works correctly
+2. [**Choose Authentication Method**](#authentication-methods) - Select access keys, IAM roles, or EKS IRSA
+3. [**Select Deployment Approach**](#deployment-approaches) - Choose CLI, Console, or CloudFormation
+4. [**Follow Implementation Steps**](#implementation) - Execute the provisioning commands
+5. [**Review Security Guidelines**](#security-best-practices) - Ensure secure configuration
 
 ## Overview
 
