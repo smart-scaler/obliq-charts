@@ -170,7 +170,7 @@ echo "============================="
 echo "IMPORTANT: Save these credentials securely!"
 ```
 
-**Step 5: Verify Configuration**
+**Step 4: Verify Configuration**
 ```bash
 # Verify configuration
 aws sts get-caller-identity
@@ -240,51 +240,7 @@ aws sts get-caller-identity
 - Ensure you have AWS CLI installed and configured with CloudFormation permissions
 - Run all commands below in your local terminal
 
-**Step 1: Prepare Policy Document**
-```bash
-# Save the comprehensive policy to a file
-cat > obliq-sre-agents-policy.json << 'EOF'
-{
-    "Version": "2012-10-17",
-    "Statement": [
-        {
-            "Effect": "Allow",
-            "Action": [
-                "ec2:DescribeInstances",
-                "ec2:DescribeRegions",
-                "ec2:DescribeAccountAttributes",
-                "ec2:DescribeSecurityGroups",
-                "ec2:DescribeVpcs",
-                "ecs:ListClusters",
-                "ecs:DescribeClusters",
-                "ecs:ListServices",
-                "ecs:DescribeServices",
-                "ecs:ListTasks",
-                "ecs:DescribeTasks",
-                "ecs:DescribeTaskDefinition",
-                "elasticloadbalancing:DescribeLoadBalancers",
-                "elasticloadbalancing:DescribeTargetGroups",
-                "elasticloadbalancing:DescribeTargetHealth",
-                "elasticloadbalancing:DescribeListeners",
-                "elasticloadbalancing:DescribeRules",
-                "elasticloadbalancing:DescribeTags",
-                "autoscaling:DescribeAutoScalingGroups",
-                "cloudwatch:GetMetricStatistics",
-                "cloudwatch:ListMetrics",
-                "sts:AssumeRoleWithWebIdentity",
-                "sts:GetCallerIdentity"
-            ],
-            "Resource": "*"
-        }
-    ]
-}
-EOF
-
-# Verify the policy file was created
-ls -la obliq-sre-agents-policy.json
-```
-
-**Step 2: Create CloudFormation Template**
+**Step 1: Create CloudFormation Template**
 ```bash
 # Create the CloudFormation template file
 cat > obliq-sre-user-template.yaml << 'EOF'
@@ -352,7 +308,7 @@ echo "Template created successfully:"
 ls -la obliq-sre-user-template.yaml
 ```
 
-**Step 3: Deploy CloudFormation Stack**
+**Step 2: Deploy CloudFormation Stack**
 ```bash
 # Deploy the stack
 aws cloudformation create-stack \
@@ -371,7 +327,7 @@ aws cloudformation describe-stacks \
     --output text
 ```
 
-**Step 4: Get Access Keys**
+**Step 3: Get Access Keys**
 ```bash
 # Get Access Key ID
 ACCESS_KEY_ID=$(aws cloudformation describe-stacks \
