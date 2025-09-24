@@ -228,50 +228,43 @@ aws sts get-caller-identity
 
 **Prerequisites**: Access to AWS Console with IAM permissions.
 
-**Step 1: Navigate to IAM Console**
+**Step 1: Create IAM Policy**
 1. Open your web browser and go to [AWS IAM Console](https://console.aws.amazon.com/iam/)
 2. Sign in with your AWS account credentials
-3. In the left navigation panel, click **"Users"**
-4. Click the **"Create user"** button (blue button in top-right)
+3. In the left navigation panel, click **"Policies"**
+4. Click **"Create policy"**
+5. Click **"JSON"** tab
+6. Copy and paste the comprehensive policy from the [Complete IAM Policy](#complete-iam-policy-ready-to-copy) section
+7. Click **"Next"**
+8. Enter policy name: `ObliqSREAgentsComprehensive`
+9. Enter description: `Comprehensive policy for Obliq SRE Agent platform`
+10. Click **"Create policy"**
 
-**Step 2: Create User**
-1. In the "User name" field, enter: `obliq-sre-agents-user`
-2. Under "Select AWS access type", check **"Programmatic access"**
-3. Click **"Next: Permissions"**
+**Step 2: Create IAM User**
+1. In the left navigation panel, click **"Users"**
+2. Click **"Create user"**
+3. In the "User name" field, enter: `obliq-sre-agents-user`
+4. Click **"Next"**
 
-**Step 3: Create IAM Policy**
-1. In the left navigation panel, click **"Policies"**
-2. Click **"Create policy"**
-3. Click **"JSON"** tab
-4. Copy and paste the comprehensive policy from the [Complete IAM Policy](#complete-iam-policy-ready-to-copy) section
-5. Click **"Next: Tags"** (optional)
-6. Click **"Next: Review"**
-7. Enter policy name: `ObliqSREAgentsComprehensive`
-8. Enter description: `Comprehensive policy for Obliq SRE Agent platform`
-9. Click **"Create policy"**
+**Step 3: Attach Policy**
+1. Under "Set permissions", select **"Attach policies directly"**
+2. In the search box, type: `ObliqSREAgentsComprehensive`
+3. Check the checkbox next to the policy
+4. Click **"Next"**
+5. Review the user details and click **"Create user"**
 
-**Step 4: Attach Policy**
-1. Go back to **"Users"** in the left navigation
-2. Click on **"obliq-sre-agents-user"** (if you haven't created it yet, go back to Step 2)
-3. Click **"Add permissions"** → **"Attach policies directly"**
-4. In the search box, type: `ObliqSREAgentsComprehensive`
-5. Check the checkbox next to the policy
-6. Click **"Next: Review"**
-7. Click **"Add permissions"**
+**Step 4: Create Access Keys**
+1. Click on **"obliq-sre-agents-user"**
+2. Go to **"Security credentials"** tab
+3. Scroll down to **"Access keys"** section
+4. Click **"Create access key"**
+5. Select **"Application running outside AWS"**
+6. Click **"Next"**
+7. Add description (optional): `Obliq SRE Agent access key`
+8. Click **"Create access key"**
+9. **Important**: Copy and save both the **Access Key ID** and **Secret Access Key**
+10. Click **"Done"**
 
-**Step 5: Generate Access Keys**
-1. **CRITICAL**: You will see a success page with access credentials
-2. **Copy the Access Key ID** (starts with AKIA...)
-3. **Copy the Secret Access Key** (long random string)
-4. **Download the CSV file** by clicking "Download .csv" button
-5. **Save these credentials securely** - you cannot retrieve the secret key later
-6. Click **"Close"**
-
-**Step 6: Verify Configuration**
-```bash
-# Verify the configuration
-aws sts get-caller-identity
-```
 
 
 #### **Approach C: CloudFormation Method**
