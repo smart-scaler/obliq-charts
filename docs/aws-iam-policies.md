@@ -154,7 +154,6 @@ The comprehensive policy above includes all necessary permissions for:
 
 ### **1. Access Keys (Programmatic Access)**
 
-For applications, scripts, and CLI tools that need programmatic access:
 
 #### **Approach A: AWS CLI Method**
 
@@ -544,18 +543,11 @@ echo "Credentials saved to access-keys.txt"
 aws sts get-caller-identity
 ```
 
-**Step 5: Cleanup (Optional)**
-```bash
-# To delete the CloudFormation stack and user (if needed)
-# aws cloudformation delete-stack --stack-name obliq-sre-agents-user
-```
 
 
-**Use Case**: Perfect for applications, CI/CD pipelines, and automated scripts that need direct AWS API access.
 
 ### **2. IAM Roles (EC2 Instance Access)**
 
-For EC2 instances that need to assume roles automatically:
 
 #### **Approach A: AWS CLI Method**
 
@@ -888,11 +880,9 @@ aws iam get-instance-profile --instance-profile-name obliq-sre-agents-instance-p
 aws iam list-attached-role-policies --role-name obliq-sre-agents-ec2-role
 ```
 
-**Use Case**: Perfect for EC2 instances running Obliq SRE agents that need automatic AWS access without storing credentials.
 
 ### **3. EKS POD IRSA (Kubernetes Service Account Access)**
 
-For Kubernetes deployments using IAM Roles for Service Accounts (IRSA):
 
 #### **Approach A: AWS CLI Method**
 
@@ -973,7 +963,6 @@ kubectl annotate serviceaccount obliq-sre-agent -n avesha \
 ```
 
 
-**Use Case**: Perfect for Kubernetes pods running Obliq SRE agents that need automatic AWS access without storing credentials.
 
 #### **Approach B: AWS Console Method**
 
