@@ -119,7 +119,7 @@ diagnosticMode:
 ##
 image:
   registry: docker.io
-  repository: bitnami/mongodb
+  repository: bitnamilegacy/mongodb
   tag: 6.0.8-debian-11-r20
   digest: ""
   ## Specify a imagePullPolicy
@@ -243,7 +243,7 @@ tls:
   ##
   image:
     registry: docker.io
-    repository: bitnami/nginx
+    repository: bitnamilegacy/nginx
     tag: 1.25.2-debian-11-r0
     digest: ""
     pullPolicy: IfNotPresent
@@ -808,7 +808,7 @@ externalAccess:
     ##
     image:
       registry: docker.io
-      repository: bitnami/kubectl
+      repository: bitnamilegacy/kubectl
       tag: 1.25.12-debian-11-r26
       digest: ""
       ## Specify a imagePullPolicy
@@ -1181,7 +1181,7 @@ volumePermissions:
   ##
   image:
     registry: docker.io
-    repository: bitnami/os-shell
+    repository: bitnamilegacy/os-shell
     tag: 11-debian-11-r40
     digest: ""
     ## Specify a imagePullPolicy
@@ -1962,7 +1962,7 @@ metrics:
   ##
   image:
     registry: docker.io
-    repository: bitnami/mongodb-exporter
+    repository: bitnamilegacy/mongodb-exporter
     tag: 0.39.0-debian-11-r73
     digest: ""
     pullPolicy: IfNotPresent
