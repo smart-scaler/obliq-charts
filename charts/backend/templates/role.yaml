@@ -1,0 +1,28 @@
+{{- if and .Values.serviceAccount.create .Values.rbac.enabled }}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ include "backend.fullname" . }}-role
+  labels:
+    {{- include "backend.labels" . | nindent 4 }}
+rules:
+  # Secrets permissions - read and write
+  - apiGroups: [""]
+    resources: ["secrets"]
+    verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+
+  # Deployments – restart (patch) and scale
+  - apiGroups: ["apps"]
+    resources: ["deployments"]
+    verbs: ["get", "list", "watch", "patch", "update"]
+
+  # Pods – optional; only needed when backend chooses to wait for rollout
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["get", "list", "watch"]
+
+  # Additional custom rules from values.yaml
+  {{- with .Values.rbac.additionalRules }}
+  {{- toYaml . | nindent 2 }}
+  {{- end }}
+{{- end }}
