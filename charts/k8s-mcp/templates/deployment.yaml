@@ -98,8 +98,10 @@ spec:
               {{- end }}
             {{- end }}
             
+            # Override KUBECONFIG to point to mounted file instead of secret key
+            - name: KUBECONFIG
+              value: "{{ .Values.volumes.kubeconfig.mountPath }}/config"
 
-            
             # Database secret environment variables
             {{- if .Values.secrets.database }}
             {{- range $key, $value := .Values.secrets.database }}
@@ -213,6 +215,9 @@ spec:
         - name: kubeconfig-volume
           secret:
             secretName: {{ .Values.volumes.kubeconfig.secretName }}
+            items:
+            - key: {{ .Values.volumes.kubeconfig.key }}
+              path: config
             defaultMode: 0440
         {{- end }}
       {{- end }}

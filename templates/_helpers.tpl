@@ -308,11 +308,6 @@ This template provides all environment variables from the global secret
     secretKeyRef:
       name: {{ include "obliq-sre-agent.globalSecretName" . }}
       key: AUTOMATIC_EXECUTION_ENABLED
-- name: KUBECONFIG
-  valueFrom:
-    secretKeyRef:
-      name: {{ include "obliq-sre-agent.globalSecretName" . }}
-      key: KUBECONFIG
 - name: DEBUG
   valueFrom:
     secretKeyRef:
@@ -641,14 +636,6 @@ This template provides all environment variables from the global secret
     secretKeyRef:
       name: {{ include "obliq-sre-agent.globalSecretName" . }}
       key: SG_UPDATE_INTERVAL_SECONDS
-
-
-# Kubernetes configuration from global Secret
-- name: KUBECONFIG_FILE
-  valueFrom:
-    secretKeyRef:
-      name: {{ include "obliq-sre-agent.globalSecretName" . }}
-      key: KUBECONFIG_FILE
 
 # Observability configuration from global Secret
 - name: OTEL_COLLECTOR_ENDPOINT

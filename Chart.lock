@@ -10,60 +10,60 @@ dependencies:
   version: 13.17.0
 - name: loki-mcp
   repository: file://./charts/loki-mcp
-  version: 0.1.0
+  version: 1.0.0
 - name: cloudwatch-mcp
   repository: file://./charts/cloudwatch-mcp
-  version: 0.1.0
+  version: 1.0.0
 - name: aws-mcp
   repository: file://./charts/aws-mcp
-  version: 0.1.0
+  version: 1.0.0
 - name: k8s-mcp
   repository: file://./charts/k8s-mcp
-  version: 0.1.0
+  version: 1.0.0
 - name: prometheus-mcp
   repository: file://./charts/prometheus-mcp
-  version: 0.1.0
+  version: 1.0.0
 - name: aws-ec2-cloudwatch-alarms
   repository: file://./charts/aws-ec2-cloudwatch-alarms
-  version: 0.1.0
+  version: 1.0.0
 - name: kubernetes-events-ingester
   repository: file://./charts/kubernetes-events-ingester
-  version: 0.1.0
+  version: 1.0.0
 - name: slack-ingester
   repository: file://./charts/slack-ingester
-  version: 0.1.0
+  version: 1.0.0
 - name: neo4j-mcp
   repository: file://./charts/neo4j-mcp
-  version: 0.1.0
+  version: 1.0.0
 - name: anomaly-detection
   repository: file://./charts/anomaly-detection
-  version: 0.1.0
+  version: 1.0.0
 - name: active-inventory
   repository: file://./charts/active-inventory
-  version: 0.1.0
+  version: 1.0.0
 - name: incident-manager
   repository: file://./charts/incident-manager
-  version: 0.1.0
+  version: 1.0.0
 - name: rca-agent
   repository: file://./charts/rca-agent
-  version: 0.1.0
+  version: 1.0.0
 - name: auto-remediation
   repository: file://./charts/auto-remediation
-  version: 0.1.0
+  version: 1.0.0
 - name: backend
   repository: file://./charts/backend
-  version: 0.1.0
+  version: 1.0.0
 - name: service-graph-engine
   repository: file://./charts/service-graph-engine
-  version: 0.1.0
+  version: 1.0.0
 - name: infra-agent
   repository: file://./charts/infra-agent
-  version: 0.1.0
+  version: 1.0.0
 - name: avesha-unified-ui
   repository: file://./charts/avesha-unified-ui
-  version: 0.1.0
+  version: 1.0.0
 - name: orchestrator
   repository: file://./charts/orchestrator
-  version: 0.1.0
-digest: sha256:9e5cbc3c74d272e2bff803936ab226cc8a37dda0ee540f450e6a429603909ba5
-generated: "2025-09-05T15:16:21.771746745+05:30"
+  version: 1.0.0
+digest: sha256:b5742bf828a2d14d8f9cd76b4160d0beecb30047373957307ad32a3ebad632c8
+generated: "2025-10-02T11:34:53.937183265Z"
