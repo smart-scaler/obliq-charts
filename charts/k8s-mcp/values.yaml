@@ -192,8 +192,15 @@ readinessProbe:
 #   successThreshold: 1
 
 # Command and args override
-command: []
-args: []
+command: 
+  - /app/kubernetes-mcp-server
+args:
+  - --sse-port
+  - "8080"
+  - --list-output
+  - yaml
+  - --kubeconfig
+  - /etc/kubeconfig/config
 
 # Container ports
 ports:
