@@ -3,7 +3,7 @@ name: obliq-sre-agent
 description: A comprehensive umbrella Helm chart for deploying the Avesha Obliq AI SRE Agent platform
 type: application
 version: 1.1.2
-appVersion: "1.1.2"
+appVersion: "1.2.0"
 keywords:
   - sre
   - ai
@@ -61,6 +61,11 @@ dependencies:
     repository: file://./charts/k8s-mcp
     condition: k8s-mcp.enabled
     
+  - name: gcp-mcp
+    version: 1.0.0
+    repository: file://./charts/gcp-mcp
+    condition: gcp-mcp.enabled
+    
   - name: prometheus-mcp
     version: 1.0.0
     repository: file://./charts/prometheus-mcp
@@ -103,6 +108,11 @@ dependencies:
     repository: file://./charts/incident-manager
     condition: incident-manager.enabled
     
+  - name: incident-ingester
+    version: 1.0.0
+    repository: file://./charts/incident-ingester
+    condition: incident-ingester.enabled
+    
   - name: rca-agent
     version: 1.0.0
     repository: file://./charts/rca-agent
@@ -112,6 +122,11 @@ dependencies:
     version: 1.0.0
     repository: file://./charts/auto-remediation
     condition: auto-remediation.enabled
+    
+  - name: hitl-manager
+    version: 1.0.0
+    repository: file://./charts/hitl-manager
+    condition: hitl-manager.enabled
     
   - name: backend
     version: 1.0.0
@@ -141,3 +156,14 @@ dependencies:
     version: 1.0.0
     repository: file://./charts/orchestrator
     condition: orchestrator.enabled
+
+  # STEP 11: Observability Services (community charts - standalone - no dependencies)
+  - name: prometheus
+    version: 27.41.0
+    repository: https://prometheus-community.github.io/helm-charts
+    condition: prometheus.enabled
+    
+  - name: jaeger
+    version: 6.0.5
+    repository: https://charts.bitnami.com/bitnami
+    condition: jaeger.enabled

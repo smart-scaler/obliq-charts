@@ -36,12 +36,15 @@ x-images:
   rca-agent: &rcaAgentImage "agents/release/rca-agent"
   anomaly-detection: &anomalyDetectionImage "agents/release/anomaly-detection"
   auto-remediation: &autoRemediationImage "agents/release/auto-remediation"
+  hitl-manager: &hitlManagerImage "agents/release/hitl-manager"
   incident-manager: &incidentManagerImage "agents/release/incident-manager"
+  incident-ingester: &incidentIngesterImage "agents/release/incident-ingester"
   service-graph-engine: &serviceGraphEngineImage "agents/release/service-graph-engine"
   active-inventory: &activeInventoryImage "agents/release/active-inventory"
   infra-agent: &infraAgentImage "agents/release/infra-agent"
   aws-mcp: &awsMcpImage "agents/release/aws-mcp"
   k8s-mcp: &k8sMcpImage "agents/release/k8s-mcp"
+  gcp-mcp: &gcpMcpImage "agents/release/gcp-mcp"
   prometheus-mcp: &prometheusMcpImage "agents/release/prometheus-mcp"
   loki-mcp: &lokiMcpImage "agents/release/loki-mcp"
   neo4j-mcp: &neo4jMcpImage "agents/release/neo4j-mcp"
@@ -130,6 +133,16 @@ global:
   kubeconfig:
     # Kubeconfig file content (provide via --set-file global.kubeconfig.content=./kubeconfig)
     # Example: helm install --set-file global.kubeconfig.content=./kubeconfig
+    content: ""
+  
+  # ----------------------------------------
+  # Google Cloud Platform Configuration
+  # ----------------------------------------
+  # Global GCP credentials configuration for Google Cloud API access
+  # Required for gcp-mcp service and other GCP integrations
+  gcpCredentials:
+    # GCP service account JSON file content (provide via --set-file global.gcpCredentials.content=./gcp-credentials.json)
+    # Example: helm install --set-file global.gcpCredentials.content=./gcp-credentials.json
     content: ""
   
   # ----------------------------------------
@@ -306,6 +319,12 @@ global:
       JIRA_PROJECT_KEY: ""                            # Jira project key for creating tickets
       JIRA_PAT: ""                                    # Jira Personal Access Token (alternative to API token)
     
+    # ServiceNow Configuration (OPTIONAL - for incident-ingester)
+    servicenow:
+      SERVICE_NOW_INSTANCE: ""                        # ServiceNow instance URL (e.g., https://yourcompany.service-now.com)
+      SERVICE_NOW_USERNAME: ""                        # ServiceNow username for API access
+      SERVICE_NOW_PASSWORD: ""                        # ServiceNow password for API access
+    
     # Slack Configuration (OPTIONAL - for notifications and slack-ingester)
     slack:
       SLACK_WEBHOOK_URL: ""                           # Slack webhook URL for notifications
@@ -324,13 +343,14 @@ global:
       # Individual MCP server endpoints
       MCP_SERVERS_AWS_EC2: "AWS_EC2:http://aws-mcp:8080"           # AWS EC2 integration
       MCP_SERVERS_K8S: "K8s:http://k8s-mcp:8080"                   # Kubernetes integration
+      MCP_SERVERS_GCP: "GCP:http://gcp-mcp:8098"                   # Google Cloud Platform integration
       MCP_SERVERS_PROMETHEUS: "PROMETHEUS:http://prometheus-mcp:8041"  # Prometheus metrics
       MCP_SERVERS_NEO4J: "NEO4J:http://neo4j-mcp:8080"             # Neo4j graph data
       MCP_SERVERS_LOKI: "LOKI:http://loki-mcp:8089"                # Loki logs
       
       # Combined MCP server configurations
-      MCP_SERVERS_FULL: "AWS_EC2:http://aws-mcp:8080,K8s:http://k8s-mcp:8080,PROMETHEUS:http://prometheus-mcp:8041,NEO4J:http://neo4j-mcp:8080,LOKI:http://loki-mcp:8089"
-      MCP_SERVERS: "AWS_EC2:http://aws-mcp:8080,K8s:http://k8s-mcp:8080,PROMETHEUS:http://prometheus-mcp:8041,NEO4J:http://neo4j-mcp:8080,LOKI:http://loki-mcp:8089"
+      MCP_SERVERS_FULL: "AWS_EC2:http://aws-mcp:8080,K8s:http://k8s-mcp:8080,GCP:http://gcp-mcp:8098,PROMETHEUS:http://prometheus-mcp:8041,NEO4J:http://neo4j-mcp:8080,LOKI:http://loki-mcp:8089"
+      MCP_SERVERS: "AWS_EC2:http://aws-mcp:8080,K8s:http://k8s-mcp:8080,GCP:http://gcp-mcp:8098,PROMETHEUS:http://prometheus-mcp:8041,NEO4J:http://neo4j-mcp:8080,LOKI:http://loki-mcp:8089"
       
       # Neo4j MCP specific configuration
       NEO4J_MCP_URL: "http://neo4j-mcp:8080"                       # Neo4j MCP service URL
@@ -564,7 +584,7 @@ backend:
   fullnameOverride: "backend"
   image:
     repository: *backendImage
-    tag: "1.1.2"
+    tag: "1.2.0"
     pullPolicy: IfNotPresent
   
   # Use common service configuration
@@ -624,7 +644,7 @@ avesha-unified-ui:
   fullnameOverride: "avesha-unified-ui"
   image:
     repository: *aveshaUnifiedUiImage
-    tag: "1.1.2"
+    tag: "1.2.0"
     pullPolicy: IfNotPresent
   
   # Use common service configuration
@@ -682,7 +702,7 @@ orchestrator:
   fullnameOverride: "orchestrator"
   image:
     repository: *orchestratorImage
-    tag: "1.1.2"
+    tag: "1.2.0"
     pullPolicy: IfNotPresent
   
   # Use common service configuration
@@ -715,7 +735,7 @@ rca-agent:
   fullnameOverride: "rca-agent"
   image:
     repository: *rcaAgentImage
-    tag: "1.1.2"
+    tag: "1.2.0"
   service:
     port: 8062
   env:
@@ -731,7 +751,7 @@ anomaly-detection:
   fullnameOverride: "anomaly-detection"
   image:
     repository: *anomalyDetectionImage
-    tag: "1.1.2"
+    tag: "1.2.0"
   service:
     port: 8061
   env:
@@ -746,7 +766,7 @@ auto-remediation:
   fullnameOverride: "auto-remediation"
   image:
     repository: *autoRemediationImage
-    tag: "1.1.2"
+    tag: "1.2.0"
   service:
     port: 8063
   env:
@@ -754,19 +774,60 @@ auto-remediation:
       AGENT_TYPE: "auto_remediation"
       PORT: "8063"
 
+# Human-in-the-Loop Manager - manages human intervention workflows and evidence collection
+hitl-manager:
+  enabled: true  # CORE SERVICE - Always required (requires Neo4j and MongoDB)
+  fullnameOverride: "hitl-manager"
+  image:
+    repository: *hitlManagerImage
+    tag: "1.2.0"
+  service:
+    port: 8065
+  env:
+    app:
+      AGENT_TYPE: "hitl_manager"
+      PORT: "8065"
+      EVIDENCE_STORAGE_TYPE: "mongodb"
+      EVIDENCE_MONGO_HOST: "mongodb"
+      EVIDENCE_MONGO_PORT: "27017"
+      EVIDENCE_MONGO_DB: "infra_db"
+      EVIDENCE_MONGO_COLLECTION: "evidence_files"
+      EVIDENCE_GRIDFS_THRESHOLD: "262144"
+      EVIDENCE_MAX_FILE_SIZE: "104857600"
+      # Note: NEO4J_URI, NEO4J_USER, NEO4J_PASSWORD, EVIDENCE_MONGO_USERNAME, EVIDENCE_MONGO_PASSWORD, LOG_LEVEL, OTEL_SERVICE_NAME, OTEL_EXPORTER_JAEGER_ENDPOINT are provided via globalSecretEnv
+
 # Incident Management System - manages and tracks incidents and responses
 incident-manager:
   enabled: true  # CORE SERVICE - Always required (requires OpenAI API key)
   fullnameOverride: "incident-manager"
   image:
     repository: *incidentManagerImage
-    tag: "1.1.2"
+    tag: "1.2.0"
   service:
     port: 8064
   env:
     app:
       AGENT_TYPE: "incident_manager"
       PORT: "8064"
+
+# Incident Ingester - ServiceNow integration for incident data ingestion
+incident-ingester:
+  enabled: false  # OPTIONAL SERVICE - Enable for ServiceNow integration (requires ServiceNow credentials)
+  fullnameOverride: "incident-ingester"
+  image:
+    repository: *incidentIngesterImage
+    tag: "1.2.0"
+  service:
+    port: 8065
+  env:
+    app:
+      AGENT_TYPE: "incident_ingester"
+      PORT: "8065"
+      SERVICE_NOW_CALLER_USERNAME: "admin"
+      INCIDENTS_START_TIME: "2025-09-26T06:00:00.0000Z"
+      OPENAI_MODEL: "gpt-4o-mini"
+      LLM_TEMPERATURE: "0.2"
+      # Note: OTEL_COLLECTOR_ENDPOINT, NEO4J_URI, NEO4J_USER, NEO4J_PASSWORD, ORCHESTRATOR_URL, SERVICE_NOW_INSTANCE, SERVICE_NOW_USERNAME, SERVICE_NOW_PASSWORD, INCIDENT_MANAGER_URL, OPENAI_API_KEY are provided via globalSecretEnv
 
 
 # Service Topology Mapping - DataDog integration for service graphs and monitoring
@@ -775,7 +836,7 @@ service-graph-engine:
   fullnameOverride: "service-graph-engine"
   image:
     repository: *serviceGraphEngineImage
-    tag: "1.1.2"
+    tag: "1.2.0"
   service:
     port: 8074
   env:
@@ -793,7 +854,7 @@ active-inventory:
   fullnameOverride: "active-inventory"
   image:
     repository: *activeInventoryImage
-    tag: "1.1.2"
+    tag: "1.2.0"
   service:
     port: 8065
   env:
@@ -808,7 +869,7 @@ infra-agent:
   fullnameOverride: "infra-agent"
   image:
     repository: *infraAgentImage
-    tag: "1.1.2"
+    tag: "1.2.0"
   service:
     port: 8051
   ingress:
@@ -826,7 +887,7 @@ aws-mcp:
   fullnameOverride: "aws-mcp"
   image:
     repository: *awsMcpImage
-    tag: "1.1.2"
+    tag: "1.2.0"
   service:
     port: 8080
   env:
@@ -841,7 +902,7 @@ k8s-mcp:
   fullnameOverride: "k8s-mcp"
   image:
     repository: *k8sMcpImage
-    tag: "1.1.2"
+    tag: "1.2.0"
   service:
     port: 8080
   # Kubeconfig configuration (inherits from global.kubeconfig.content)
@@ -852,13 +913,36 @@ k8s-mcp:
       # Note: KUBECONFIG is provided via globalSecretEnv
 
 
+# Google Cloud Platform Model Context Protocol Server - provides GCP integration
+gcp-mcp:
+  enabled: false  # OPTIONAL MCP - Enable for GCP integration (requires GCP credentials JSON file)
+  fullnameOverride: "gcp-mcp"
+  image:
+    repository: *gcpMcpImage
+    tag: "1.2.0"
+  service:
+    port: 8098
+  # GCP Credentials configuration (uses global.gcpCredentials.content)
+  volumes:
+    gcpCredentials:
+      enabled: true
+      mountPath: /app
+      secretName: gcp-credentials-secret
+      fileName: gcp.json
+  env:
+    app:
+      AGENT_TYPE: "gcp_mcp"
+      PORT: "8098"
+      # Note: GOOGLE_APPLICATION_CREDENTIALS is set to /app/gcp.json in deployment
+
+
 # Prometheus Model Context Protocol Server - provides Prometheus metrics integration
 prometheus-mcp:
   enabled: false  # OPTIONAL MCP - Enable for Prometheus integration (requires PROMETHEUS_URL, PROMETHEUS_MCP_USERNAME, PROMETHEUS_MCP_PASSWORD)
   fullnameOverride: "prometheus-mcp"
   image:
     repository: *prometheusMcpImage
-    tag: "1.1.2"
+    tag: "1.2.0"
   service:
     port: 8041
   env:
@@ -874,7 +958,7 @@ neo4j-mcp:
   fullnameOverride: "neo4j-mcp"
   image:
     repository: *neo4jMcpImage
-    tag: "1.1.2"
+    tag: "1.2.0"
   service:
     port: 8080
   env:
@@ -891,7 +975,7 @@ loki-mcp:
   fullnameOverride: "loki-mcp"
   image:
     repository: *lokiMcpImage
-    tag: "1.1.2"
+    tag: "1.2.0"
   service:
     port: 8089
   env:
@@ -916,7 +1000,7 @@ cloudwatch-mcp:
   fullnameOverride: "cloudwatch-mcp"
   image:
     repository: *cloudwatchMcpImage
-    tag: "1.1.2"
+    tag: "1.2.0"
   service:
     port: 8000
   env:
@@ -935,7 +1019,7 @@ kubernetes-events-ingester:
   fullnameOverride: "kubernetes-events-ingester"
   image:
     repository: *kubernetesEventsIngesterImage
-    tag: "1.1.2"
+    tag: "1.2.0"
   service:
     port: 8065
   # Kubeconfig configuration (uses global kubeconfig secret)
@@ -961,7 +1045,7 @@ slack-ingester:
   fullnameOverride: "slack-ingester"
   image:
     repository: *slackIngesterImage
-    tag: "1.1.2"
+    tag: "1.2.0"
   service:
     port: 8065
   env:
@@ -1002,7 +1086,7 @@ aws-ec2-cloudwatch-alarms:
   fullnameOverride: "aws-ec2-cloudwatch-alarms"
   image:
     repository: *awsEc2CloudwatchAlarmsImage
-    tag: "1.1.2"
+    tag: "1.2.0"
   service:
     port: 8065
   env:
@@ -1016,4 +1100,145 @@ aws-ec2-cloudwatch-alarms:
       SLO_CONFIG_FILE: "/home/appuser/slo-config.json"
       INVENTORY_SAMPLING_INTERVAL_SECONDS: "120"
       # Note: METRICS_SAMPLING_INTERVAL_SECONDS and LOG_LEVEL are provided via globalSecretEnv
+
+# Observability Services (Community Charts)
+# Prometheus Community Chart - provides comprehensive metrics collection and monitoring
+prometheus:
+  enabled: false  # OPTIONAL SERVICE - Enable for Prometheus monitoring (no external credentials needed)
+  
+  # Prometheus server configuration
+  prometheus:
+    prometheusSpec:
+      # Service configuration
+      serviceMonitorSelectorNilUsesHelmValues: false
+      serviceMonitorSelector: {}
+      serviceMonitorNamespaceSelector: {}
+      
+      # Storage configuration
+      storageSpec:
+        volumeClaimTemplate:
+          spec:
+            storageClassName: ""
+            accessModes: ["ReadWriteOnce"]
+            resources:
+              requests:
+                storage: 20Gi
+      
+      # Resource configuration
+      resources:
+        limits:
+          cpu: 1000m
+          memory: 2Gi
+        requests:
+          cpu: 500m
+          memory: 1Gi
+      
+      # Retention configuration
+      retention: 200h
+      retentionSize: ""
+      
+      # Additional scrape configs for Obliq services and Kubernetes pods
+      additionalScrapeConfigs: |
+        # Obliq SRE Agent Services
+        - job_name: "anomaly-detection"
+          static_configs:
+            - targets: ["anomaly-detection:8061"]
+              labels:
+                prometheus_job: "anomaly-detection"
+        - job_name: "incident-manager"
+          static_configs:
+            - targets: ["incident-manager:8064"]
+              labels:
+                prometheus_job: "incident-manager"
+        - job_name: "rca-agent"
+          static_configs:
+            - targets: ["rca-agent:8062"]
+              labels:
+                prometheus_job: "rca-agent"
+        - job_name: "auto-remediation"
+          static_configs:
+            - targets: ["auto-remediation:8063"]
+              labels:
+                prometheus_job: "auto-remediation"
+        - job_name: "orchestrator"
+          static_configs:
+            - targets: ["orchestrator:8060"]
+              labels:
+                prometheus_job: "orchestrator"
+  
+  # Alertmanager configuration (disabled by default)
+  alertmanager:
+    enabled: false
+  
+  # Grafana configuration (disabled by default)
+  grafana:
+    enabled: false
+  
+  # Node exporter configuration (disabled by default)
+  nodeExporter:
+    enabled: false
+  
+  # Kube state metrics configuration (disabled by default)
+  kubeStateMetrics:
+    enabled: false
+
+# Jaeger Community Chart (Bitnami) - provides distributed tracing capabilities
+jaeger:
+  enabled: false  # OPTIONAL SERVICE - Enable for distributed tracing (no external credentials needed)
+  
+  # Jaeger all-in-one configuration
+  mode: all-in-one
+  
+  # Image configuration
+  image:
+    registry: docker.io
+    repository: jaegertracing/all-in-one
+    tag: "1.60"
+    pullPolicy: IfNotPresent
+  
+  # Resource configuration
+  resources:
+    limits:
+      cpu: 1000m
+      memory: 2Gi
+    requests:
+      cpu: 500m
+      memory: 1Gi
+  
+  # Environment variables
+  extraEnvVars:
+    - name: COLLECTOR_OTLP_ENABLED
+      value: "true"
+    - name: LOG_LEVEL
+      value: "debug"
+  
+  # Service configuration
+  service:
+    type: ClusterIP
+    ports:
+      http: 16686
+      collector-http: 14268
+      collector-grpc: 14250
+  
+  # Disable persistence (all-in-one mode uses in-memory storage)
+  persistence:
+    enabled: false
+  
+  # Disable other components (we only want all-in-one)
+  agent:
+    enabled: false
+  collector:
+    enabled: false
+  query:
+    enabled: false
+  ingester:
+    enabled: false
+  sparkDependencies:
+    enabled: false
+  elasticsearch:
+    enabled: false
+  cassandra:
+    enabled: false
+  kafka:
+    enabled: false
 

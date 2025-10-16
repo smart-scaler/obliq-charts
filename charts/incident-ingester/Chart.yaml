@@ -1,0 +1,25 @@
+apiVersion: v2
+name: incident-ingester
+description: A Helm chart for deploying the incident ingester service with ServiceNow integration
+type: application
+version: 1.0.0
+appVersion: "1.2.0"
+keywords:
+  - incident-ingester
+  - servicenow
+  - integration
+  - incident
+  - ingester
+  - application
+  - container
+  - deployment
+maintainers:
+  - name: support@avesha.io
+    email: support@avesha.io
+home: https://avesha.io
+sources:
+  - https://github.com
+icon: https://via.placeholder.com/150x150.png?text=IncidentIngester
+annotations:
+  category: Application
+  licenses: Apache-2.0

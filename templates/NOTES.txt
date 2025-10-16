@@ -1,5 +1,5 @@
 ==========================================
-  Obliq SRE Agent Platform v1.1.1
+  Obliq SRE Agent Platform v1.2.0
 ==========================================
 
 🚀 DEPLOYMENT SUCCESSFUL!

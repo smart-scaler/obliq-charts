@@ -1,0 +1,25 @@
+apiVersion: v2
+name: gcp-mcp
+description: A Helm chart for deploying the Google Cloud Platform MCP (Model Context Protocol) service with multiple environment variables
+type: application
+version: 1.0.0
+appVersion: "1.2.0"
+keywords:
+  - gcp-mcp
+  - google-cloud-platform
+  - gcp
+  - mcp
+  - model-context-protocol
+  - application
+  - container
+  - deployment
+maintainers:
+  - name: support@avesha.io
+    email: support@avesha.io
+home: https://avesha.io
+sources:
+  - https://github.com
+icon: https://via.placeholder.com/150x150.png?text=GCPMCP
+annotations:
+  category: Application
+  licenses: Apache-2.0
