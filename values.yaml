@@ -637,6 +637,10 @@ backend:
       PORT: "8000"
       INFRA_AGENT_HOST: infra-agent
       INFRA_AGENT_PORT: 8051
+      ORCHESTRATOR_HOST: orchestrator
+      ORCHESTRATOR_PORT: 8060
+      HITL_MANAGER_HOST: hitl-manager
+      HITL_MANAGER_PORT: 8065
       
 # Web User Interface - provides frontend dashboard and user interface
 avesha-unified-ui:
@@ -724,6 +728,8 @@ orchestrator:
     app:
       AGENT_TYPE: "orchestrator"
       PORT: "8060"  # Service-specific port override
+      OTEL_SERVICE_NAME: "orchestrator"
+      OTEL_EXPORTER_JAEGER_ENDPOINT: "http://jaeger:14268/api/traces"
 
       # Note: OPENAI_API_KEY and service URLs are provided via globalSecretEnv
       # Note: Common environment variables (NODE_ENV, LOG_LEVEL, TZ) are provided via globalSecretEnv
@@ -742,6 +748,8 @@ rca-agent:
     app:
       AGENT_TYPE: "rca_agent"
       PORT: "8062"
+      OTEL_SERVICE_NAME: "rca-agent"
+      OTEL_EXPORTER_JAEGER_ENDPOINT: "http://jaeger:14268/api/traces"
       # Note: OPENAI_API_KEY, MCP_SERVERS, and service URLs are provided via globalSecretEnv
 
 
@@ -758,6 +766,8 @@ anomaly-detection:
     app:
       AGENT_TYPE: "anomaly_detection"
       PORT: "8061"
+      OTEL_SERVICE_NAME: "anomaly-detection"
+      OTEL_EXPORTER_JAEGER_ENDPOINT: "http://jaeger:14268/api/traces"
 
 
 # Automated Remediation Engine - AI-powered automated fixes and responses
@@ -773,6 +783,8 @@ auto-remediation:
     app:
       AGENT_TYPE: "auto_remediation"
       PORT: "8063"
+      OTEL_SERVICE_NAME: "auto-remediation"
+      OTEL_EXPORTER_JAEGER_ENDPOINT: "http://jaeger:14268/api/traces"
 
 # Human-in-the-Loop Manager - manages human intervention workflows and evidence collection
 hitl-manager:
@@ -809,6 +821,8 @@ incident-manager:
     app:
       AGENT_TYPE: "incident_manager"
       PORT: "8064"
+      OTEL_SERVICE_NAME: "incident-manager"
+      OTEL_EXPORTER_JAEGER_ENDPOINT: "http://jaeger:14268/api/traces"
 
 # Incident Ingester - ServiceNow integration for incident data ingestion
 incident-ingester:
