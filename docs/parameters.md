@@ -136,6 +136,7 @@ helm install --set backend.env.app.LOG_LEVEL="DEBUG"  # Highest priority
 | `global.env.loki.LOKI_TOKEN` | Loki token | `""` | No | `"your-token"` |
 | `global.env.mcp.NEO4J_MCP_USERNAME` | Neo4j MCP username | `"admin"` | No | `"mcp-user"` |
 | `global.env.mcp.NEO4J_MCP_PASSWORD` | Neo4j MCP password | `"admin123"` | No | `"mcp-password"` |
+| `global.gcpCredentials.content` | GCP service account JSON file content | `""` | For gcp-mcp | File content via `--set-file` |
 
 ### JIRA Integration Configuration
 
@@ -145,6 +146,14 @@ helm install --set backend.env.app.LOG_LEVEL="DEBUG"  # Highest priority
 | `global.env.jira.JIRA_EMAIL` | JIRA email | `""` | For JIRA integration | `"admin@company.com"` |
 | `global.env.jira.JIRA_API_TOKEN` | JIRA API token | `""` | For JIRA integration | `"your-api-token"` |
 | `global.env.jira.JIRA_PROJECT_KEY` | JIRA project key | `""` | For JIRA integration | `"PROJ"` |
+
+### ServiceNow Integration Configuration
+
+| Parameter | Description | Default | Required | Example |
+|-----------|-------------|---------|----------|---------|
+| `global.env.servicenow.SERVICE_NOW_INSTANCE` | ServiceNow instance URL | `""` | For incident-ingester | `"https://yourcompany.service-now.com"` |
+| `global.env.servicenow.SERVICE_NOW_USERNAME` | ServiceNow username | `""` | For incident-ingester | `"admin"` |
+| `global.env.servicenow.SERVICE_NOW_PASSWORD` | ServiceNow password | `""` | For incident-ingester | `"password"` |
 
 ### External Tools (Optional)
 

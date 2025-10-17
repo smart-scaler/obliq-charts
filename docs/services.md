@@ -50,6 +50,7 @@ These services are essential for platform functionality and cannot be disabled.
 | **anomaly-detection** | `enabled: true` | Anomaly detection and alerting | OpenAI API key |
 | **auto-remediation** | `enabled: true` | Automated fixes and responses | OpenAI API key |
 | **incident-manager** | `enabled: true` | Incident management system | OpenAI API key |
+| **hitl-manager** | `enabled: true` | Human-in-the-loop workflow management | Neo4j, MongoDB |
 
 ### Infrastructure Services
 
@@ -63,6 +64,7 @@ These services are essential for platform functionality and cannot be disabled.
 | Service | Status | Description | Requirements |
 |---------|--------|-------------|--------------|
 | **k8s-mcp** | `enabled: true` | Kubernetes Model Context Protocol server | kubeconfig file |
+| **gcp-mcp** | `enabled: false` | Google Cloud Platform Model Context Protocol server | GCP credentials JSON file |
 
 ⚠️ **Important**: Core AI services require an OpenAI API key configured via `global.env.openai.OPENAI_API_KEY`. They will fail to start without this credential.
 
@@ -81,6 +83,7 @@ Model Context Protocol services are **disabled by default** to reduce resource u
 | **`neo4j-mcp`** | Neo4j graph database integration | Uses internal Neo4j by default, optional external credentials | `--set neo4j-mcp.enabled=true` |
 | **`loki-mcp`** | Loki logs integration | • `LOKI_URL`<br>• `LOKI_USERNAME` (optional)<br>• `LOKI_PASSWORD` (optional)<br>• `LOKI_TOKEN` (optional) | `--set loki-mcp.enabled=true` |
 | **`cloudwatch-mcp`** | AWS CloudWatch integration | • `AWS_ACCESS_KEY_ID`<br>• `AWS_SECRET_ACCESS_KEY`<br>• CloudWatch permissions | `--set cloudwatch-mcp.enabled=true` |
+| **`gcp-mcp`** | Google Cloud Platform integration | • GCP service account JSON file | `--set gcp-mcp.enabled=true` |
 
 ### MCP Configuration Examples
 
@@ -156,6 +159,17 @@ export AWS_SECRET_ACCESS_KEY="your-aws-secret-key"
 --set global.env.aws.AWS_SECRET_ACCESS_KEY="${AWS_SECRET_ACCESS_KEY}"
 ```
 
+#### GCP MCP Integration
+
+```bash
+# Required credentials (GCP service account JSON file)
+# Create service account in Google Cloud Console and download JSON key
+
+# Enable command
+--set gcp-mcp.enabled=true \
+--set-file global.gcpCredentials.content=./gcp-credentials.json
+```
+
 ---
 
 ## 📊 Integration Services (Optional)
@@ -168,6 +182,7 @@ Integration services are **disabled by default** to prevent deployment failures 
 | **`slack-ingester`** | Slack message ingestion | • `SLACK_BOT_TOKEN`<br>• `SLACK_WEBHOOK_URL` (optional) | `--set slack-ingester.enabled=true` |
 | **`kubernetes-events-ingester`** | K8s events collection | • `kubeconfig` file<br>• Cluster access permissions | `--set kubernetes-events-ingester.enabled=true` |
 | **`aws-ec2-cloudwatch-alarms`** | AWS CloudWatch monitoring | • `AWS_ACCESS_KEY_ID`<br>• `AWS_SECRET_ACCESS_KEY`<br>• `AWS_ROLE_ARN_EC2_CLOUDWATCH_ALARMS` | `--set aws-ec2-cloudwatch-alarms.enabled=true` |
+| **`incident-ingester`** | ServiceNow incident ingestion | • `SERVICE_NOW_INSTANCE`<br>• `SERVICE_NOW_USERNAME`<br>• `SERVICE_NOW_PASSWORD`<br>• `OPENAI_API_KEY` | `--set incident-ingester.enabled=true` |
 
 ### Integration Configuration Examples
 
@@ -219,6 +234,23 @@ export AWS_ROLE_ARN_EC2_CLOUDWATCH="arn:aws:iam::123456789012:role/your-cloudwat
 --set global.env.aws.AWS_ACCESS_KEY_ID="${AWS_ACCESS_KEY_ID}" \
 --set global.env.aws.AWS_SECRET_ACCESS_KEY="${AWS_SECRET_ACCESS_KEY}" \
 --set global.env.aws.AWS_ROLE_ARN_EC2_CLOUDWATCH_ALARMS="${AWS_ROLE_ARN_EC2_CLOUDWATCH}"
+```
+
+#### ServiceNow Integration (incident-ingester)
+
+```bash
+# Required credentials
+export SERVICE_NOW_INSTANCE="https://yourcompany.service-now.com"
+export SERVICE_NOW_USERNAME="your-servicenow-username"
+export SERVICE_NOW_PASSWORD="your-servicenow-password"
+export OPENAI_API_KEY="sk-your-openai-api-key"
+
+# Enable command
+--set incident-ingester.enabled=true \
+--set global.env.servicenow.SERVICE_NOW_INSTANCE="${SERVICE_NOW_INSTANCE}" \
+--set global.env.servicenow.SERVICE_NOW_USERNAME="${SERVICE_NOW_USERNAME}" \
+--set global.env.servicenow.SERVICE_NOW_PASSWORD="${SERVICE_NOW_PASSWORD}" \
+--set global.env.openai.OPENAI_API_KEY="${OPENAI_API_KEY}"
 ```
 
 ---

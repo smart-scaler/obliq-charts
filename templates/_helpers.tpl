@@ -528,6 +528,23 @@ This template provides all environment variables from the global secret
       name: {{ include "obliq-sre-agent.globalSecretName" . }}
       key: JIRA_PAT
 
+# ServiceNow configuration from global Secret
+- name: SERVICE_NOW_INSTANCE
+  valueFrom:
+    secretKeyRef:
+      name: {{ include "obliq-sre-agent.globalSecretName" . }}
+      key: SERVICE_NOW_INSTANCE
+- name: SERVICE_NOW_USERNAME
+  valueFrom:
+    secretKeyRef:
+      name: {{ include "obliq-sre-agent.globalSecretName" . }}
+      key: SERVICE_NOW_USERNAME
+- name: SERVICE_NOW_PASSWORD
+  valueFrom:
+    secretKeyRef:
+      name: {{ include "obliq-sre-agent.globalSecretName" . }}
+      key: SERVICE_NOW_PASSWORD
+
 
 # Slack configuration from global Secret
 - name: SLACK_WEBHOOK_URL

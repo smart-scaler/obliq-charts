@@ -20,6 +20,9 @@ dependencies:
 - name: k8s-mcp
   repository: file://./charts/k8s-mcp
   version: 1.0.0
+- name: gcp-mcp
+  repository: file://./charts/gcp-mcp
+  version: 1.0.0
 - name: prometheus-mcp
   repository: file://./charts/prometheus-mcp
   version: 1.0.0
@@ -44,11 +47,17 @@ dependencies:
 - name: incident-manager
   repository: file://./charts/incident-manager
   version: 1.0.0
+- name: incident-ingester
+  repository: file://./charts/incident-ingester
+  version: 1.0.0
 - name: rca-agent
   repository: file://./charts/rca-agent
   version: 1.0.0
 - name: auto-remediation
   repository: file://./charts/auto-remediation
+  version: 1.0.0
+- name: hitl-manager
+  repository: file://./charts/hitl-manager
   version: 1.0.0
 - name: backend
   repository: file://./charts/backend
@@ -65,5 +74,11 @@ dependencies:
 - name: orchestrator
   repository: file://./charts/orchestrator
   version: 1.0.0
-digest: sha256:b5742bf828a2d14d8f9cd76b4160d0beecb30047373957307ad32a3ebad632c8
-generated: "2025-10-07T09:19:38.432085621Z"
+- name: prometheus
+  repository: https://prometheus-community.github.io/helm-charts
+  version: 27.41.0
+- name: jaeger
+  repository: https://charts.bitnami.com/bitnami
+  version: 6.0.5
+digest: sha256:4e3d3bedef2a2b7bde1e066b5f8b5722515bbf44653912c4b4801be88e5a10da
+generated: "2025-10-16T23:45:42.604053+03:00"

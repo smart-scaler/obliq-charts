@@ -3,7 +3,7 @@ name: service-graph-engine
 description: A Helm chart for deploying the service graph engine service with multiple environment variables
 type: application
 version: 1.0.0
-appVersion: "1.1.2"
+appVersion: "1.2.0"
 keywords:
   - service-graph-engine
   - graph

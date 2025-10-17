@@ -1,0 +1,229 @@
+# Default values for hitl-manager
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# Global configuration
+global:
+  # Global image registry
+  imageRegistry: ""
+  # Global image pull secrets - using global configuration
+  # imagePullSecrets: []
+  # Global storage class
+  storageClass: ""
+
+# Image configuration
+image:
+  # Image repository
+  repository: ""
+  # Image tag
+  tag: ""
+  # Image pull policy
+  pullPolicy: IfNotPresent
+  # Image pull secrets - using global configuration
+  # pullSecrets: []
+
+# Name override
+nameOverride: ""
+# Full name override
+fullnameOverride: ""
+
+# Service account configuration
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+# Pod annotations
+podAnnotations: {}
+
+# Pod security context - DISABLED
+# podSecurityContext: {}
+  # fsGroup: 2000
+
+# Security context - DISABLED
+# securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+# Service configuration
+service:
+  type: ClusterIP
+  port: 8065
+  # Additional ports if needed
+  additionalPorts: []
+  # - name: https
+  #   port: 443
+  #   targetPort: 443
+  #   protocol: TCP
+
+# Resource limits and requests
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+# Node selector
+nodeSelector: {}
+
+# Tolerations
+tolerations: []
+
+# Affinity
+affinity: {}
+
+# Replica count
+replicaCount: 1
+
+# Horizontal pod autoscaler
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 1
+  targetCPUUtilizationPercentage: 70
+  targetMemoryUtilizationPercentage: 80
+
+# Environment variables configuration
+env:
+  # Common environment variables - rely on global values
+  common: {}
+  
+  # Application specific environment variables - rely on main values service config
+  app: {}
+
+# Secret environment variables - rely on global secrets
+secrets: {}
+
+# ConfigMap configuration
+configMap:
+  enabled: true
+  # Additional config files
+  files: {}
+  # - name: "app.config"
+  #   content: |
+  #     # Application configuration
+  #     [app]
+  #     name = "my-app"
+  #     version = "1.0.0"
+
+# Volume mounts
+volumes:
+  # Persistent volumes
+  persistent:
+    enabled: false
+    storageClass: ""
+    size: 20Gi
+    mountPath: /data
+    accessMode: ReadWriteOnce
+  
+  # Config volumes
+  config:
+    enabled: false
+    mountPath: /config
+    subPath: ""
+  
+  # Empty dir volumes
+  emptyDir:
+    enabled: false
+    mountPath: /tmp
+    medium: ""
+    sizeLimit: ""
+
+# Liveness probe configuration - DISABLED
+livenessProbe:
+  enabled: false
+  # path: /health
+  # port: 3000
+  # initialDelaySeconds: 30
+  # periodSeconds: 10
+  # timeoutSeconds: 5
+  # failureThreshold: 3
+  # successThreshold: 1
+
+# Readiness probe configuration - DISABLED
+readinessProbe:
+  enabled: false
+  # path: /ready
+  # port: 3000
+  # initialDelaySeconds: 5
+  # periodSeconds: 5
+  # timeoutSeconds: 3
+  # failureThreshold: 3
+  # successThreshold: 1
+
+# Startup probe configuration - DISABLED
+# startupProbe:
+#   enabled: false
+#   path: /startup
+#   port: 3000
+#   initialDelaySeconds: 10
+#   periodSeconds: 10
+#   timeoutSeconds: 5
+#   failureThreshold: 30
+#   successThreshold: 1
+
+# Command and args override
+command: []
+args: []
+
+# Container ports
+ports:
+  - name: http
+    containerPort: 8065
+    protocol: TCP
+  # - name: https
+  #   containerPort: 443
+  #   protocol: TCP
+  # - name: metrics
+  #   containerPort: 9090
+  #   protocol: TCP
+
+
+
+# Network policy
+networkPolicy:
+  enabled: false
+  # Ingress rules removed - no external ingress for this service
+  egress:
+    - to:
+        - namespaceSelector: {}
+      ports:
+        - protocol: TCP
+          port: 53
+        - protocol: UDP
+          port: 53
+
+# Horizontal pod autoscaler
+hpa:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 1
+  targetCPUUtilizationPercentage: 80
+  targetMemoryUtilizationPercentage: 80
+  behavior:
+    scaleDown:
+      stabilizationWindowSeconds: 300
+      policies:
+        - type: Percent
+          value: 10
+          periodSeconds: 60
+    scaleUp:
+      stabilizationWindowSeconds: 60
+      policies:
+        - type: Percent
+          value: 100
+          periodSeconds: 60

@@ -1,211 +1,243 @@
 # Kubernetes Permissions Guide
 
-This document outlines the required Kubernetes permissions for the Avesha Agents platform to function properly.
+This document provides step-by-step instructions for setting up Kubernetes permissions and kubeconfig for the Obliq SRE Agent platform.
+
+## 📋 Table of Contents
+
+### **1. Core Resources**
+- [**Complete RBAC Configuration**](#complete-rbac-configuration) - Ready-to-copy RBAC manifests
+- [**Permission Breakdown**](#permission-breakdown) - Detailed permission explanations
+
+### **2. Setup Methods**
+- [**Generate Kubeconfig**](#generate-kubeconfig) - Complete setup with kubeconfig generation
 
 ## Overview
 
-The Avesha Agents platform requires specific Kubernetes permissions to monitor, collect metrics, and manage resources across your cluster. These permissions are organized into three main categories:
+The Obliq SRE Agent platform requires specific Kubernetes permissions to monitor cluster resources and collect metrics.
 
-1. **Cluster-Scoped Permissions** - Access to cluster-wide resources
-2. **Namespace-Scoped Permissions** - Access to resources within specific namespaces
-3. **Metrics API Permissions** - Access to Kubernetes metrics for monitoring
+## Complete RBAC Configuration
 
-## Required Permissions
-
-### **Cluster-Scoped Permissions**
-
-These permissions allow access to cluster-wide resources:
-
-```yaml
-# ClusterRole permissions
-- apiGroups: [""]
-  resources: ["nodes", "namespaces"]
-  verbs: ["get", "list"]
-```
-
-**Resources:**
-- **`nodes`**: `get`, `list` - Access to cluster node information
-- **`namespaces`**: `get`, `list` - Access to namespace information across the cluster
-
-### **Namespace-Scoped Permissions**
-
-These permissions allow access to resources within specific namespaces:
-
-```yaml
-# Namespace-scoped permissions
-- apiGroups: [""]
-  resources: ["pods", "pods/log", "events", "services"]
-  verbs: ["get", "list", "watch"]
-
-- apiGroups: ["apps"]
-  resources: ["deployments", "replicasets", "statefulsets", "daemonsets"]
-  verbs: ["get", "list", "watch"]
-```
-
-**Resources:**
-- **`pods`**: `get`, `list`, `watch` - Access to pod information and status
-- **`pods/log`**: `get` - Access to pod logs for troubleshooting
-- **`events`**: `get`, `list`, `watch` - Access to Kubernetes events
-- **`services`**: `get`, `list`, `watch` - Access to service information
-- **`deployments`**: `get`, `list`, `watch` - Access to deployment status
-- **`replicasets`**: `get`, `list`, `watch` - Access to replica set information
-- **`statefulsets`**: `get`, `list`, `watch` - Access to stateful set status
-- **`daemonsets`**: `get`, `list`, `watch` - Access to daemon set information
-
-### **Metrics API Permissions**
-
-These permissions allow access to Kubernetes metrics for monitoring and alerting:
-
-```yaml
-# Metrics API permissions
-- apiGroups: ["metrics.k8s.io"]
-  resources: ["pods", "nodes"]
-  verbs: ["get", "list"]
-```
-
-**Resources:**
-- **`pods.metrics.k8s.io`**: `get`, `list` - Access to pod resource metrics (CPU, memory)
-- **`nodes.metrics.k8s.io`**: `get`, `list` - Access to node resource metrics
-
-## Implementation
-
-### **Option 1: Create Custom ClusterRole and ClusterRoleBinding**
+**Copy this complete RBAC configuration for immediate use:**
 
 ```yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: avesha-agents-monitoring
+  name: obliq-sre-agent
 rules:
-# Cluster-scoped permissions
 - apiGroups: [""]
-  resources: ["nodes", "namespaces"]
-  verbs: ["get", "list"]
-
-# Namespace-scoped permissions
-- apiGroups: [""]
-  resources: ["pods", "pods/log", "events", "services"]
+  resources:
+  - pods
+  - pods/log
+  - services
+  - endpoints
+  - nodes
+  - namespaces
+  - events
   verbs: ["get", "list", "watch"]
 
 - apiGroups: ["apps"]
-  resources: ["deployments", "replicasets", "statefulsets", "daemonsets"]
+  resources:
+  - deployments
+  - daemonsets
+  - statefulsets
+  - replicasets
   verbs: ["get", "list", "watch"]
 
-# Metrics API permissions
+- apiGroups: ["batch"]
+  resources:
+  - jobs
+  - cronjobs
+  verbs: ["get", "list", "watch"]
+
 - apiGroups: ["metrics.k8s.io"]
-  resources: ["pods", "nodes"]
+  resources:
+  - pods
+  - nodes
   verbs: ["get", "list"]
+
+- apiGroups: ["networking.k8s.io"]
+  resources:
+  - ingresses
+  - networkpolicies
+  verbs: ["get", "list", "watch"]
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: avesha-agents-monitoring
+  name: obliq-sre-agent
 subjects:
 - kind: ServiceAccount
-  name: avesha-agents
+  name: obliq-sre-agent
   namespace: avesha
 roleRef:
   kind: ClusterRole
-  name: avesha-agents-monitoring
+  name: obliq-sre-agent
   apiGroup: rbac.authorization.k8s.io
 ```
 
-### **Option 2: Use Existing Cluster Roles**
+## Permission Breakdown
 
-If you prefer to use existing cluster roles, you can bind to:
+The RBAC configuration includes permissions for:
 
-```yaml
-# Bind to view cluster role (read-only access)
+### **Core Resources**
+- **Pods**: get, list, watch - Access to pod information and status
+- **Pods/Log**: get - Access to pod logs for troubleshooting
+- **Services**: get, list, watch - Access to service information
+- **Endpoints**: get, list, watch - Access to service endpoints
+- **Nodes**: get, list, watch - Access to cluster node information
+- **Namespaces**: get, list, watch - Access to namespace information
+- **Events**: get, list, watch - Access to Kubernetes events
+
+### **Workload APIs**
+- **Deployments**: get, list, watch - Access to deployment status
+- **DaemonSets**: get, list, watch - Access to daemon set information
+- **StatefulSets**: get, list, watch - Access to stateful set status
+- **ReplicaSets**: get, list, watch - Access to replica set information
+
+### **Batch APIs**
+- **Jobs**: get, list, watch - Access to job information
+- **CronJobs**: get, list, watch - Access to cron job information
+
+### **Metrics API**
+- **Pods Metrics**: get, list - Access to pod resource metrics (CPU, memory)
+- **Nodes Metrics**: get, list - Access to node resource metrics
+
+### **Networking**
+- **Ingresses**: get, list, watch - Access to ingress information
+- **Network Policies**: get, list, watch - Access to network policy information
+
+## Generate Kubeconfig
+
+**Prerequisites**: Cluster admin access, kubectl configured.
+
+**Important Notes**:
+- **Cluster Name**: Replace `your-cluster-name` with your actual cluster name in the commands below
+- **Cluster Endpoint**: Ensure the Kubernetes cluster endpoint is accessible from where the Obliq setup is running. Make sure to configure any required firewall rules or network policies to allow access to the cluster API server
+
+### **Step 1: Create Namespace and Service Account**
+```bash
+# Create namespace
+kubectl create namespace avesha
+
+# Create service account
+kubectl create serviceaccount obliq-sre-agent -n avesha
+```
+
+### **Step 2: Apply RBAC Configuration**
+```bash
+# Apply the complete RBAC configuration
+kubectl apply -f - << EOF
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: obliq-sre-agent
+rules:
+- apiGroups: [""]
+  resources:
+  - pods
+  - pods/log
+  - services
+  - endpoints
+  - nodes
+  - namespaces
+  - events
+  verbs: ["get", "list", "watch"]
+- apiGroups: ["apps"]
+  resources:
+  - deployments
+  - daemonsets
+  - statefulsets
+  - replicasets
+  verbs: ["get", "list", "watch"]
+- apiGroups: ["batch"]
+  resources:
+  - jobs
+  - cronjobs
+  verbs: ["get", "list", "watch"]
+- apiGroups: ["metrics.k8s.io"]
+  resources:
+  - pods
+  - nodes
+  verbs: ["get", "list"]
+- apiGroups: ["networking.k8s.io"]
+  resources:
+  - ingresses
+  - networkpolicies
+  verbs: ["get", "list", "watch"]
+---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: avesha-agents-view
+  name: obliq-sre-agent
 subjects:
 - kind: ServiceAccount
-  name: avesha-agents
+  name: obliq-sre-agent
   namespace: avesha
 roleRef:
   kind: ClusterRole
-  name: view
+  name: obliq-sre-agent
   apiGroup: rbac.authorization.k8s.io
+EOF
 ```
 
-**Note**: The `view` cluster role provides most of the required permissions but may need additional metrics API permissions.
-
-## Service Account Configuration
-
-Ensure your Avesha Agents deployment uses the correct service account:
-
-```yaml
+### **Step 3: Generate Service Account Token**
+```bash
+# Create token secret
+kubectl apply -f - << EOF
 apiVersion: v1
-kind: ServiceAccount
+kind: Secret
 metadata:
-  name: avesha-agents
+  name: obliq-sre-agent-token
   namespace: avesha
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: avesha-agents
-spec:
-  template:
-    spec:
-      serviceAccountName: avesha-agents
-      # ... other configuration
+  annotations:
+    kubernetes.io/service-account.name: obliq-sre-agent
+type: kubernetes.io/service-account-token
+EOF
+
+# Wait for token to be generated
+sleep 10
+
+# Get token
+TOKEN=$(kubectl get secret obliq-sre-agent-token -n avesha -o jsonpath='{.data.token}' | base64 -d)
+
+# Get cluster information
+# Note: Replace 'your-cluster-name' with your actual cluster name
+CLUSTER_NAME="your-cluster-name"
+CLUSTER_ENDPOINT=$(kubectl config view --minify -o jsonpath='{.clusters[0].cluster.server}')
+CLUSTER_CA=$(kubectl config view --raw -o jsonpath='{.clusters[0].cluster.certificate-authority-data}')
 ```
 
-## Verification
-
-To verify the permissions are working correctly:
-
+### **Step 4: Create Kubeconfig**
 ```bash
-# Test cluster-scoped access
-kubectl auth can-i get nodes --as=system:serviceaccount:avesha:avesha-agents
-kubectl auth can-i list namespaces --as=system:serviceaccount:avesha:avesha-agents
+# Create kubeconfig file
+cat > obliq-sre-agent-kubeconfig.yaml << EOF
+apiVersion: v1
+kind: Config
+clusters:
+- cluster:
+    certificate-authority-data: ${CLUSTER_CA}
+    server: ${CLUSTER_ENDPOINT}
+  name: ${CLUSTER_NAME}
+contexts:
+- context:
+    cluster: ${CLUSTER_NAME}
+    user: obliq-sre-agent
+  name: ${CLUSTER_NAME}
+current-context: ${CLUSTER_NAME}
+users:
+- name: obliq-sre-agent
+  user:
+    token: ${TOKEN}
+EOF
 
-# Test namespace-scoped access
-kubectl auth can-i get pods --as=system:serviceaccount:avesha:avesha-agents -n avesha
-kubectl auth can-i get deployments --as=system:serviceaccount:avesha:avesha-agents -n avesha
-
-# Test metrics API access
-kubectl auth can-i get pods.metrics.k8s.io --as=system:serviceaccount:avesha:avesha-agents
-kubectl auth can-i get nodes.metrics.k8s.io --as=system:serviceaccount:avesha:avesha-agents
+echo "Kubeconfig created: obliq-sre-agent-kubeconfig.yaml"
 ```
 
-## Security Considerations
-
-- **Principle of Least Privilege**: Only grant the minimum permissions necessary
-- **Namespace Isolation**: Consider restricting access to specific namespaces if possible
-- **Regular Review**: Periodically review and audit permissions
-- **Monitoring**: Monitor for any permission-related errors in logs
-
-## Troubleshooting
-
-### **Common Permission Issues**
-
-1. **"Forbidden" errors**: Check if the service account has the required permissions
-2. **Metrics API errors**: Ensure metrics-server is installed and the service account has metrics API access
-3. **Cross-namespace access**: Verify cluster role bindings are properly configured
-
-### **Debug Commands**
-
+### **Step 5: Test Kubeconfig**
 ```bash
-# Check service account permissions
-kubectl auth can-i --list --as=system:serviceaccount:avesha:avesha-agents
-
-# Check cluster role bindings
-kubectl get clusterrolebindings | grep avesha
-
-# Check cluster roles
-kubectl get clusterroles | grep avesha
+# Test the kubeconfig
+kubectl --kubeconfig=obliq-sre-agent-kubeconfig.yaml get nodes
+kubectl --kubeconfig=obliq-sre-agent-kubeconfig.yaml get pods -n avesha
+kubectl --kubeconfig=obliq-sre-agent-kubeconfig.yaml get deployments -n avesha
 ```
-
-## References
-
-- [Kubernetes RBAC Documentation](https://kubernetes.io/docs/reference/access-authn-authz/rbac/)
-- [Kubernetes Metrics API](https://kubernetes.io/docs/tasks/debug-application-cluster/resource-metrics-pipeline/)
-- [Service Accounts](https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/)
-
----
-
-**Note**: This document should be reviewed and updated as the Avesha Agents platform evolves and new permission requirements are identified.
