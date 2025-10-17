@@ -166,15 +166,15 @@ readinessProbe:
   # successThreshold: 1
 
 # Startup probe configuration - DISABLED
-# startupProbe:
-#   enabled: false
-#   path: /startup
-#   port: 3000
-#   initialDelaySeconds: 10
-#   periodSeconds: 10
-#   timeoutSeconds: 5
-#   failureThreshold: 30
-#   successThreshold: 1
+startupProbe:
+  enabled: false
+  # path: /startup
+  # port: 3000
+  # initialDelaySeconds: 10
+  # periodSeconds: 10
+  # timeoutSeconds: 5
+  # failureThreshold: 30
+  # successThreshold: 1
 
 # Command and args override
 command: []
