@@ -103,6 +103,21 @@ spec:
               value: {{ $value | quote }}
               {{- end }}
             {{- end }}
+
+                        # RCA-specific OpenAI configuration from global secret
+            - name: RCA_OPENAI_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "obliq-sre-agent.globalSecretName" $ }}
+                  key: OPENAI_API_KEY
+            - name: RCA_OPENAI_MODEL
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "obliq-sre-agent.globalSecretName" $ }}
+                  key: OPENAI_MODELS
+            - name: RCA_OPENAI_TEMPERATURE
+              value: "0.1"
+              
             {{- if .Values.env.app }}
               {{- range $key, $value := .Values.env.app }}
             - name: {{ $key }}

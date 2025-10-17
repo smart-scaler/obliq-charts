@@ -44,27 +44,27 @@ helm install obliq-sre-agent ./obliq-sre-agent \
 
 This service requires Kubernetes API access to ingest events. Configure kubeconfig using one of these approaches:
 
-### Option 1: Using --set-file (Recommended for Development)
+### Option 1: Using Global Secret (Recommended)
 ```bash
+# Kubeconfig content is automatically stored in the global secret
 helm install obliq-sre-agent ./obliq-sre-agent \
   --namespace avesha \
-  --set-file kubernetes-events-ingester.kubeconfig.content=./kubeconfig \
+  --set-file global.kubeconfig.content=./kubeconfig \
   [other parameters...]
 ```
 
-### Option 2: Using Pre-created Secret (Recommended for Production)
+### Option 2: Using Pre-created Global Secret (Alternative)
 ```bash
-# Create secret first
-kubectl create secret generic kubeconfig-secret \
-  --from-file=config=./kubeconfig \
+# Create global secret first
+kubectl create secret generic obliq-sre-agent-global-secret \
+  --from-literal=KUBECONFIG_CONTENT="$(cat ./kubeconfig | base64 -w 0)" \
   --namespace avesha
 
-# Install with secret reference
+# Install with global secret reference
 helm install obliq-sre-agent ./obliq-sre-agent \
   --namespace avesha \
   --set kubernetes-events-ingester.kubeconfig.secretRef.enabled=true \
-  --set kubernetes-events-ingester.kubeconfig.secretRef.name=kubeconfig-secret \
-  --set global.env.common.KUBECONFIG=/etc/kubeconfig/config \
+  --set global.env.common.KUBECONFIG_FILE_PATH=/etc/kubeconfig/config \
   [other parameters...]
 ```
 
@@ -164,7 +164,7 @@ The `kubernetes-events-ingester` inherits configuration from the umbrella chart'
 ┌─────────────────────────────────────────────────────────┐
 │        kubernetes-events-ingester Configuration         │
 │                                                         │
-│  ✅ Inherits: LOG_LEVEL, NODE_ENV, KUBECONFIG           │
+│  ✅ Inherits: LOG_LEVEL, NODE_ENV, KUBECONFIG_FILE_PATH           │
 │  ✅ Inherits: Resources, volumes, autoscaling           │
 │  ➕ Adds: kubeconfig.content, service-specific config   │
 │  🔄 Overrides: Can override any inherited setting       │
@@ -182,7 +182,7 @@ global:
     common:
       LOG_LEVEL: "INFO"           # ✅ Inherited
       NODE_ENV: "production"      # ✅ Inherited  
-      KUBECONFIG: "/etc/kubeconfig/config"  # ✅ Inherited - Secret mount path
+      KUBECONFIG_FILE_PATH: "/etc/kubeconfig/config"  # ✅ Inherited - Secret mount path
       TZ: "UTC"                   # ✅ Inherited
       DEBUG: "false"              # ✅ Inherited
     
@@ -261,7 +261,7 @@ Parameters follow this precedence (highest to lowest):
 This service depends on these global configurations:
 
 #### Required Global Parameters:
-- `global.env.common.KUBECONFIG` → Path to kubeconfig file in container
+- `global.env.common.KUBECONFIG_FILE_PATH` → Path to kubeconfig file in container
 - `global.env.common.LOG_LEVEL` → Logging configuration
 - `global.env.common.NODE_ENV` → Runtime environment
 
@@ -323,8 +323,8 @@ EOF
 # Check current mount
 kubectl describe pod -n avesha -l app.kubernetes.io/name=kubernetes-events-ingester | grep -A 10 "Mounts:"
 
-# Update KUBECONFIG environment variable if using secret approach
---set global.env.common.KUBECONFIG=/etc/kubeconfig/config
+# Update KUBECONFIG_FILE_PATH environment variable if using secret approach
+--set global.env.common.KUBECONFIG_FILE_PATH=/etc/kubeconfig/config
 ```
 
 ### Common Issues

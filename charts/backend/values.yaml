@@ -37,6 +37,16 @@ serviceAccount:
   # If not set and create is true, a name is generated using the fullname template
   name: ""
 
+# RBAC configuration
+rbac:
+  # Enable RBAC resources (Role and RoleBinding)
+  enabled: true
+  # Additional Role rules (will be merged with default rules)
+  additionalRules: []
+  # - apiGroups: [""]
+  #   resources: ["configmaps"]
+  #   verbs: ["create", "update", "patch", "delete"]
+
 # Pod annotations
 podAnnotations: {}
 
