@@ -1,9 +1,9 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "avesha-unified-ui.fullname" . }}
+  name: {{ include "obliq-unified-ui.fullname" . }}
   labels:
-    {{- include "avesha-unified-ui.labels" . | nindent 4 }}
+    {{- include "obliq-unified-ui.labels" . | nindent 4 }}
   {{- with .Values.podAnnotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
@@ -14,11 +14,11 @@ spec:
   {{- end }}
   selector:
     matchLabels:
-      {{- include "avesha-unified-ui.selectorLabels" . | nindent 6 }}
+      {{- include "obliq-unified-ui.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
-        {{- include "avesha-unified-ui.selectorLabels" . | nindent 8 }}
+        {{- include "obliq-unified-ui.selectorLabels" . | nindent 8 }}
       {{- with .Values.podAnnotations }}
       annotations:
         {{- toYaml . | nindent 8 }}
@@ -29,7 +29,7 @@ spec:
       imagePullSecrets:
         - name: {{ $secretName }}
       {{- end }}
-      serviceAccountName: {{ include "avesha-unified-ui.serviceAccountName" . }}
+      serviceAccountName: {{ include "obliq-unified-ui.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
@@ -88,7 +88,7 @@ spec:
               {{- end }}
             {{- end }}
             # Service-specific environment variables from main values config
-            {{- include "obliq-sre-agent.serviceSpecificEnv" (dict "serviceName" "avesha-unified-ui" "root" $) | nindent 12 }}
+            {{- include "obliq-sre-agent.serviceSpecificEnv" (dict "serviceName" "obliq-unified-ui" "root" $) | nindent 12 }}
             
             # Local app environment variables (override global if any)
             {{- if .Values.env.app }}
@@ -105,7 +105,7 @@ spec:
             - name: {{ $key }}
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "avesha-unified-ui.fullname" $ }}-secrets
+                  name: {{ include "obliq-unified-ui.fullname" $ }}-secrets
                   key: {{ $key }}
             {{- end }}
             {{- end }}
@@ -118,7 +118,7 @@ spec:
             - name: {{ $key }}
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "avesha-unified-ui.fullname" $ }}-secrets
+                  name: {{ include "obliq-unified-ui.fullname" $ }}-secrets
                   key: {{ $key }}
             {{- end }}
             {{- end }}
@@ -131,7 +131,7 @@ spec:
             - name: {{ $key }}
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "avesha-unified-ui.fullname" $ }}-secrets
+                  name: {{ include "obliq-unified-ui.fullname" $ }}-secrets
                   key: {{ $key }}
             {{- end }}
             {{- end }}
@@ -185,12 +185,12 @@ spec:
         {{- if .Values.volumes.persistent.enabled }}
         - name: persistent-storage
           persistentVolumeClaim:
-            claimName: {{ include "avesha-unified-ui.fullname" . }}-pvc
+            claimName: {{ include "obliq-unified-ui.fullname" . }}-pvc
         {{- end }}
         {{- if .Values.volumes.config.enabled }}
         - name: config-volume
           configMap:
-            name: {{ include "avesha-unified-ui.fullname" . }}-config
+            name: {{ include "obliq-unified-ui.fullname" . }}-config
         {{- end }}
         {{- if .Values.volumes.emptyDir.enabled }}
         - name: temp-storage
@@ -220,14 +220,14 @@ spec:
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: {{ include "avesha-unified-ui.fullname" . }}
+  name: {{ include "obliq-unified-ui.fullname" . }}
   labels:
-    {{- include "avesha-unified-ui.labels" . | nindent 4 }}
+    {{- include "obliq-unified-ui.labels" . | nindent 4 }}
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: {{ include "avesha-unified-ui.fullname" . }}
+    name: {{ include "obliq-unified-ui.fullname" . }}
   minReplicas: {{ .Values.autoscaling.minReplicas }}
   maxReplicas: {{ .Values.autoscaling.maxReplicas }}
   metrics:
@@ -253,14 +253,14 @@ spec:
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: {{ include "avesha-unified-ui.fullname" . }}-hpa
+  name: {{ include "obliq-unified-ui.fullname" . }}-hpa
   labels:
-    {{- include "avesha-unified-ui.labels" . | nindent 4 }}
+    {{- include "obliq-unified-ui.labels" . | nindent 4 }}
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: {{ include "avesha-unified-ui.fullname" . }}
+    name: {{ include "obliq-unified-ui.fullname" . }}
   minReplicas: {{ .Values.hpa.minReplicas }}
   maxReplicas: {{ .Values.hpa.maxReplicas }}
   metrics:

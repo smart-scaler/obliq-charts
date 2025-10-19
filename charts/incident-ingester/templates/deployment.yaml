@@ -20,9 +20,10 @@ spec:
       labels:
         {{- include "incident-ingester.selectorLabels" . | nindent 8 }}
     spec:
-      {{- with .Values.podSecurityContext }}
-      securityContext:
-        {{- toYaml . | nindent 8 }}
+      {{- $secretName := include "obliq-sre-agent.imagePullSecretName" $ }}
+      {{- if $secretName }}
+      imagePullSecrets:
+        - name: {{ $secretName }}
       {{- end }}
       serviceAccountName: {{ include "incident-ingester.serviceAccountName" . }}
       securityContext:

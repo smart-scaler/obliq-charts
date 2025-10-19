@@ -2,9 +2,9 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: {{ include "avesha-unified-ui.fullname" . }}-pvc
+  name: {{ include "obliq-unified-ui.fullname" . }}-pvc
   labels:
-    {{- include "avesha-unified-ui.labels" . | nindent 4 }}
+    {{- include "obliq-unified-ui.labels" . | nindent 4 }}
 spec:
   accessModes:
     - {{ .Values.volumes.persistent.accessMode }}

@@ -145,10 +145,10 @@ dependencies:
     condition: infra-agent.enabled
 
   # STEP 9: Backend-dependent Services (needs: backend)
-  - name: avesha-unified-ui
+  - name: obliq-unified-ui
     version: 1.0.0
-    repository: file://./charts/avesha-unified-ui
-    condition: avesha-unified-ui.enabled
+    repository: file://./charts/obliq-unified-ui
+    condition: obliq-unified-ui.enabled
 
   # STEP 10: Orchestrator (needs: neo4j + all analysis services)
   # Must deploy last as it depends on: anomaly-detection, incident-manager, rca-agent, auto-remediation, service-graph-engine

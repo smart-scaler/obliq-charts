@@ -1,4 +1,4 @@
-# Avesha Unified UI
+# Obliq Unified UI
 
 Web-based user interface for the Obliq SRE Agent platform
 
@@ -29,7 +29,7 @@ To enable or disable this specific service, use the umbrella chart with custom v
 
 ```yaml
 # custom-values.yaml
-avesha-unified-ui:
+obliq-unified-ui:
   enabled: true  # Set to false to disable this service
 ```
 
@@ -46,7 +46,7 @@ Configure this service through the umbrella chart's values:
 
 ```yaml
 # custom-values.yaml
-avesha-unified-ui:
+obliq-unified-ui:
   enabled: true
   replicaCount: 2
   image:
@@ -84,13 +84,13 @@ global:
 
 ```bash
 # Check if the service is running
-kubectl get pods -n avesha -l app.kubernetes.io/name=avesha-unified-ui
+kubectl get pods -n obliq -l app.kubernetes.io/name=obliq-unified-ui
 
 # View service logs
-kubectl logs -n avesha -l app.kubernetes.io/name=avesha-unified-ui
+kubectl logs -n obliq -l app.kubernetes.io/name=obliq-unified-ui
 
 # Describe the deployment
-kubectl describe deployment -n avesha avesha-unified-ui
+kubectl describe deployment -n obliq obliq-unified-ui
 ```
 
 ### Common Issues
@@ -114,8 +114,8 @@ helm upgrade obliq-sre-agent ./obliq-sre-agent \
 Remove the entire platform:
 
 ```bash
-# This will remove all services including avesha-unified-ui
-helm uninstall obliq-sre-agent --namespace avesha
+# This will remove all services including obliq-unified-ui
+helm uninstall obliq-sre-agent --namespace obliq
 ```
 
 ## For Developers
@@ -129,8 +129,8 @@ helm uninstall obliq-sre-agent --namespace avesha
 helm dependency build ../
 
 # Install only this chart (may not work without global context)
-helm install avesha-unified-ui-test ./avesha-unified-ui \
-  --namespace avesha-dev \
+helm install obliq-unified-ui-test ./obliq-unified-ui \
+  --namespace obliq-dev \
   --create-namespace \
   --set global.env.database.NEO4J_PASSWORD=test \
   # ... other required global values

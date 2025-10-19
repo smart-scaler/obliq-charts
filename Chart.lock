@@ -68,8 +68,8 @@ dependencies:
 - name: infra-agent
   repository: file://./charts/infra-agent
   version: 1.0.0
-- name: avesha-unified-ui
-  repository: file://./charts/avesha-unified-ui
+- name: obliq-unified-ui
+  repository: file://./charts/obliq-unified-ui
   version: 1.0.0
 - name: orchestrator
   repository: file://./charts/orchestrator
@@ -80,5 +80,5 @@ dependencies:
 - name: jaeger
   repository: https://charts.bitnami.com/bitnami
   version: 6.0.5
-digest: sha256:e3fb61d8f068c79026473757f50ffb5524f7a54a677a73a9bf2bc42ef2797ede
-generated: "2025-10-17T15:00:57.834234+03:00"
+digest: sha256:20d6b760601165541ca8795ad03dc8f1dcb25cbb2683b838ed70f537de01cbf2
+generated: "2025-10-19T23:01:44.291931+03:00"

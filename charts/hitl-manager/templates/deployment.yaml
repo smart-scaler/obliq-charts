@@ -20,9 +20,10 @@ spec:
       labels:
         {{- include "hitl-manager.selectorLabels" . | nindent 8 }}
     spec:
-      {{- with .Values.podSecurityContext }}
-      securityContext:
-        {{- toYaml . | nindent 8 }}
+      {{- $secretName := include "obliq-sre-agent.imagePullSecretName" $ }}
+      {{- if $secretName }}
+      imagePullSecrets:
+        - name: {{ $secretName }}
       {{- end }}
       serviceAccountName: {{ include "hitl-manager.serviceAccountName" . }}
       securityContext:

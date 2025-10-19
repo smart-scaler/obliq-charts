@@ -31,7 +31,7 @@ x-imageRegistry: &imageRegistry "avesha.azurecr.io"
 # Centralized image paths for all services
 x-images:
   backend: &backendImage "agents/release/backend"
-  avesha-unified-ui: &aveshaUnifiedUiImage "agents/release/obliq-ai-sre"
+  obliq-unified-ui: &obliqUnifiedUiImage "agents/release/obliq-ai-sre"
   orchestrator: &orchestratorImage "agents/release/orchestrator"
   rca-agent: &rcaAgentImage "agents/release/rca-agent"
   anomaly-detection: &anomalyDetectionImage "agents/release/anomaly-detection"
@@ -196,7 +196,7 @@ global:
   storageClass: ""
 
   # Global namespace where all services will be deployed
-  namespace: "avesha"
+  namespace: "obliq"
 
   # ========================================
   # ENVIRONMENT VARIABLES
@@ -458,6 +458,7 @@ mongodb:
     enabled: true
     size: 10Gi
     resourcePolicy: "keep"
+    medium: ""
 
 # Observability Data Collection - collects and processes telemetry data
 opentelemetry-collector:
@@ -621,14 +622,14 @@ backend:
     annotations:
       <<: *commonIngressAnnotations
     hosts:
-      - host: api.avesha.local
+      - host: api.obliq.local
         paths:
           - path: /
             pathType: Prefix
     tls:
       - secretName: api-tls
         hosts:
-          - api.avesha.local
+          - api.obliq.local
   
   env:
     app:
@@ -642,11 +643,11 @@ backend:
       HITL_MANAGER_PORT: 8065
       
 # Web User Interface - provides frontend dashboard and user interface
-avesha-unified-ui:
+obliq-unified-ui:
   enabled: true  # CORE SERVICE - Always required (no external credentials needed)
-  fullnameOverride: "avesha-unified-ui"
+  fullnameOverride: "obliq-unified-ui"
   image:
-    repository: *aveshaUnifiedUiImage
+    repository: *obliqUnifiedUiImage
     tag: "1.2.0"
     pullPolicy: IfNotPresent
   
@@ -685,18 +686,18 @@ avesha-unified-ui:
     annotations:
       <<: *commonIngressAnnotations
     hosts:
-      - host: ui.avesha.local
+      - host: ui.obliq.local
         paths:
           - path: /
             pathType: Prefix
     tls:
       - secretName: ui-tls
         hosts:
-          - ui.avesha.local
+          - ui.obliq.local
   
   env:
     app:
-      AGENT_TYPE: "avesha_unified_ui"
+      AGENT_TYPE: "obliq_unified_ui"
       PORT: "3000"
 
 # Workflow Orchestration Engine - manages and coordinates AI/SRE workflows
@@ -1065,7 +1066,7 @@ slack-ingester:
     app:
       AGENT_TYPE: "slack_ingester"
       PORT: "8065"
-      SLACK_CHANNELS: "#avesha-agent-alerts"
+      SLACK_CHANNELS: "#obliq-agent-alerts"
       NOTIFICATION_INTERVAL: "300"
       SLACK_AFTER_TS_UTC: "2025-07-24 07:00:00"
       SLACK_PARSER_CONFIG: "/home/appuser/config/slack_parser_config.json"
