@@ -78,7 +78,7 @@ dependencies:
   repository: https://prometheus-community.github.io/helm-charts
   version: 27.41.0
 - name: jaeger
-  repository: https://charts.bitnami.com/bitnami
-  version: 6.0.5
-digest: sha256:20d6b760601165541ca8795ad03dc8f1dcb25cbb2683b838ed70f537de01cbf2
-generated: "2025-10-19T23:01:44.291931+03:00"
+  repository: https://jaegertracing.github.io/helm-charts
+  version: 0.71.0
+digest: sha256:ff387ad98048030f9efb5e5042eba8a37b76f451187dff574aec9bb6f962babc
+generated: "2025-10-20T11:31:10.652129+03:00"

@@ -1196,56 +1196,48 @@ prometheus:
   kubeStateMetrics:
     enabled: false
 
-# Jaeger Community Chart (Bitnami) - provides distributed tracing capabilities
+# Jaeger Community Chart (JaegerTracing) - provides distributed tracing capabilities
 jaeger:
   enabled: false  # OPTIONAL SERVICE - Enable for distributed tracing (no external credentials needed)
   
   # Jaeger all-in-one configuration
-  mode: all-in-one
-  
-  # Image configuration
-  image:
-    registry: docker.io
-    repository: jaegertracing/all-in-one
+  allInOne:
+    enabled: true
+    image: jaegertracing/all-in-one
     tag: "1.60"
     pullPolicy: IfNotPresent
-  
-  # Resource configuration
-  resources:
-    limits:
-      cpu: 1000m
-      memory: 2Gi
-    requests:
-      cpu: 500m
-      memory: 1Gi
-  
-  # Environment variables
-  extraEnvVars:
-    - name: COLLECTOR_OTLP_ENABLED
-      value: "true"
-    - name: LOG_LEVEL
-      value: "debug"
-  
-  # Service configuration
-  service:
-    type: ClusterIP
-    ports:
-      http: 16686
-      collector-http: 14268
-      collector-grpc: 14250
-  
-  # Disable persistence (all-in-one mode uses in-memory storage)
-  persistence:
-    enabled: false
+    
+    # Resource configuration
+    resources:
+      limits:
+        cpu: 1000m
+        memory: 2Gi
+      requests:
+        cpu: 500m
+        memory: 1Gi
+    
+    # Environment variables
+    extraEnv:
+      - name: COLLECTOR_OTLP_ENABLED
+        value: "true"
+      - name: LOG_LEVEL
+        value: "debug"
+    
+    # Service configuration
+    service:
+      headless: false
+      type: ClusterIP
+      ports:
+        http: 16686
+        collector-http: 14268
+        collector-grpc: 14250
   
   # Disable other components (we only want all-in-one)
-  agent:
-    enabled: false
   collector:
     enabled: false
   query:
     enabled: false
-  ingester:
+  agent:
     enabled: false
   sparkDependencies:
     enabled: false

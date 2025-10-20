@@ -164,6 +164,6 @@ dependencies:
     condition: prometheus.enabled
     
   - name: jaeger
-    version: 6.0.5
-    repository: https://charts.bitnami.com/bitnami
+    version: 0.71.0
+    repository: https://jaegertracing.github.io/helm-charts
     condition: jaeger.enabled
