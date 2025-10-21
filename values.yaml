@@ -850,7 +850,7 @@ service-graph-engine:
   fullnameOverride: "service-graph-engine"
   image:
     repository: *serviceGraphEngineImage
-    tag: "1.2.0"
+    tag: "1.2.0b"
   service:
     port: 8074
   env:
