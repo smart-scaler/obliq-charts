@@ -298,7 +298,7 @@ helm repo update
 
 ```bash
 helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
-  --namespace avesha \
+  --namespace obliq \
   --create-namespace \
   --set-file global.kubeconfig.content=./kubeconfig \
   --set global.env.openai.OPENAI_API_KEY="${OPENAI_API_KEY}" \
@@ -309,7 +309,7 @@ helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
 
 ```bash
 helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
-  --namespace avesha \
+  --namespace obliq \
   --create-namespace \
   --set-file global.kubeconfig.content=./kubeconfig \
   --set global.env.openai.OPENAI_API_KEY="${OPENAI_API_KEY}" \
@@ -325,27 +325,47 @@ helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
   --set avesha-unified-ui.service.type=LoadBalancer
 ```
 
-### Full Integration Deployment
+### Full Integration Deployment (All 27 Services)
 
 ```bash
 helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
-  --namespace avesha \
+  --namespace obliq \
   --create-namespace \
   --set-file global.kubeconfig.content=./kubeconfig \
   --set global.env.openai.OPENAI_API_KEY="${OPENAI_API_KEY}" \
   --set global.env.backend.DEFAULT_ADMIN_EMAIL="${DEFAULT_ADMIN_EMAIL}" \
   --set global.env.backend.DEFAULT_ADMIN_PASSWORD="${DEFAULT_ADMIN_PASSWORD}" \
-  # Enable optional MCP services
+  --set mongodb.persistence.enabled=false \
+  --set neo4j.volumes.data.mode=volume \
+  --set neo4j.volumes.data.volume.emptyDir="{}" \
+  # Enable ALL 27 services
+  --set prometheus.enabled=true \
+  --set jaeger.enabled=true \
+  --set opentelemetry-collector.enabled=true \
+  --set neo4j.enabled=true \
+  --set mongodb.enabled=true \
   --set aws-mcp.enabled=true \
+  --set k8s-mcp.enabled=true \
+  --set gcp-mcp.enabled=true \
   --set prometheus-mcp.enabled=true \
   --set neo4j-mcp.enabled=true \
   --set loki-mcp.enabled=true \
   --set cloudwatch-mcp.enabled=true \
-  # Enable optional integration services
-  --set service-graph-engine.enabled=true \
-  --set slack-ingester.enabled=true \
-  --set kubernetes-events-ingester.enabled=true \
   --set aws-ec2-cloudwatch-alarms.enabled=true \
+  --set kubernetes-events-ingester.enabled=true \
+  --set slack-ingester.enabled=true \
+  --set anomaly-detection.enabled=true \
+  --set active-inventory.enabled=true \
+  --set incident-manager.enabled=true \
+  --set incident-ingester.enabled=true \
+  --set rca-agent.enabled=true \
+  --set auto-remediation.enabled=true \
+  --set hitl-manager.enabled=true \
+  --set backend.enabled=true \
+  --set service-graph-engine.enabled=true \
+  --set infra-agent.enabled=true \
+  --set obliq-unified-ui.enabled=true \
+  --set orchestrator.enabled=true \
   # Provide all required credentials
   --set global.env.aws.AWS_ACCESS_KEY_ID="${AWS_ACCESS_KEY_ID}" \
   --set global.env.aws.AWS_SECRET_ACCESS_KEY="${AWS_SECRET_ACCESS_KEY}" \
@@ -361,7 +381,7 @@ helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
   --set global.env.jira.JIRA_BASE_URL="${JIRA_BASE_URL}" \
   --set global.env.jira.JIRA_EMAIL="${JIRA_EMAIL}" \
   --set global.env.jira.JIRA_API_TOKEN="${JIRA_API_TOKEN}" \
-  --set avesha-unified-ui.service.type=LoadBalancer
+  --set obliq-unified-ui.service.type=LoadBalancer
 ```
 
 #### Cloud Provider Specific LoadBalancer Examples
@@ -420,16 +440,16 @@ helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
 
 ```bash
 # Check service status
-kubectl get pods -n avesha
+kubectl get pods -n obliq
 
 # View service logs
-kubectl logs -n avesha -l app.kubernetes.io/name=<service-name>
+kubectl logs -n obliq -l app.kubernetes.io/name=<service-name>
 
 # Check MCP services specifically
-kubectl get pods -n avesha -l app.kubernetes.io/component=mcp
+kubectl get pods -n obliq -l app.kubernetes.io/component=mcp
 
 # Check configuration
-helm get values obliq-sre-agent -n avesha
+helm get values obliq-sre-agent -n obliq
 ```
 
 ### Impact of Disabled Services

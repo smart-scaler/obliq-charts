@@ -292,7 +292,7 @@ helm repo update
 
 ```bash
 helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
-  --namespace avesha \
+  --namespace obliq \
   --create-namespace \
   --set-file global.kubeconfig.content=./kubeconfig \
   --set global.env.openai.OPENAI_API_KEY="${OPENAI_API_KEY}" \
@@ -304,7 +304,7 @@ helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
 ```bash
 # Enable AWS services and credentials
 helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
-  --namespace avesha \
+  --namespace obliq \
   --create-namespace \
   --set-file global.kubeconfig.content=./kubeconfig \
   --set global.env.openai.OPENAI_API_KEY="${OPENAI_API_KEY}" \
@@ -323,7 +323,7 @@ helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
 ```bash
 # Essential parameters
 helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
-  --namespace avesha \
+  --namespace obliq \
   --create-namespace \
   --set-file global.kubeconfig.content=./kubeconfig \
   --set global.env.openai.OPENAI_API_KEY="${OPENAI_API_KEY}" \
@@ -382,7 +382,7 @@ helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
 ```bash
 # Dry run to validate configuration
 helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
-  --namespace avesha \
+  --namespace obliq \
   --dry-run \
   --set-file global.kubeconfig.content=./kubeconfig \
   --set global.env.openai.OPENAI_API_KEY="test" \
