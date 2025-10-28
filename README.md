@@ -25,8 +25,6 @@ A comprehensive AI-powered Site Reliability Engineering platform deployed as a s
 - **[Kubernetes Permissions](./docs/kubernetes-permissions.md)** - Required cluster permissions and RBAC setup
 - **[Prerequisites Details](./docs/prerequisites.md)** - Comprehensive system requirements and integrations
 
-💡 **For local development**: Run `./scripts/update-dependencies.sh` to ensure all chart dependencies are resolved before local installation.
-
 📋 **Note**: The `--set-file global.kubeconfig.content=./kubeconfig` parameter expects a kubeconfig file in the current directory. Make sure to:
 
 - Place your kubeconfig file in the same directory where you run the helm command, OR
@@ -73,6 +71,7 @@ export DEFAULT_ADMIN_PASSWORD="your-secure-password"  # Custom admin password
 helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
   --namespace obliq \
   --create-namespace \
+  --dependency-update `# Update chart dependencies before install` \
   --set-file global.kubeconfig.content=./kubeconfig `# Path to your kubeconfig file` \
   --set global.env.openai.OPENAI_API_KEY="${OPENAI_API_KEY}" `# Required for AI services` \
   --set global.env.backend.DEFAULT_ADMIN_EMAIL="${DEFAULT_ADMIN_EMAIL}" `# Custom admin email` \
@@ -104,6 +103,7 @@ export DEFAULT_ADMIN_PASSWORD="your-secure-password"  # Custom admin password
 helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
   --namespace obliq \
   --create-namespace \
+  --dependency-update `# Update chart dependencies before install` \
   --set-file global.kubeconfig.content=./kubeconfig `# Path to your kubeconfig` \
   --set global.env.openai.OPENAI_API_KEY="${OPENAI_API_KEY}" `# Required for AI services` \
   --set global.env.backend.DEFAULT_ADMIN_EMAIL="${DEFAULT_ADMIN_EMAIL}" `# Custom admin email` \
@@ -141,6 +141,7 @@ export SLACK_BOT_TOKEN="xoxb-your-slack-bot-token"  # For Slack integration
 helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
   --namespace obliq \
   --create-namespace \
+  --dependency-update `# Update chart dependencies before install` \
   --set-file global.kubeconfig.content=./kubeconfig `# Path to your kubeconfig file` \
   --set global.env.openai.OPENAI_API_KEY="${OPENAI_API_KEY}" `# Required for AI services` \
   --set global.env.backend.DEFAULT_ADMIN_EMAIL="${DEFAULT_ADMIN_EMAIL}" `# Custom admin email` \
