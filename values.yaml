@@ -643,6 +643,8 @@ backend:
       ORCHESTRATOR_PORT: 8060
       HITL_MANAGER_HOST: hitl-manager
       HITL_MANAGER_PORT: 8065
+      OBLIQ_SECRET_NAME: "obliq-sre-agent-global-secret"
+      OBLIQ_SECRET_NAMESPACE: "obliq"
       
 # Web User Interface - provides frontend dashboard and user interface
 obliq-unified-ui:
