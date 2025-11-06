@@ -51,6 +51,27 @@ The following integrations are **optional** and only required if you enable spec
 
 Setup: Review [aws-iam-policies.md](aws-iam-policies.md) for required policies and roles.
 
+### Google Cloud Platform Integration
+**Required for**: `gcp-mcp`
+
+| Requirement | Parameters | Reference |
+|-------------|------------|-----------|
+| **GCP Service Account** | Service account JSON file | Google Cloud Console → IAM & Admin → Service Accounts |
+| **GCP Permissions** | Required API permissions | Google Cloud Console → IAM & Admin → IAM |
+
+Setup: Create a service account in Google Cloud Console and download the JSON key file.
+
+### ServiceNow Integration
+**Required for**: `incident-ingester`
+
+| Requirement | Parameters | Reference |
+|-------------|------------|-----------|
+| **ServiceNow Instance** | `SERVICE_NOW_INSTANCE` | ServiceNow instance URL |
+| **ServiceNow Credentials** | `SERVICE_NOW_USERNAME`, `SERVICE_NOW_PASSWORD` | ServiceNow user account with API access |
+| **OpenAI API Key** | `OPENAI_API_KEY` | OpenAI platform for LLM processing |
+
+Setup: Ensure ServiceNow user has appropriate permissions to read incident data via REST API.
+
 ### DataDog Integration
 **Required for**: `service-graph-engine`
 
@@ -245,7 +266,7 @@ helm repo update
 
 # Now run any of the installation commands from the main README
 helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
-  --namespace avesha \
+  --namespace obliq \
   --create-namespace \
   --set-file global.kubeconfig.content=./kubeconfig \
   --set global.env.openai.OPENAI_API_KEY="${OPENAI_API_KEY}" \

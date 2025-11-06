@@ -1,0 +1,17 @@
+{{- if .Values.volumes.persistent.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "obliq-unified-ui.fullname" . }}-pvc
+  labels:
+    {{- include "obliq-unified-ui.labels" . | nindent 4 }}
+spec:
+  accessModes:
+    - {{ .Values.volumes.persistent.accessMode }}
+  {{- if .Values.volumes.persistent.storageClass }}
+  storageClassName: {{ .Values.volumes.persistent.storageClass }}
+  {{- end }}
+  resources:
+    requests:
+      storage: {{ .Values.volumes.persistent.size }}
+{{- end }} 

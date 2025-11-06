@@ -117,11 +117,11 @@ configMap:
 
 # Kubeconfig configuration (secret-only approach)
 kubeconfig:
-  # Kubeconfig is provided via secret reference only
+  # Kubeconfig is provided via global secret reference only
   secretRef:
-    enabled: false
-    name: "kubeconfig-secret"  # Name of the secret containing kubeconfig
-    key: "config"  # Key in the secret containing kubeconfig content
+    enabled: true
+    name: ""  # Will be set to global secret name in template
+    key: "KUBECONFIG_CONTENT"  # Key in the global secret containing kubeconfig content
 
 # Additional config files
 files: {}

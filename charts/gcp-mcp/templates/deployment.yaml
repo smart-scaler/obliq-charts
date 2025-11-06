@@ -1,0 +1,174 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "gcp-mcp.fullname" . }}
+  labels:
+    {{- include "gcp-mcp.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "gcp-mcp.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "gcp-mcp.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.podSecurityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "gcp-mcp.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.securityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.global.imageRegistry | default "avesha.azurecr.io" }}/{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{- if .Values.command }}
+          command:
+            {{- toYaml .Values.command | nindent 12 }}
+          {{- end }}
+          {{- if .Values.args }}
+          args:
+            {{- toYaml .Values.args | nindent 12 }}
+          {{- end }}
+          ports:
+            {{- range .Values.ports }}
+            - name: {{ .name }}
+              containerPort: {{ .containerPort }}
+              protocol: {{ .protocol }}
+            {{- end }}
+          {{- if .Values.livenessProbe.enabled }}
+          livenessProbe:
+            {{- if .Values.livenessProbe.httpGet }}
+            httpGet:
+              path: {{ .Values.livenessProbe.httpGet.path }}
+              port: {{ .Values.livenessProbe.httpGet.port }}
+            {{- end }}
+            initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
+            failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
+            successThreshold: {{ .Values.livenessProbe.successThreshold }}
+          {{- end }}
+          {{- if .Values.readinessProbe.enabled }}
+          readinessProbe:
+            {{- if .Values.readinessProbe.httpGet }}
+            httpGet:
+              path: {{ .Values.readinessProbe.httpGet.path }}
+              port: {{ .Values.readinessProbe.httpGet.port }}
+            {{- end }}
+            initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
+            failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
+            successThreshold: {{ .Values.readinessProbe.successThreshold }}
+          {{- end }}
+          {{- if .Values.startupProbe.enabled }}
+          startupProbe:
+            {{- if .Values.startupProbe.httpGet }}
+            httpGet:
+              path: {{ .Values.startupProbe.httpGet.path }}
+              port: {{ .Values.startupProbe.httpGet.port }}
+            {{- end }}
+            initialDelaySeconds: {{ .Values.startupProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.startupProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.startupProbe.timeoutSeconds }}
+            failureThreshold: {{ .Values.startupProbe.failureThreshold }}
+            successThreshold: {{ .Values.startupProbe.successThreshold }}
+          {{- end }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          env:
+            {{- range $key, $value := .Values.env.app }}
+            - name: {{ $key }}
+              value: {{ $value | quote }}
+            {{- end }}
+            {{- range $key, $value := .Values.env.common }}
+            - name: {{ $key }}
+              value: {{ $value | quote }}
+            {{- end }}
+            {{- range $key, $value := .Values.secrets }}
+            - name: {{ $key }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $value.secretName }}
+                  key: {{ $value.key }}
+            {{- end }}
+            # GCP Credentials environment variable
+            - name: GOOGLE_APPLICATION_CREDENTIALS
+              value: "/app/gcp.json"
+            # Port environment variable
+            - name: PORT
+              value: "8098"
+          volumeMounts:
+            {{- if .Values.volumes.persistent.enabled }}
+            - name: data
+              mountPath: {{ .Values.volumes.persistent.mountPath }}
+            {{- end }}
+            {{- if .Values.volumes.config.enabled }}
+            - name: config
+              mountPath: {{ .Values.volumes.config.mountPath }}
+              {{- if .Values.volumes.config.subPath }}
+              subPath: {{ .Values.volumes.config.subPath }}
+              {{- end }}
+            {{- end }}
+            {{- if .Values.volumes.gcpCredentials.enabled }}
+            - name: gcp-credentials
+              mountPath: {{ .Values.volumes.gcpCredentials.mountPath }}
+              readOnly: true
+            {{- end }}
+            {{- if .Values.volumes.emptyDir.enabled }}
+            - name: tmp
+              mountPath: {{ .Values.volumes.emptyDir.mountPath }}
+            {{- end }}
+      volumes:
+        {{- if .Values.volumes.persistent.enabled }}
+        - name: data
+          persistentVolumeClaim:
+            claimName: {{ include "gcp-mcp.fullname" . }}-data
+        {{- end }}
+        {{- if .Values.volumes.config.enabled }}
+        - name: config
+          configMap:
+            name: {{ include "gcp-mcp.fullname" . }}-config
+        {{- end }}
+        {{- if .Values.volumes.gcpCredentials.enabled }}
+        - name: gcp-credentials
+          secret:
+            secretName: {{ .Values.volumes.gcpCredentials.secretName }}
+            items:
+              - key: {{ .Values.volumes.gcpCredentials.fileName }}
+                path: {{ .Values.volumes.gcpCredentials.fileName }}
+        {{- end }}
+        {{- if .Values.volumes.emptyDir.enabled }}
+        - name: tmp
+          emptyDir:
+            {{- if .Values.volumes.emptyDir.medium }}
+            medium: {{ .Values.volumes.emptyDir.medium }}
+            {{- end }}
+            {{- if .Values.volumes.emptyDir.sizeLimit }}
+            sizeLimit: {{ .Values.volumes.emptyDir.sizeLimit }}
+            {{- end }}
+        {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

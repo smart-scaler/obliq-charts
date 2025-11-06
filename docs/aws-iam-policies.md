@@ -745,7 +745,7 @@ cat > obliq-sre-trust-policy.json << EOF
             "Condition": {
                 "StringEquals": {
                     "oidc.eks.${REGION}.amazonaws.com/id/${OIDC_ID}:aud": "sts.amazonaws.com",
-                    "oidc.eks.${REGION}.amazonaws.com/id/${OIDC_ID}:sub": "system:serviceaccount:avesha:obliq-sre-agent"
+                    "oidc.eks.${REGION}.amazonaws.com/id/${OIDC_ID}:sub": "system:serviceaccount:obliq:obliq-sre-agent"
                 }
             }
         }
@@ -767,13 +767,13 @@ aws iam attach-role-policy \
 **Step 3: Create Kubernetes Service Accounts**
 ```bash
 # Create namespace if it doesn't exist
-kubectl create namespace avesha --dry-run=client -o yaml | kubectl apply -f -
+kubectl create namespace obliq --dry-run=client -o yaml | kubectl apply -f -
 
 # Create service account for Obliq SRE Agent
-kubectl create serviceaccount obliq-sre-agent -n avesha
+kubectl create serviceaccount obliq-sre-agent -n obliq
 
 # Annotate service account with IAM role ARN
-kubectl annotate serviceaccount obliq-sre-agent -n avesha \
+kubectl annotate serviceaccount obliq-sre-agent -n obliq \
     eks.amazonaws.com/role-arn=arn:aws:iam::${ACCOUNT_ID}:role/obliq-sre-agents-role
 ```
 
@@ -807,7 +807,7 @@ kubectl annotate serviceaccount obliq-sre-agent -n avesha \
 {
     "StringEquals": {
         "oidc.eks.${REGION}.amazonaws.com/id/${OIDC_ID}:aud": "sts.amazonaws.com",
-        "oidc.eks.${REGION}.amazonaws.com/id/${OIDC_ID}:sub": "system:serviceaccount:avesha:obliq-sre-agent"
+        "oidc.eks.${REGION}.amazonaws.com/id/${OIDC_ID}:sub": "system:serviceaccount:obliq:obliq-sre-agent"
     }
 }
 ```
@@ -816,13 +816,13 @@ kubectl annotate serviceaccount obliq-sre-agent -n avesha \
 **Step 4: Create Kubernetes Resources**
 ```bash
 # Create namespace if it doesn't exist
-kubectl create namespace avesha --dry-run=client -o yaml | kubectl apply -f -
+kubectl create namespace obliq --dry-run=client -o yaml | kubectl apply -f -
 
 # Create service account
-kubectl create serviceaccount obliq-sre-agent -n avesha
+kubectl create serviceaccount obliq-sre-agent -n obliq
 
 # Annotate service account with IAM role ARN
-kubectl annotate serviceaccount obliq-sre-agent -n avesha \
+kubectl annotate serviceaccount obliq-sre-agent -n obliq \
     eks.amazonaws.com/role-arn=arn:aws:iam::${ACCOUNT_ID}:role/obliq-sre-agents-role
 ```
 
@@ -874,7 +874,7 @@ Resources:
             Condition:
               StringEquals:
                 !Sub '${OIDCProviderUrl}:aud': 'sts.amazonaws.com'
-                !Sub '${OIDCProviderUrl}:sub': 'system:serviceaccount:avesha:obliq-sre-agent'
+                !Sub '${OIDCProviderUrl}:sub': 'system:serviceaccount:obliq:obliq-sre-agent'
       Policies:
         - PolicyName: ObliqSREAgentsPolicy
           PolicyDocument:
@@ -943,13 +943,13 @@ echo "Role ARN: $ROLE_ARN"
 **Step 3: Create Kubernetes Resources**
 ```bash
 # Create namespace if it doesn't exist
-kubectl create namespace avesha --dry-run=client -o yaml | kubectl apply -f -
+kubectl create namespace obliq --dry-run=client -o yaml | kubectl apply -f -
 
 # Create service account
-kubectl create serviceaccount obliq-sre-agent -n avesha
+kubectl create serviceaccount obliq-sre-agent -n obliq
 
 # Annotate service account with IAM role ARN
-kubectl annotate serviceaccount obliq-sre-agent -n avesha \
+kubectl annotate serviceaccount obliq-sre-agent -n obliq \
     eks.amazonaws.com/role-arn=$ROLE_ARN
 ```
 

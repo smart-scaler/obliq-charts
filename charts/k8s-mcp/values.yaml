@@ -148,7 +148,8 @@ volumes:
   kubeconfig:
     enabled: true
     mountPath: /etc/kubeconfig
-    secretName: kubeconfig-secret
+    secretName: ""  # Will be set to global secret name in template
+    secretKey: "KUBECONFIG_CONTENT"
   
   # Empty dir volumes
   emptyDir:
@@ -191,8 +192,15 @@ readinessProbe:
 #   successThreshold: 1
 
 # Command and args override
-command: []
-args: []
+command: 
+  - /app/kubernetes-mcp-server
+args:
+  - --sse-port
+  - "8080"
+  - --list-output
+  - yaml
+  - --kubeconfig
+  - /etc/kubeconfig/config
 
 # Container ports
 ports:

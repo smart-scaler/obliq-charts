@@ -69,7 +69,7 @@ metadata:
 subjects:
 - kind: ServiceAccount
   name: obliq-sre-agent
-  namespace: avesha
+  namespace: obliq
 roleRef:
   kind: ClusterRole
   name: obliq-sre-agent
@@ -118,10 +118,10 @@ The RBAC configuration includes permissions for:
 ### **Step 1: Create Namespace and Service Account**
 ```bash
 # Create namespace
-kubectl create namespace avesha
+kubectl create namespace obliq
 
 # Create service account
-kubectl create serviceaccount obliq-sre-agent -n avesha
+kubectl create serviceaccount obliq-sre-agent -n obliq
 ```
 
 ### **Step 2: Apply RBAC Configuration**
@@ -173,7 +173,7 @@ metadata:
 subjects:
 - kind: ServiceAccount
   name: obliq-sre-agent
-  namespace: avesha
+  namespace: obliq
 roleRef:
   kind: ClusterRole
   name: obliq-sre-agent
@@ -189,7 +189,7 @@ apiVersion: v1
 kind: Secret
 metadata:
   name: obliq-sre-agent-token
-  namespace: avesha
+  namespace: obliq
   annotations:
     kubernetes.io/service-account.name: obliq-sre-agent
 type: kubernetes.io/service-account-token
@@ -199,7 +199,7 @@ EOF
 sleep 10
 
 # Get token
-TOKEN=$(kubectl get secret obliq-sre-agent-token -n avesha -o jsonpath='{.data.token}' | base64 -d)
+TOKEN=$(kubectl get secret obliq-sre-agent-token -n obliq -o jsonpath='{.data.token}' | base64 -d)
 
 # Get cluster information
 # Note: Replace 'your-cluster-name' with your actual cluster name
@@ -238,6 +238,6 @@ echo "Kubeconfig created: obliq-sre-agent-kubeconfig.yaml"
 ```bash
 # Test the kubeconfig
 kubectl --kubeconfig=obliq-sre-agent-kubeconfig.yaml get nodes
-kubectl --kubeconfig=obliq-sre-agent-kubeconfig.yaml get pods -n avesha
-kubectl --kubeconfig=obliq-sre-agent-kubeconfig.yaml get deployments -n avesha
+kubectl --kubeconfig=obliq-sre-agent-kubeconfig.yaml get pods -n obliq
+kubectl --kubeconfig=obliq-sre-agent-kubeconfig.yaml get deployments -n obliq
 ```

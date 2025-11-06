@@ -8,13 +8,14 @@ This guide provides instructions for creating and managing Kubernetes secrets fo
 |-------------|---------|---------------|---------------------|
 | **Global Secret** | All environment variables | ✅ | ✅ |
 | **Image Pull Secret** | Container registry access | ✅ | ✅ |
-| **Kubeconfig Secret** | Kubernetes cluster access | ✅ | ✅ |
+| **Kubeconfig Content** | Kubernetes cluster access (stored in global secret) | ✅ | ✅ |
 
 ## 📋 Required Environment Variables
 
 ### Core Variables (Required)
 - `OPENAI_API_KEY` - OpenAI API key for AI services (required)
-- `KUBECONFIG` - Kubernetes configuration for cluster access (required)
+- `KUBECONFIG_FILE_PATH` - Kubernetes configuration for cluster access (required)
+- `KUBECONFIG_CONTENT` - Kubernetes configuration file content (stored in global secret)
 
 ### AWS Integration (Optional)
 - `AWS_ACCESS_KEY_ID` - AWS access key for cloud services
@@ -30,7 +31,7 @@ This guide provides instructions for creating and managing Kubernetes secrets fo
 - `DD_APP_KEY` - DataDog application key
 - `JIRA_EMAIL` - Jira user email for incident management
 - `JIRA_API_TOKEN` - Jira API token
-- `JIRA_BASE_URL` - Jira instance URL (default: https://avesha.atlassian.net)
+- `JIRA_BASE_URL` - Jira instance URL (default: https://obliq.atlassian.net)
 - `PROMETHEUS_URL` - Prometheus server URL (default: http://prometheus:9090)
 - `PROMETHEUS_USER` - Prometheus username (if auth enabled)
 - `PROMETHEUS_PASSWORD` - Prometheus password (if auth enabled)
@@ -48,14 +49,14 @@ Create your own Kubernetes secret with all required environment variables:
 #### Minimal Deployment (Core Services Only)
 ```bash
 kubectl create secret generic obliq-secrets \
-  --namespace=avesha \
+  --namespace=obliq \
   --from-literal=OPENAI_API_KEY="sk-your-openai-key"
 ```
 
 #### AWS Integration
 ```bash
 kubectl create secret generic obliq-secrets \
-  --namespace=avesha \
+  --namespace=obliq \
   --from-literal=OPENAI_API_KEY="sk-your-openai-key" \
   --from-literal=AWS_ACCESS_KEY_ID="your-aws-access-key" \
   --from-literal=AWS_SECRET_ACCESS_KEY="your-aws-secret-key" \
@@ -66,7 +67,7 @@ kubectl create secret generic obliq-secrets \
 #### Full Integration (All Services)
 ```bash
 kubectl create secret generic obliq-secrets \
-  --namespace=avesha \
+  --namespace=obliq \
   --from-literal=OPENAI_API_KEY="sk-your-openai-key" \
   --from-literal=AWS_ACCESS_KEY_ID="your-aws-access-key" \
   --from-literal=AWS_SECRET_ACCESS_KEY="your-aws-secret-key" \
@@ -112,7 +113,7 @@ helm repo update
 Then install with the pre-existing secret:
 ```bash
 helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
-  --namespace avesha \
+  --namespace obliq \
   --create-namespace \
   --set-file global.kubeconfig.content=./kubeconfig \
   --set global.globalSecret.existing.enabled=true \
@@ -131,7 +132,7 @@ kubectl create secret docker-registry registry-secret \
   --docker-username=your-username \
   --docker-password=your-password \
   --docker-email=your-email \
-  --namespace=avesha
+  --namespace=obliq
 ```
 
 ### Step 2: Configure Chart
@@ -204,25 +205,25 @@ service-graph-engine:
 ### Check Secret Creation
 ```bash
 # Verify secret exists
-kubectl get secrets -n avesha
+kubectl get secrets -n obliq
 
 # Check secret content (keys only)
-kubectl describe secret obliq-secrets -n avesha
+kubectl describe secret obliq-secrets -n obliq
 
 # View secret data (base64 encoded)
-kubectl get secret obliq-secrets -n avesha -o yaml
+kubectl get secret obliq-secrets -n obliq -o yaml
 ```
 
 ### Verify Environment Variables in Pods
 ```bash
 # Check backend pod environment
-kubectl exec -n avesha deployment/backend -- env | grep -E "(OPENAI|AWS|SLACK)" | sort
+kubectl exec -n obliq deployment/backend -- env | grep -E "(OPENAI|AWS|SLACK)" | sort
 
 # Check specific service
-kubectl exec -n avesha deployment/aws-mcp -- env | grep AWS
+kubectl exec -n obliq deployment/aws-mcp -- env | grep AWS
 
 # Check all pods
-kubectl get pods -n avesha -o jsonpath='{range .items[*]}{.metadata.name}{"\n"}{end}'
+kubectl get pods -n obliq -o jsonpath='{range .items[*]}{.metadata.name}{"\n"}{end}'
 ```
 
 ### Common Issues and Solutions
@@ -231,15 +232,15 @@ kubectl get pods -n avesha -o jsonpath='{range .items[*]}{.metadata.name}{"\n"}{
 **Problem**: Pod fails to start due to missing environment variables
 ```bash
 # Check pod events
-kubectl describe pod -n avesha -l app.kubernetes.io/name=backend
+kubectl describe pod -n obliq -l app.kubernetes.io/name=backend
 
 # Check logs
-kubectl logs -n avesha -l app.kubernetes.io/name=backend
+kubectl logs -n obliq -l app.kubernetes.io/name=backend
 ```
 
 **Solution**: Add missing variables to your secret
 ```bash
-kubectl patch secret obliq-secrets -n avesha \
+kubectl patch secret obliq-secrets -n obliq \
   --type='json' \
   -p='[{"op": "add", "path": "/data/MISSING_VAR", "value": "'$(echo -n "your-value" | base64)'"}]'
 ```
@@ -248,7 +249,7 @@ kubectl patch secret obliq-secrets -n avesha \
 **Problem**: Chart can't find the specified secret
 ```bash
 # Check if secret exists in correct namespace
-kubectl get secret obliq-secrets -n avesha
+kubectl get secret obliq-secrets -n obliq
 ```
 
 **Solution**: Ensure secret name matches configuration and is in correct namespace
@@ -257,10 +258,10 @@ kubectl get secret obliq-secrets -n avesha
 **Problem**: Services fail to authenticate with external APIs
 ```bash
 # Test OpenAI API
-kubectl exec -n avesha deployment/backend -- curl -H "Authorization: Bearer $OPENAI_API_KEY" https://api.openai.com/v1/models
+kubectl exec -n obliq deployment/backend -- curl -H "Authorization: Bearer $OPENAI_API_KEY" https://api.openai.com/v1/models
 
 # Test AWS credentials
-kubectl exec -n avesha deployment/aws-mcp -- aws sts get-caller-identity
+kubectl exec -n obliq deployment/aws-mcp -- aws sts get-caller-identity
 ```
 
 **Solution**: Verify credentials are correct and have proper permissions
@@ -269,7 +270,7 @@ kubectl exec -n avesha deployment/aws-mcp -- aws sts get-caller-identity
 **Problem**: Updated secret values not reflected in running pods
 ```bash
 # Restart deployments to pick up new values
-kubectl rollout restart deployment -n avesha
+kubectl rollout restart deployment -n obliq
 ```
 
 ## 📝 Secret Management Best Practices

@@ -1,0 +1,13 @@
+{{- if .Values.configMap.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "hitl-manager.fullname" . }}-config
+  labels:
+    {{- include "hitl-manager.labels" . | nindent 4 }}
+data:
+  # Add any additional configuration files here
+  # Example:
+  # config.yaml: |
+  #   # Configuration content
+{{- end }}

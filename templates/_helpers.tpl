@@ -308,11 +308,11 @@ This template provides all environment variables from the global secret
     secretKeyRef:
       name: {{ include "obliq-sre-agent.globalSecretName" . }}
       key: AUTOMATIC_EXECUTION_ENABLED
-- name: KUBECONFIG
+- name: KUBECONFIG_FILE_PATH
   valueFrom:
     secretKeyRef:
       name: {{ include "obliq-sre-agent.globalSecretName" . }}
-      key: KUBECONFIG
+      key: KUBECONFIG_FILE_PATH
 - name: DEBUG
   valueFrom:
     secretKeyRef:
@@ -528,6 +528,23 @@ This template provides all environment variables from the global secret
       name: {{ include "obliq-sre-agent.globalSecretName" . }}
       key: JIRA_PAT
 
+# ServiceNow configuration from global Secret
+- name: SERVICE_NOW_INSTANCE
+  valueFrom:
+    secretKeyRef:
+      name: {{ include "obliq-sre-agent.globalSecretName" . }}
+      key: SERVICE_NOW_INSTANCE
+- name: SERVICE_NOW_USERNAME
+  valueFrom:
+    secretKeyRef:
+      name: {{ include "obliq-sre-agent.globalSecretName" . }}
+      key: SERVICE_NOW_USERNAME
+- name: SERVICE_NOW_PASSWORD
+  valueFrom:
+    secretKeyRef:
+      name: {{ include "obliq-sre-agent.globalSecretName" . }}
+      key: SERVICE_NOW_PASSWORD
+
 
 # Slack configuration from global Secret
 - name: SLACK_WEBHOOK_URL
@@ -644,11 +661,6 @@ This template provides all environment variables from the global secret
 
 
 # Kubernetes configuration from global Secret
-- name: KUBECONFIG_FILE
-  valueFrom:
-    secretKeyRef:
-      name: {{ include "obliq-sre-agent.globalSecretName" . }}
-      key: KUBECONFIG_FILE
 
 # Observability configuration from global Secret
 - name: OTEL_COLLECTOR_ENDPOINT

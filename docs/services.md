@@ -50,6 +50,7 @@ These services are essential for platform functionality and cannot be disabled.
 | **anomaly-detection** | `enabled: true` | Anomaly detection and alerting | OpenAI API key |
 | **auto-remediation** | `enabled: true` | Automated fixes and responses | OpenAI API key |
 | **incident-manager** | `enabled: true` | Incident management system | OpenAI API key |
+| **hitl-manager** | `enabled: true` | Human-in-the-loop workflow management | Neo4j, MongoDB |
 
 ### Infrastructure Services
 
@@ -63,6 +64,7 @@ These services are essential for platform functionality and cannot be disabled.
 | Service | Status | Description | Requirements |
 |---------|--------|-------------|--------------|
 | **k8s-mcp** | `enabled: true` | Kubernetes Model Context Protocol server | kubeconfig file |
+| **gcp-mcp** | `enabled: false` | Google Cloud Platform Model Context Protocol server | GCP credentials JSON file |
 
 ⚠️ **Important**: Core AI services require an OpenAI API key configured via `global.env.openai.OPENAI_API_KEY`. They will fail to start without this credential.
 
@@ -81,6 +83,7 @@ Model Context Protocol services are **disabled by default** to reduce resource u
 | **`neo4j-mcp`** | Neo4j graph database integration | Uses internal Neo4j by default, optional external credentials | `--set neo4j-mcp.enabled=true` |
 | **`loki-mcp`** | Loki logs integration | • `LOKI_URL`<br>• `LOKI_USERNAME` (optional)<br>• `LOKI_PASSWORD` (optional)<br>• `LOKI_TOKEN` (optional) | `--set loki-mcp.enabled=true` |
 | **`cloudwatch-mcp`** | AWS CloudWatch integration | • `AWS_ACCESS_KEY_ID`<br>• `AWS_SECRET_ACCESS_KEY`<br>• CloudWatch permissions | `--set cloudwatch-mcp.enabled=true` |
+| **`gcp-mcp`** | Google Cloud Platform integration | • GCP service account JSON file | `--set gcp-mcp.enabled=true` |
 
 ### MCP Configuration Examples
 
@@ -156,6 +159,17 @@ export AWS_SECRET_ACCESS_KEY="your-aws-secret-key"
 --set global.env.aws.AWS_SECRET_ACCESS_KEY="${AWS_SECRET_ACCESS_KEY}"
 ```
 
+#### GCP MCP Integration
+
+```bash
+# Required credentials (GCP service account JSON file)
+# Create service account in Google Cloud Console and download JSON key
+
+# Enable command
+--set gcp-mcp.enabled=true \
+--set-file global.gcpCredentials.content=./gcp-credentials.json
+```
+
 ---
 
 ## 📊 Integration Services (Optional)
@@ -168,6 +182,7 @@ Integration services are **disabled by default** to prevent deployment failures 
 | **`slack-ingester`** | Slack message ingestion | • `SLACK_BOT_TOKEN`<br>• `SLACK_WEBHOOK_URL` (optional) | `--set slack-ingester.enabled=true` |
 | **`kubernetes-events-ingester`** | K8s events collection | • `kubeconfig` file<br>• Cluster access permissions | `--set kubernetes-events-ingester.enabled=true` |
 | **`aws-ec2-cloudwatch-alarms`** | AWS CloudWatch monitoring | • `AWS_ACCESS_KEY_ID`<br>• `AWS_SECRET_ACCESS_KEY`<br>• `AWS_ROLE_ARN_EC2_CLOUDWATCH_ALARMS` | `--set aws-ec2-cloudwatch-alarms.enabled=true` |
+| **`incident-ingester`** | ServiceNow incident ingestion | • `SERVICE_NOW_INSTANCE`<br>• `SERVICE_NOW_USERNAME`<br>• `SERVICE_NOW_PASSWORD`<br>• `OPENAI_API_KEY` | `--set incident-ingester.enabled=true` |
 
 ### Integration Configuration Examples
 
@@ -221,6 +236,23 @@ export AWS_ROLE_ARN_EC2_CLOUDWATCH="arn:aws:iam::123456789012:role/your-cloudwat
 --set global.env.aws.AWS_ROLE_ARN_EC2_CLOUDWATCH_ALARMS="${AWS_ROLE_ARN_EC2_CLOUDWATCH}"
 ```
 
+#### ServiceNow Integration (incident-ingester)
+
+```bash
+# Required credentials
+export SERVICE_NOW_INSTANCE="https://yourcompany.service-now.com"
+export SERVICE_NOW_USERNAME="your-servicenow-username"
+export SERVICE_NOW_PASSWORD="your-servicenow-password"
+export OPENAI_API_KEY="sk-your-openai-api-key"
+
+# Enable command
+--set incident-ingester.enabled=true \
+--set global.env.servicenow.SERVICE_NOW_INSTANCE="${SERVICE_NOW_INSTANCE}" \
+--set global.env.servicenow.SERVICE_NOW_USERNAME="${SERVICE_NOW_USERNAME}" \
+--set global.env.servicenow.SERVICE_NOW_PASSWORD="${SERVICE_NOW_PASSWORD}" \
+--set global.env.openai.OPENAI_API_KEY="${OPENAI_API_KEY}"
+```
+
 ---
 
 ## 🔧 External Tools (Not Included)
@@ -266,7 +298,7 @@ helm repo update
 
 ```bash
 helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
-  --namespace avesha \
+  --namespace obliq \
   --create-namespace \
   --set-file global.kubeconfig.content=./kubeconfig \
   --set global.env.openai.OPENAI_API_KEY="${OPENAI_API_KEY}" \
@@ -277,7 +309,7 @@ helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
 
 ```bash
 helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
-  --namespace avesha \
+  --namespace obliq \
   --create-namespace \
   --set-file global.kubeconfig.content=./kubeconfig \
   --set global.env.openai.OPENAI_API_KEY="${OPENAI_API_KEY}" \
@@ -293,27 +325,47 @@ helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
   --set avesha-unified-ui.service.type=LoadBalancer
 ```
 
-### Full Integration Deployment
+### Full Integration Deployment (All 27 Services)
 
 ```bash
 helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
-  --namespace avesha \
+  --namespace obliq \
   --create-namespace \
   --set-file global.kubeconfig.content=./kubeconfig \
   --set global.env.openai.OPENAI_API_KEY="${OPENAI_API_KEY}" \
   --set global.env.backend.DEFAULT_ADMIN_EMAIL="${DEFAULT_ADMIN_EMAIL}" \
   --set global.env.backend.DEFAULT_ADMIN_PASSWORD="${DEFAULT_ADMIN_PASSWORD}" \
-  # Enable optional MCP services
+  --set mongodb.persistence.enabled=false \
+  --set neo4j.volumes.data.mode=volume \
+  --set neo4j.volumes.data.volume.emptyDir="{}" \
+  # Enable ALL 27 services
+  --set prometheus.enabled=true \
+  --set jaeger.enabled=true \
+  --set opentelemetry-collector.enabled=true \
+  --set neo4j.enabled=true \
+  --set mongodb.enabled=true \
   --set aws-mcp.enabled=true \
+  --set k8s-mcp.enabled=true \
+  --set gcp-mcp.enabled=true \
   --set prometheus-mcp.enabled=true \
   --set neo4j-mcp.enabled=true \
   --set loki-mcp.enabled=true \
   --set cloudwatch-mcp.enabled=true \
-  # Enable optional integration services
-  --set service-graph-engine.enabled=true \
-  --set slack-ingester.enabled=true \
-  --set kubernetes-events-ingester.enabled=true \
   --set aws-ec2-cloudwatch-alarms.enabled=true \
+  --set kubernetes-events-ingester.enabled=true \
+  --set slack-ingester.enabled=true \
+  --set anomaly-detection.enabled=true \
+  --set active-inventory.enabled=true \
+  --set incident-manager.enabled=true \
+  --set incident-ingester.enabled=true \
+  --set rca-agent.enabled=true \
+  --set auto-remediation.enabled=true \
+  --set hitl-manager.enabled=true \
+  --set backend.enabled=true \
+  --set service-graph-engine.enabled=true \
+  --set infra-agent.enabled=true \
+  --set obliq-unified-ui.enabled=true \
+  --set orchestrator.enabled=true \
   # Provide all required credentials
   --set global.env.aws.AWS_ACCESS_KEY_ID="${AWS_ACCESS_KEY_ID}" \
   --set global.env.aws.AWS_SECRET_ACCESS_KEY="${AWS_SECRET_ACCESS_KEY}" \
@@ -329,7 +381,7 @@ helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
   --set global.env.jira.JIRA_BASE_URL="${JIRA_BASE_URL}" \
   --set global.env.jira.JIRA_EMAIL="${JIRA_EMAIL}" \
   --set global.env.jira.JIRA_API_TOKEN="${JIRA_API_TOKEN}" \
-  --set avesha-unified-ui.service.type=LoadBalancer
+  --set obliq-unified-ui.service.type=LoadBalancer
 ```
 
 #### Cloud Provider Specific LoadBalancer Examples
@@ -388,16 +440,16 @@ helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
 
 ```bash
 # Check service status
-kubectl get pods -n avesha
+kubectl get pods -n obliq
 
 # View service logs
-kubectl logs -n avesha -l app.kubernetes.io/name=<service-name>
+kubectl logs -n obliq -l app.kubernetes.io/name=<service-name>
 
 # Check MCP services specifically
-kubectl get pods -n avesha -l app.kubernetes.io/component=mcp
+kubectl get pods -n obliq -l app.kubernetes.io/component=mcp
 
 # Check configuration
-helm get values obliq-sre-agent -n avesha
+helm get values obliq-sre-agent -n obliq
 ```
 
 ### Impact of Disabled Services

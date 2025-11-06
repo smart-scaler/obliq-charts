@@ -46,7 +46,7 @@ This service requires Kubernetes API access for cluster operations. Kubeconfig i
 
 ### Global Kubeconfig Secret (Recommended)
 ```bash
-# Kubeconfig is automatically created via the umbrella chart
+# Kubeconfig content is automatically stored in the global secret
 helm install obliq-sre-agent ./obliq-sre-agent/ \
   --namespace avesha \
   --set-file global.kubeconfig.content=./kubeconfig
@@ -54,15 +54,15 @@ helm install obliq-sre-agent ./obliq-sre-agent/ \
 
 ### Manual Secret Creation (Alternative)
 ```bash
-# Create secret manually if needed
-kubectl create secret generic kubeconfig-secret \
-  --from-file=config=./kubeconfig \
+# Create global secret manually if needed
+kubectl create secret generic obliq-sre-agent-global-secret \
+  --from-literal=KUBECONFIG_CONTENT="$(cat ./kubeconfig | base64 -w 0)" \
   --namespace avesha
 
 # The chart automatically references this secret
 ```
 
-The kubeconfig secret is mounted at `/etc/kubeconfig` with read-only permissions.
+The kubeconfig content is stored in the global secret and mounted at `/etc/kubeconfig/config` with read-only permissions.
 
 ## ⚙️ Configuration Parameters
 
@@ -155,7 +155,7 @@ global:
     common:
       LOG_LEVEL: "INFO"              # ✅ Inherited
       NODE_ENV: "production"         # ✅ Inherited
-      KUBECONFIG: "/etc/kubeconfig/config"  # ✅ Critical for K8s API access
+      KUBECONFIG_FILE_PATH: "/etc/kubeconfig/config"  # ✅ Critical for K8s API access
       CLUSTER_NAME: "obliq-cluster"  # ✅ Inherited
       DEBUG: "false"                 # ✅ Inherited
       TZ: "UTC"                      # ✅ Inherited
@@ -183,10 +183,10 @@ k8s-mcp:
 #### Example 1: Override Kubeconfig Path
 ```bash
 # Global default (ConfigMap approach)
---set global.env.common.KUBECONFIG="/etc/kubeconfig/config"
+--set global.env.common.KUBECONFIG_FILE_PATH="/etc/kubeconfig/config"
 
 # Override for secret approach
---set global.env.common.KUBECONFIG="/etc/kubeconfig/config" \
+--set global.env.common.KUBECONFIG_FILE_PATH="/etc/kubeconfig/config" \
 --set k8s-mcp.volumes.kubeconfig.enabled=true
 ```
 
@@ -212,7 +212,7 @@ k8s-mcp:
 #### Required Global Parameters:
 | Parameter | Purpose | Example |
 |-----------|---------|---------|
-| `global.env.common.KUBECONFIG` | Kubernetes API access | `"/etc/kubeconfig/config"` |
+| `global.env.common.KUBECONFIG_FILE_PATH` | Kubernetes API access | `"/etc/kubeconfig/config"` |
 | `global.env.common.LOG_LEVEL` | Logging configuration | `"INFO"` |
 | `global.env.common.CLUSTER_NAME` | Cluster identification | `"production-cluster"` |
 

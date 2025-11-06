@@ -3,7 +3,7 @@ name: anomaly-detection
 description: A Helm chart for deploying the anomaly detection service with multiple environment variables
 type: application
 version: 1.0.0
-appVersion: "1.1.2"
+appVersion: "1.2.0"
 keywords:
   - anomaly-detection
   - ml

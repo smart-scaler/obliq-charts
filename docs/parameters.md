@@ -76,7 +76,7 @@ helm install --set backend.env.app.LOG_LEVEL="DEBUG"  # Highest priority
 | `global.env.common.TZ` | Timezone | `"UTC"` | No | `"America/New_York"` |
 | `global.env.common.ENVIRONMENT` | Environment name | `"production"` | No | `"staging"` |
 | `global.env.common.CLUSTER_NAME` | Kubernetes cluster name | `"obliq-cluster"` | No | `"my-cluster"` |
-| `global.env.common.KUBECONFIG` | Path to kubeconfig file | `"/etc/kubeconfig/config"` | No | `"/root/.kube/config"` |
+| `global.env.common.KUBECONFIG_FILE_PATH` | Path to kubeconfig file | `"/etc/kubeconfig/config"` | No | `"/root/.kube/config"` |
 | `global.env.common.DEBUG` | Enable debug mode | `"false"` | No | `"true"` |
 | `global.env.common.AUTOMATIC_EXECUTION_ENABLED` | Enable automatic execution | `"true"` | No | `"false"` |
 
@@ -136,6 +136,7 @@ helm install --set backend.env.app.LOG_LEVEL="DEBUG"  # Highest priority
 | `global.env.loki.LOKI_TOKEN` | Loki token | `""` | No | `"your-token"` |
 | `global.env.mcp.NEO4J_MCP_USERNAME` | Neo4j MCP username | `"admin"` | No | `"mcp-user"` |
 | `global.env.mcp.NEO4J_MCP_PASSWORD` | Neo4j MCP password | `"admin123"` | No | `"mcp-password"` |
+| `global.gcpCredentials.content` | GCP service account JSON file content | `""` | For gcp-mcp | File content via `--set-file` |
 
 ### JIRA Integration Configuration
 
@@ -145,6 +146,14 @@ helm install --set backend.env.app.LOG_LEVEL="DEBUG"  # Highest priority
 | `global.env.jira.JIRA_EMAIL` | JIRA email | `""` | For JIRA integration | `"admin@company.com"` |
 | `global.env.jira.JIRA_API_TOKEN` | JIRA API token | `""` | For JIRA integration | `"your-api-token"` |
 | `global.env.jira.JIRA_PROJECT_KEY` | JIRA project key | `""` | For JIRA integration | `"PROJ"` |
+
+### ServiceNow Integration Configuration
+
+| Parameter | Description | Default | Required | Example |
+|-----------|-------------|---------|----------|---------|
+| `global.env.servicenow.SERVICE_NOW_INSTANCE` | ServiceNow instance URL | `""` | For incident-ingester | `"https://yourcompany.service-now.com"` |
+| `global.env.servicenow.SERVICE_NOW_USERNAME` | ServiceNow username | `""` | For incident-ingester | `"admin"` |
+| `global.env.servicenow.SERVICE_NOW_PASSWORD` | ServiceNow password | `""` | For incident-ingester | `"password"` |
 
 ### External Tools (Optional)
 
@@ -283,7 +292,7 @@ helm repo update
 
 ```bash
 helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
-  --namespace avesha \
+  --namespace obliq \
   --create-namespace \
   --set-file global.kubeconfig.content=./kubeconfig \
   --set global.env.openai.OPENAI_API_KEY="${OPENAI_API_KEY}" \
@@ -295,7 +304,7 @@ helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
 ```bash
 # Enable AWS services and credentials
 helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
-  --namespace avesha \
+  --namespace obliq \
   --create-namespace \
   --set-file global.kubeconfig.content=./kubeconfig \
   --set global.env.openai.OPENAI_API_KEY="${OPENAI_API_KEY}" \
@@ -314,7 +323,7 @@ helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
 ```bash
 # Essential parameters
 helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
-  --namespace avesha \
+  --namespace obliq \
   --create-namespace \
   --set-file global.kubeconfig.content=./kubeconfig \
   --set global.env.openai.OPENAI_API_KEY="${OPENAI_API_KEY}" \
@@ -373,7 +382,7 @@ helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
 ```bash
 # Dry run to validate configuration
 helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
-  --namespace avesha \
+  --namespace obliq \
   --dry-run \
   --set-file global.kubeconfig.content=./kubeconfig \
   --set global.env.openai.OPENAI_API_KEY="test" \
