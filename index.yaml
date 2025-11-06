@@ -5,8 +5,8 @@ entries:
       category: Application
       licenses: Apache-2.0
     apiVersion: v2
-    appVersion: 1.1.2
-    created: "2025-09-11T09:11:03.601954996Z"
+    appVersion: 1.2.0
+    created: "2025-11-06T05:57:12.419774818Z"
     dependencies:
     - condition: opentelemetry-collector.enabled
       name: opentelemetry-collector
@@ -35,6 +35,10 @@ entries:
     - condition: k8s-mcp.enabled
       name: k8s-mcp
       repository: file://./charts/k8s-mcp
+      version: 1.0.0
+    - condition: gcp-mcp.enabled
+      name: gcp-mcp
+      repository: file://./charts/gcp-mcp
       version: 1.0.0
     - condition: prometheus-mcp.enabled
       name: prometheus-mcp
@@ -68,6 +72,10 @@ entries:
       name: incident-manager
       repository: file://./charts/incident-manager
       version: 1.0.0
+    - condition: incident-ingester.enabled
+      name: incident-ingester
+      repository: file://./charts/incident-ingester
+      version: 1.0.0
     - condition: rca-agent.enabled
       name: rca-agent
       repository: file://./charts/rca-agent
@@ -75,6 +83,10 @@ entries:
     - condition: auto-remediation.enabled
       name: auto-remediation
       repository: file://./charts/auto-remediation
+      version: 1.0.0
+    - condition: hitl-manager.enabled
+      name: hitl-manager
+      repository: file://./charts/hitl-manager
       version: 1.0.0
     - condition: backend.enabled
       name: backend
@@ -88,17 +100,25 @@ entries:
       name: infra-agent
       repository: file://./charts/infra-agent
       version: 1.0.0
-    - condition: avesha-unified-ui.enabled
-      name: avesha-unified-ui
-      repository: file://./charts/avesha-unified-ui
+    - condition: obliq-unified-ui.enabled
+      name: obliq-unified-ui
+      repository: file://./charts/obliq-unified-ui
       version: 1.0.0
     - condition: orchestrator.enabled
       name: orchestrator
       repository: file://./charts/orchestrator
       version: 1.0.0
+    - condition: prometheus.enabled
+      name: prometheus
+      repository: https://prometheus-community.github.io/helm-charts
+      version: 27.41.0
+    - condition: jaeger.enabled
+      name: jaeger
+      repository: https://jaegertracing.github.io/helm-charts
+      version: 0.71.0
     description: A comprehensive umbrella Helm chart for deploying the Avesha Obliq
       AI SRE Agent platform
-    digest: 97cdf8162541a5c3295f388bdaf92649b57348bd72f24cce96cc0770cab7fca3
+    digest: 2dc39439f1552d74e790048b787608865ad511763155ebb0c2bad727b0e20138
     home: https://avesha.io
     icon: https://via.placeholder.com/150x150.png?text=Obliq+SRE
     keywords:
@@ -123,7 +143,7 @@ entries:
       licenses: Apache-2.0
     apiVersion: v2
     appVersion: 1.1.1
-    created: "2025-09-11T09:11:03.548246737Z"
+    created: "2025-11-06T05:57:12.328773735Z"
     dependencies:
     - condition: opentelemetry-collector.enabled
       name: opentelemetry-collector
@@ -235,4 +255,4 @@ entries:
     urls:
     - https://repo.obliq.avesha.io/obliq-sre-agent-1.1.1.tgz
     version: 1.1.1
-generated: "2025-09-11T09:11:03.502311956Z"
+generated: "2025-11-06T05:57:12.28884454Z"
