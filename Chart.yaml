@@ -2,7 +2,7 @@ apiVersion: v2
 name: obliq-sre-agent
 description: A comprehensive umbrella Helm chart for deploying the Avesha Obliq AI SRE Agent platform
 type: application
-version: 1.1.2
+version: 1.2.0
 appVersion: "1.2.0"
 keywords:
   - sre
@@ -22,19 +22,18 @@ annotations:
   category: Application
   licenses: Apache-2.0
 
-
 dependencies:
   # Core Data & Observability Infrastructure
   - name: opentelemetry-collector
     version: 0.130.2
     repository: file://./charts/opentelemetry-collector
     condition: opentelemetry-collector.enabled
-    
+
   - name: neo4j
     version: 5.26.10
     repository: file://./charts/neo4j
     condition: neo4j.enabled
-    
+
   - name: mongodb
     version: 13.17.0
     repository: file://./charts/mongodb
@@ -42,118 +41,118 @@ dependencies:
 
   # STEP 5: MCP Services (no dependencies - standalone integrations)
   - name: loki-mcp
-    version: 1.0.0
+    version: 1.2.0
     repository: file://./charts/loki-mcp
     condition: loki-mcp.enabled
     
   - name: cloudwatch-mcp
-    version: 1.0.0
+    version: 1.2.0
     repository: file://./charts/cloudwatch-mcp
     condition: cloudwatch-mcp.enabled
     
   - name: aws-mcp
-    version: 1.0.0
+    version: 1.2.0
     repository: file://./charts/aws-mcp
     condition: aws-mcp.enabled
     
   - name: k8s-mcp
-    version: 1.0.0
+    version: 1.2.0
     repository: file://./charts/k8s-mcp
     condition: k8s-mcp.enabled
     
   - name: gcp-mcp
-    version: 1.0.0
+    version: 1.2.0
     repository: file://./charts/gcp-mcp
     condition: gcp-mcp.enabled
     
   - name: prometheus-mcp
-    version: 1.0.0
+    version: 1.2.0
     repository: file://./charts/prometheus-mcp
     condition: prometheus-mcp.enabled
-
+    
   # STEP 6: Data Collection Services (needs: opentelemetry-collector)
   - name: aws-ec2-cloudwatch-alarms
-    version: 1.0.0
+    version: 1.2.0
     repository: file://./charts/aws-ec2-cloudwatch-alarms
     condition: aws-ec2-cloudwatch-alarms.enabled
     
   - name: kubernetes-events-ingester
-    version: 1.0.0
+    version: 1.2.0
     repository: file://./charts/kubernetes-events-ingester
     condition: kubernetes-events-ingester.enabled
     
   - name: slack-ingester
-    version: 1.0.0
+    version: 1.2.0
     repository: file://./charts/slack-ingester
     condition: slack-ingester.enabled
-
+    
   # STEP 7: Neo4j-dependent Services (needs: neo4j)
   - name: neo4j-mcp
-    version: 1.0.0
+    version: 1.2.0
     repository: file://./charts/neo4j-mcp
     condition: neo4j-mcp.enabled
     
   - name: anomaly-detection
-    version: 1.0.0
+    version: 1.2.0
     repository: file://./charts/anomaly-detection
     condition: anomaly-detection.enabled
     
   - name: active-inventory
-    version: 1.0.0
+    version: 1.2.0
     repository: file://./charts/active-inventory
     condition: active-inventory.enabled
     
   - name: incident-manager
-    version: 1.0.0
+    version: 1.2.0
     repository: file://./charts/incident-manager
     condition: incident-manager.enabled
     
   - name: incident-ingester
-    version: 1.0.0
+    version: 1.2.0
     repository: file://./charts/incident-ingester
     condition: incident-ingester.enabled
     
   - name: rca-agent
-    version: 1.0.0
+    version: 1.2.0
     repository: file://./charts/rca-agent
     condition: rca-agent.enabled
     
   - name: auto-remediation
-    version: 1.0.0
+    version: 1.2.0
     repository: file://./charts/auto-remediation
     condition: auto-remediation.enabled
     
   - name: hitl-manager
-    version: 1.0.0
+    version: 1.2.0
     repository: file://./charts/hitl-manager
     condition: hitl-manager.enabled
     
   - name: backend
-    version: 1.0.0
+    version: 1.2.0
     repository: file://./charts/backend
     condition: backend.enabled
     
   - name: service-graph-engine
-    version: 1.0.0
+    version: 1.2.0
     repository: file://./charts/service-graph-engine
     condition: service-graph-engine.enabled
-
+    
   # STEP 8: MongoDB-dependent Services (needs: mongodb)
   - name: infra-agent
-    version: 1.0.0
+    version: 1.2.0
     repository: file://./charts/infra-agent
     condition: infra-agent.enabled
-
+    
   # STEP 9: Backend-dependent Services (needs: backend)
   - name: obliq-unified-ui
-    version: 1.0.0
+    version: 1.2.0
     repository: file://./charts/obliq-unified-ui
     condition: obliq-unified-ui.enabled
-
+    
   # STEP 10: Orchestrator (needs: neo4j + all analysis services)
   # Must deploy last as it depends on: anomaly-detection, incident-manager, rca-agent, auto-remediation, service-graph-engine
   - name: orchestrator
-    version: 1.0.0
+    version: 1.2.0
     repository: file://./charts/orchestrator
     condition: orchestrator.enabled
 
@@ -162,7 +161,7 @@ dependencies:
     version: 27.41.0
     repository: https://prometheus-community.github.io/helm-charts
     condition: prometheus.enabled
-    
+
   - name: jaeger
     version: 0.71.0
     repository: https://jaegertracing.github.io/helm-charts

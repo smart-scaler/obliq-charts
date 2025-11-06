@@ -47,7 +47,7 @@ spec:
               containerPort: {{ .containerPort }}
               protocol: {{ .protocol }}
             {{- end }}
-          {{- if .Values.livenessProbe.enabled }}
+          {{- if and .Values.livenessProbe (.Values.livenessProbe.enabled) }}
           livenessProbe:
             {{- if .Values.livenessProbe.httpGet }}
             httpGet:
@@ -60,7 +60,7 @@ spec:
             failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
             successThreshold: {{ .Values.livenessProbe.successThreshold }}
           {{- end }}
-          {{- if .Values.readinessProbe.enabled }}
+          {{- if and .Values.readinessProbe (.Values.readinessProbe.enabled) }}
           readinessProbe:
             {{- if .Values.readinessProbe.httpGet }}
             httpGet:
@@ -73,7 +73,7 @@ spec:
             failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
             successThreshold: {{ .Values.readinessProbe.successThreshold }}
           {{- end }}
-          {{- if .Values.startupProbe.enabled }}
+          {{- if and .Values.startupProbe (.Values.startupProbe.enabled) }}
           startupProbe:
             {{- if .Values.startupProbe.httpGet }}
             httpGet:
