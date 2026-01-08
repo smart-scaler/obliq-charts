@@ -586,7 +586,7 @@ backend:
   fullnameOverride: "backend"
   image:
     repository: *backendImage
-    tag: "1.2.0"
+    tag: "1.3.0"
     pullPolicy: IfNotPresent
   
   # Use common service configuration
@@ -652,7 +652,7 @@ obliq-unified-ui:
   fullnameOverride: "obliq-unified-ui"
   image:
     repository: *obliqUnifiedUiImage
-    tag: "1.2.0"
+    tag: "1.3.0"
     pullPolicy: IfNotPresent
   
   # Use common service configuration
@@ -710,7 +710,7 @@ orchestrator:
   fullnameOverride: "orchestrator"
   image:
     repository: *orchestratorImage
-    tag: "1.2.0"
+    tag: "1.3.0"
     pullPolicy: IfNotPresent
   
   # Use common service configuration
@@ -745,7 +745,7 @@ rca-agent:
   fullnameOverride: "rca-agent"
   image:
     repository: *rcaAgentImage
-    tag: "1.2.0"
+    tag: "1.3.0"
   service:
     port: 8062
   env:
@@ -763,7 +763,7 @@ anomaly-detection:
   fullnameOverride: "anomaly-detection"
   image:
     repository: *anomalyDetectionImage
-    tag: "1.2.0"
+    tag: "1.3.0"
   service:
     port: 8061
   env:
@@ -780,7 +780,7 @@ auto-remediation:
   fullnameOverride: "auto-remediation"
   image:
     repository: *autoRemediationImage
-    tag: "1.2.0"
+    tag: "1.3.0"
   service:
     port: 8063
   env:
@@ -796,7 +796,7 @@ hitl-manager:
   fullnameOverride: "hitl-manager"
   image:
     repository: *hitlManagerImage
-    tag: "1.2.0"
+    tag: "1.3.0"
   service:
     port: 8065
   env:
@@ -818,7 +818,7 @@ incident-manager:
   fullnameOverride: "incident-manager"
   image:
     repository: *incidentManagerImage
-    tag: "1.2.0"
+    tag: "1.3.0"
   service:
     port: 8064
   env:
@@ -834,7 +834,7 @@ incident-ingester:
   fullnameOverride: "incident-ingester"
   image:
     repository: *incidentIngesterImage
-    tag: "1.2.0"
+    tag: "1.3.0"
   service:
     port: 8065
   env:
@@ -854,7 +854,7 @@ service-graph-engine:
   fullnameOverride: "service-graph-engine"
   image:
     repository: *serviceGraphEngineImage
-    tag: "1.2.0"
+    tag: "1.3.0"
   service:
     port: 8074
   env:
@@ -872,7 +872,7 @@ active-inventory:
   fullnameOverride: "active-inventory"
   image:
     repository: *activeInventoryImage
-    tag: "1.2.0"
+    tag: "1.3.0"
   service:
     port: 8065
   env:
@@ -887,7 +887,7 @@ infra-agent:
   fullnameOverride: "infra-agent"
   image:
     repository: *infraAgentImage
-    tag: "1.2.0"
+    tag: "1.3.0"
   service:
     port: 8051
   ingress:
@@ -905,7 +905,7 @@ aws-mcp:
   fullnameOverride: "aws-mcp"
   image:
     repository: *awsMcpImage
-    tag: "1.2.0"
+    tag: "1.3.0"
   service:
     port: 8080
   env:
@@ -920,7 +920,7 @@ k8s-mcp:
   fullnameOverride: "k8s-mcp"
   image:
     repository: *k8sMcpImage
-    tag: "1.2.0"
+    tag: "1.3.0"
   service:
     port: 8080
   # Kubeconfig configuration (inherits from global.kubeconfig.content)
@@ -937,7 +937,7 @@ gcp-mcp:
   fullnameOverride: "gcp-mcp"
   image:
     repository: *gcpMcpImage
-    tag: "1.2.0"
+    tag: "1.3.0"
   service:
     port: 8098
   # GCP Credentials configuration (uses global.gcpCredentials.content)
@@ -960,7 +960,7 @@ prometheus-mcp:
   fullnameOverride: "prometheus-mcp"
   image:
     repository: *prometheusMcpImage
-    tag: "1.2.0"
+    tag: "1.3.0"
   service:
     port: 8041
   env:
@@ -976,7 +976,7 @@ neo4j-mcp:
   fullnameOverride: "neo4j-mcp"
   image:
     repository: *neo4jMcpImage
-    tag: "1.2.0"
+    tag: "1.3.0"
   service:
     port: 8080
   env:
@@ -993,7 +993,7 @@ loki-mcp:
   fullnameOverride: "loki-mcp"
   image:
     repository: *lokiMcpImage
-    tag: "1.2.0"
+    tag: "1.3.0"
   service:
     port: 8089
   env:
@@ -1018,7 +1018,7 @@ cloudwatch-mcp:
   fullnameOverride: "cloudwatch-mcp"
   image:
     repository: *cloudwatchMcpImage
-    tag: "1.2.0"
+    tag: "1.3.0"
   service:
     port: 8000
   env:
@@ -1037,7 +1037,7 @@ kubernetes-events-ingester:
   fullnameOverride: "kubernetes-events-ingester"
   image:
     repository: *kubernetesEventsIngesterImage
-    tag: "1.2.0"
+    tag: "1.3.0"
   service:
     port: 8065
   # Kubeconfig configuration (uses global secret with KUBECONFIG_CONTENT key)
@@ -1063,7 +1063,7 @@ slack-ingester:
   fullnameOverride: "slack-ingester"
   image:
     repository: *slackIngesterImage
-    tag: "1.2.0"
+    tag: "1.3.0"
   service:
     port: 8065
   env:
@@ -1104,7 +1104,7 @@ aws-ec2-cloudwatch-alarms:
   fullnameOverride: "aws-ec2-cloudwatch-alarms"
   image:
     repository: *awsEc2CloudwatchAlarmsImage
-    tag: "1.2.0"
+    tag: "1.3.0"
   service:
     port: 8065
   env:
