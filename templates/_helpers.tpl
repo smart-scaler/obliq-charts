@@ -313,6 +313,11 @@ This template provides all environment variables from the global secret
     secretKeyRef:
       name: {{ include "obliq-sre-agent.globalSecretName" . }}
       key: KUBECONFIG_FILE_PATH
+- name: GOOGLE_APPLICATION_CREDENTIALS
+  valueFrom:
+    secretKeyRef:
+      name: {{ include "obliq-sre-agent.globalSecretName" . }}
+      key: GOOGLE_APPLICATION_CREDENTIALS
 - name: DEBUG
   valueFrom:
     secretKeyRef:
@@ -544,6 +549,11 @@ This template provides all environment variables from the global secret
     secretKeyRef:
       name: {{ include "obliq-sre-agent.globalSecretName" . }}
       key: SERVICE_NOW_PASSWORD
+- name: SERVICE_NOW_CALLER_USERNAME
+  valueFrom:
+    secretKeyRef:
+      name: {{ include "obliq-sre-agent.globalSecretName" . }}
+      key: SERVICE_NOW_CALLER_USERNAME
 
 
 # Slack configuration from global Secret
@@ -658,6 +668,31 @@ This template provides all environment variables from the global secret
     secretKeyRef:
       name: {{ include "obliq-sre-agent.globalSecretName" . }}
       key: SG_UPDATE_INTERVAL_SECONDS
+- name: OTEL_JAEGER_URL
+  valueFrom:
+    secretKeyRef:
+      name: {{ include "obliq-sre-agent.globalSecretName" . }}
+      key: OTEL_JAEGER_URL
+- name: JAEGER_URL
+  valueFrom:
+    secretKeyRef:
+      name: {{ include "obliq-sre-agent.globalSecretName" . }}
+      key: JAEGER_URL
+- name: UPDATE_INTERVAL
+  valueFrom:
+    secretKeyRef:
+      name: {{ include "obliq-sre-agent.globalSecretName" . }}
+      key: UPDATE_INTERVAL
+- name: INITIAL_DELAY_SECONDS
+  valueFrom:
+    secretKeyRef:
+      name: {{ include "obliq-sre-agent.globalSecretName" . }}
+      key: INITIAL_DELAY_SECONDS
+- name: ADDITIONAL_SERVICE_TAGS
+  valueFrom:
+    secretKeyRef:
+      name: {{ include "obliq-sre-agent.globalSecretName" . }}
+      key: ADDITIONAL_SERVICE_TAGS
 
 
 # Kubernetes configuration from global Secret

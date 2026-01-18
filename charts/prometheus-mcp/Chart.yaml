@@ -3,7 +3,7 @@ name: prometheus-mcp
 description: A Helm chart for deploying the Prometheus MCP (Model Context Protocol) service with multiple environment variables
 type: application
 version: 1.0.0
-appVersion: "1.2.0"
+appVersion: "1.4.0"
 keywords:
   - prometheus-mcp
   - prometheus

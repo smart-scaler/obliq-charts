@@ -3,7 +3,7 @@ name: hitl-manager
 description: A Helm chart for deploying the Human-in-the-Loop (HITL) manager service with multiple environment variables
 type: application
 version: 1.0.0
-appVersion: "1.2.0"
+appVersion: "1.4.0"
 keywords:
   - hitl-manager
   - human-in-the-loop
