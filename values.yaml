@@ -30,28 +30,28 @@ x-imageRegistry: &imageRegistry "avesha.azurecr.io"
 
 # Centralized image paths for all services
 x-images:
-  backend: &backendImage "agents/release/backend"
-  obliq-unified-ui: &obliqUnifiedUiImage "agents/release/obliq-ai-sre"
-  orchestrator: &orchestratorImage "agents/release/orchestrator"
-  rca-agent: &rcaAgentImage "agents/release/rca-agent"
-  anomaly-detection: &anomalyDetectionImage "agents/release/anomaly-detection"
-  auto-remediation: &autoRemediationImage "agents/release/auto-remediation"
-  hitl-manager: &hitlManagerImage "agents/release/hitl-manager"
-  incident-manager: &incidentManagerImage "agents/release/incident-manager"
-  incident-ingester: &incidentIngesterImage "agents/release/incident-ingester"
-  service-graph-engine: &serviceGraphEngineImage "agents/release/service-graph-engine"
-  active-inventory: &activeInventoryImage "agents/release/active-inventory"
-  infra-agent: &infraAgentImage "agents/release/infra-agent"
-  aws-mcp: &awsMcpImage "agents/release/aws-mcp"
-  k8s-mcp: &k8sMcpImage "agents/release/k8s-mcp"
-  gcp-mcp: &gcpMcpImage "agents/release/gcp-mcp"
-  prometheus-mcp: &prometheusMcpImage "agents/release/prometheus-mcp"
-  loki-mcp: &lokiMcpImage "agents/release/loki-mcp"
-  neo4j-mcp: &neo4jMcpImage "agents/release/neo4j-mcp"
-  cloudwatch-mcp: &cloudwatchMcpImage "agents/release/cloudwatch-mcp"
-  kubernetes-events-ingester: &kubernetesEventsIngesterImage "agents/release/kubernetes-events-ingester"
-  slack-ingester: &slackIngesterImage "agents/release/slack-ingester"
-  aws-ec2-cloudwatch-alarms: &awsEc2CloudwatchAlarmsImage "agents/release/aws-ec2-cloudwatch-alarms"
+  backend: &backendImage "agents/staging/backend"
+  obliq-unified-ui: &obliqUnifiedUiImage "agents/staging/obliq-ai-sre"
+  orchestrator: &orchestratorImage "agents/staging/orchestrator"
+  rca-agent: &rcaAgentImage "agents/staging/rca-agent"
+  anomaly-detection: &anomalyDetectionImage "agents/staging/anomaly-detection"
+  auto-remediation: &autoRemediationImage "agents/staging/auto-remediation"
+  hitl-manager: &hitlManagerImage "agents/staging/hitl-manager"
+  incident-manager: &incidentManagerImage "agents/staging/incident-manager"
+  incident-ingester: &incidentIngesterImage "agents/staging/incident-ingester"
+  service-graph-engine: &serviceGraphEngineImage "agents/staging/service-graph-engine"
+  active-inventory: &activeInventoryImage "agents/staging/active-inventory"
+  infra-agent: &infraAgentImage "agents/staging/infra-agent"
+  aws-mcp: &awsMcpImage "agents/staging/aws-mcp"
+  k8s-mcp: &k8sMcpImage "agents/staging/k8s-mcp"
+  gcp-mcp: &gcpMcpImage "agents/staging/gcp-mcp"
+  prometheus-mcp: &prometheusMcpImage "agents/staging/prometheus-mcp"
+  loki-mcp: &lokiMcpImage "agents/staging/loki-mcp"
+  neo4j-mcp: &neo4jMcpImage "agents/staging/neo4j-mcp"
+  cloudwatch-mcp: &cloudwatchMcpImage "agents/staging/cloudwatch-mcp"
+  kubernetes-events-ingester: &kubernetesEventsIngesterImage "agents/staging/kubernetes-events-ingester"
+  slack-ingester: &slackIngesterImage "agents/staging/slack-ingester"
+  aws-ec2-cloudwatch-alarms: &awsEc2CloudwatchAlarmsImage "agents/staging/aws-ec2-cloudwatch-alarms"
 
 # Common service configuration templates
 x-commonConfig: &commonServiceConfig
@@ -293,13 +293,14 @@ global:
     # Used by: rca-agent, anomaly-detection, auto-remediation
     openai:
       OPENAI_API_KEY: ""                              # OpenAI API key (provide via --set)
+      OPENAI_MODEL: "o3-mini"                         # OpenAI model for LLM processing (default: o3-mini)
     
     # ----------------------------------------
     # Observability Integrations
     # ----------------------------------------
     # Prometheus Configuration (for prometheus-mcp service)
     prometheus:
-      PROMETHEUS_URL: "http://prometheus:9090"        # External Prometheus server URL
+      PROMETHEUS_URL: ""        # External Prometheus server URL (provide via --set or .env)
       PROMETHEUS_USER: "admin"                        # Prometheus username (if auth enabled)
       PROMETHEUS_PASSWORD: "admin123"                 # Prometheus password (if auth enabled)
       PROMETHEUS_MCP_USERNAME: "admin"                # Username for Prometheus MCP service
@@ -307,7 +308,7 @@ global:
     
     # Loki Configuration (for loki-mcp service)
     loki:
-      LOKI_URL: "http://loki:3100"                    # External Loki server URL
+      LOKI_URL: ""                    # External Loki server URL (provide via --set or .env)
       LOKI_TOKEN: ""                                  # Loki authentication token (if required)
       LOKI_USERNAME: ""                               # Loki username (if auth enabled)
       LOKI_PASSWORD: ""                               # Loki password (if auth enabled)
@@ -371,7 +372,7 @@ global:
     sg:
       APM_PROVIDER: "otel.jaeger"                         # APM provider (currently only otel.jaeger & datadog are supported)
       OTEL_JAEGER_URL: ""                                 # OpenTelemetry Jaeger URL (provide via --set or .env)
-      JAEGER_URL: ""                                      # Jaeger UI URL (defaults to OTEL_JAEGER_URL if not set)
+      JAEGER_URL: ""                                      # Jaeger UI URL (defaults to OTEL_JAEGER_URL if not set, provide via --set or .env)
       UPDATE_INTERVAL_SECONDS: "86400"                    # Service graph update interval (24 hours)
       SERVICE_GRAPH_UPDATE_INTERVAL: "86400"              # Service graph update interval in seconds (default: 86400 = 24 hours)
       SERVICE_GRAPH_INITIAL_DELAY_SECONDS: "0"           # Initial delay before first update (default: 0)
@@ -392,6 +393,7 @@ global:
       OTEL_COLLECTOR_HTTP_ENDPOINT: "opentelemetry-collector:4318" # OTLP HTTP endpoint
       OTEL_EXPORTER_OTLP_ENDPOINT: "http://opentelemetry-collector:4317"  # Full OTLP URL
       OTEL_EXPORTER_OTLP_INSECURE: "true"                          # Allow insecure connections
+      GRAFANA_URL: ""                                              # Grafana UI URL (provide via --set or .env)
     
     # ----------------------------------------
     # Service URLs Configuration
@@ -602,7 +604,7 @@ backend:
   fullnameOverride: "backend"
   image:
     repository: *backendImage
-    tag: "1.4.0"
+    tag: "release-1.4.0"
     pullPolicy: IfNotPresent
   
   # Use common service configuration
@@ -659,6 +661,8 @@ backend:
       ORCHESTRATOR_PORT: 8060
       HITL_MANAGER_HOST: hitl-manager
       HITL_MANAGER_PORT: 8065
+      INCIDENT_INGESTER_HOST: incident-ingester
+      INCIDENT_INGESTER_PORT: 8065
       OBLIQ_SECRET_NAME: "obliq-sre-agent-global-secret"
       OBLIQ_SECRET_NAMESPACE: "obliq"
       
@@ -668,7 +672,7 @@ obliq-unified-ui:
   fullnameOverride: "obliq-unified-ui"
   image:
     repository: *obliqUnifiedUiImage
-    tag: "1.4.0"
+    tag: "release-1.4.0"
     pullPolicy: IfNotPresent
   
   # Use common service configuration
@@ -726,7 +730,7 @@ orchestrator:
   fullnameOverride: "orchestrator"
   image:
     repository: *orchestratorImage
-    tag: "1.4.0"
+    tag: "release-1.4.0"
     pullPolicy: IfNotPresent
   
   # Use common service configuration
@@ -761,7 +765,7 @@ rca-agent:
   fullnameOverride: "rca-agent"
   image:
     repository: *rcaAgentImage
-    tag: "1.4.0"
+    tag: "release-1.4.0"
   service:
     port: 8062
   env:
@@ -779,7 +783,7 @@ anomaly-detection:
   fullnameOverride: "anomaly-detection"
   image:
     repository: *anomalyDetectionImage
-    tag: "1.4.0"
+    tag: "release-1.4.0"
   service:
     port: 8061
   env:
@@ -796,7 +800,7 @@ auto-remediation:
   fullnameOverride: "auto-remediation"
   image:
     repository: *autoRemediationImage
-    tag: "1.4.0"
+    tag: "release-1.4.0"
   service:
     port: 8063
   env:
@@ -812,7 +816,7 @@ hitl-manager:
   fullnameOverride: "hitl-manager"
   image:
     repository: *hitlManagerImage
-    tag: "1.4.0"
+    tag: "release-1.4.0"
   service:
     port: 8065
   env:
@@ -834,7 +838,7 @@ incident-manager:
   fullnameOverride: "incident-manager"
   image:
     repository: *incidentManagerImage
-    tag: "1.4.0"
+    tag: "release-1.4.0"
   service:
     port: 8064
   env:
@@ -851,18 +855,21 @@ incident-ingester:
   fullnameOverride: "incident-ingester"
   image:
     repository: *incidentIngesterImage
-    tag: "1.4.0"
+    tag: "release-1.4.0"
   service:
     port: 8065
   env:
     app:
       AGENT_TYPE: "incident_ingester"
       PORT: "8065"
+      INCIDENT_INGESTER_HOST: "incident-ingester"
+      INCIDENT_INGESTER_PORT: "8065"
+      ORCHESTRATOR_URL: "http://orchestrator:8060"
       # SERVICE_NOW_CALLER_USERNAME is provided via globalSecretEnv (remove local definition to avoid duplication)
       INCIDENTS_START_TIME: "2025-09-26T06:00:00.0000Z"            # Start time for incident ingestion (can be overridden via --set)
-      OPENAI_MODEL: "gpt-4o-mini"
+      # OPENAI_MODEL is provided via globalSecretEnv (remove local definition to avoid duplication)
       LLM_TEMPERATURE: "0.2"
-      # Note: OTEL_COLLECTOR_ENDPOINT, NEO4J_URI, NEO4J_USER, NEO4J_PASSWORD, NEO4J_AUTH, NEO4J_DATABASE, ORCHESTRATOR_URL, SERVICE_NOW_INSTANCE, SERVICE_NOW_USERNAME, SERVICE_NOW_PASSWORD, SERVICE_NOW_CALLER_USERNAME, INCIDENT_MANAGER_URL, OPENAI_API_KEY are provided via globalSecretEnv
+      # Note: OTEL_COLLECTOR_ENDPOINT, NEO4J_URI, NEO4J_USER, NEO4J_PASSWORD, NEO4J_AUTH, NEO4J_DATABASE, SERVICE_NOW_INSTANCE, SERVICE_NOW_USERNAME, SERVICE_NOW_PASSWORD, SERVICE_NOW_CALLER_USERNAME, INCIDENT_MANAGER_URL, OPENAI_API_KEY are provided via globalSecretEnv
 
 
 # Service Topology Mapping - DataDog integration for service graphs and monitoring
@@ -871,7 +878,7 @@ service-graph-engine:
   fullnameOverride: "service-graph-engine"
   image:
     repository: *serviceGraphEngineImage
-    tag: "1.4.0"
+    tag: "release-1.4.0"
   service:
     port: 8074
   env:
@@ -889,7 +896,7 @@ active-inventory:
   fullnameOverride: "active-inventory"
   image:
     repository: *activeInventoryImage
-    tag: "1.4.0"
+    tag: "release-1.4.0"
   service:
     port: 8065
   env:
@@ -904,7 +911,7 @@ infra-agent:
   fullnameOverride: "infra-agent"
   image:
     repository: *infraAgentImage
-    tag: "1.4.0"
+    tag: "release-1.4.0"
   service:
     port: 8051
   ingress:
@@ -922,7 +929,7 @@ aws-mcp:
   fullnameOverride: "aws-mcp"
   image:
     repository: *awsMcpImage
-    tag: "1.4.0"
+    tag: "release-1.4.0"
   service:
     port: 8080
   env:
@@ -937,7 +944,7 @@ k8s-mcp:
   fullnameOverride: "k8s-mcp"
   image:
     repository: *k8sMcpImage
-    tag: "1.4.0"
+    tag: "release-1.4.0"
   service:
     port: 8080
   # Kubeconfig configuration (inherits from global.kubeconfig.content)
@@ -954,7 +961,7 @@ gcp-mcp:
   fullnameOverride: "gcp-mcp"
   image:
     repository: *gcpMcpImage
-    tag: "1.4.0"
+    tag: "release-1.4.0"
   service:
     port: 8098
   # Startup probe configuration (disabled by default)
@@ -980,7 +987,7 @@ prometheus-mcp:
   fullnameOverride: "prometheus-mcp"
   image:
     repository: *prometheusMcpImage
-    tag: "1.4.0"
+    tag: "release-1.4.0"
   service:
     port: 8041
   env:
@@ -996,7 +1003,7 @@ neo4j-mcp:
   fullnameOverride: "neo4j-mcp"
   image:
     repository: *neo4jMcpImage
-    tag: "1.4.0"
+    tag: "release-1.4.0"
   service:
     port: 8080
   env:
@@ -1013,7 +1020,7 @@ loki-mcp:
   fullnameOverride: "loki-mcp"
   image:
     repository: *lokiMcpImage
-    tag: "1.4.0"
+    tag: "release-1.4.0"
   service:
     port: 8089
   env:
@@ -1038,7 +1045,7 @@ cloudwatch-mcp:
   fullnameOverride: "cloudwatch-mcp"
   image:
     repository: *cloudwatchMcpImage
-    tag: "1.4.0"
+    tag: "release-1.4.0"
   service:
     port: 8000
   env:
@@ -1057,7 +1064,7 @@ kubernetes-events-ingester:
   fullnameOverride: "kubernetes-events-ingester"
   image:
     repository: *kubernetesEventsIngesterImage
-    tag: "1.4.0"
+    tag: "release-1.4.0"
   service:
     port: 8065
   # Kubeconfig configuration (uses global secret with KUBECONFIG_CONTENT key)
@@ -1083,7 +1090,7 @@ slack-ingester:
   fullnameOverride: "slack-ingester"
   image:
     repository: *slackIngesterImage
-    tag: "1.4.0"
+    tag: "release-1.4.0"
   service:
     port: 8065
   env:
@@ -1124,7 +1131,7 @@ aws-ec2-cloudwatch-alarms:
   fullnameOverride: "aws-ec2-cloudwatch-alarms"
   image:
     repository: *awsEc2CloudwatchAlarmsImage
-    tag: "1.4.0"
+    tag: "release-1.4.0"
   service:
     port: 8065
   env:

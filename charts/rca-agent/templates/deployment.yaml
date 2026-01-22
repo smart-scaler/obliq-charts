@@ -114,7 +114,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: {{ include "obliq-sre-agent.globalSecretName" $ }}
-                  key: OPENAI_MODELS
+                  key: OPENAI_MODEL
             - name: RCA_OPENAI_TEMPERATURE
               value: "0.1"
               
