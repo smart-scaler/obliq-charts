@@ -2,7 +2,7 @@ apiVersion: v2
 name: kubernetes-events-ingester
 description: A Helm chart for deploying the Kubernetes events ingester service with multiple environment variables
 type: application
-version: 1.0.0
+version: 1.4.0
 appVersion: "1.4.0"
 keywords:
   - kubernetes-events-ingester

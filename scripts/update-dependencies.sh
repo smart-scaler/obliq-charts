@@ -7,6 +7,18 @@ set -e
 
 echo "🔄 Updating Helm chart dependencies..."
 
+# Clean cached dependencies to avoid version conflicts
+echo "🧹 Cleaning cached dependencies and lock files..."
+rm -f Chart.lock || true
+rm -rf charts/*/charts || true
+
+# Also clean sub-chart locks
+for chart_dir in charts/*/; do
+  if [[ -f "${chart_dir}Chart.lock" ]]; then
+    rm -f "${chart_dir}Chart.lock" || true
+  fi
+done
+
 # Update dependencies for the main chart
 echo "📦 Updating main chart dependencies..."
 helm dependency update .

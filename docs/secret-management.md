@@ -8,21 +8,8 @@ This guide provides instructions for creating and managing Kubernetes secrets fo
 |-------------|---------|---------------|---------------------|
 | **Global Secret** | All environment variables | ✅ | ✅ |
 | **Image Pull Secret** | Container registry access | ✅ | ✅ |
-| **Kubeconfig Content** | Kubernetes cluster access (stored in global secret) | ✅ | ✅ |
 
 ## 📋 Required Environment Variables
-
-### Core Variables (Required)
-- `OPENAI_API_KEY` - OpenAI API key for AI services (required)
-- `KUBECONFIG_FILE_PATH` - Kubernetes configuration for cluster access (required)
-- `KUBECONFIG_CONTENT` - Kubernetes configuration file content (stored in global secret)
-
-### AWS Integration (Optional)
-- `AWS_ACCESS_KEY_ID` - AWS access key for cloud services
-- `AWS_SECRET_ACCESS_KEY` - AWS secret access key
-- `AWS_REGION` - AWS region (default: us-east-1)
-- `AWS_ROLE_ARN_AWS_MCP` - IAM role for AWS MCP service
-- `AWS_ROLE_ARN_EC2_CLOUDWATCH_ALARMS` - IAM role for CloudWatch alarms
 
 ### External Integrations (Optional)
 - `SLACK_BOT_TOKEN` - Slack bot token for notifications (xoxb-...)
@@ -49,29 +36,13 @@ Create your own Kubernetes secret with all required environment variables:
 #### Minimal Deployment (Core Services Only)
 ```bash
 kubectl create secret generic obliq-secrets \
-  --namespace=obliq \
-  --from-literal=OPENAI_API_KEY="sk-your-openai-key"
-```
-
-#### AWS Integration
-```bash
-kubectl create secret generic obliq-secrets \
-  --namespace=obliq \
-  --from-literal=OPENAI_API_KEY="sk-your-openai-key" \
-  --from-literal=AWS_ACCESS_KEY_ID="your-aws-access-key" \
-  --from-literal=AWS_SECRET_ACCESS_KEY="your-aws-secret-key" \
-  --from-literal=AWS_REGION="us-east-1" \
-  --from-literal=AWS_ROLE_ARN_AWS_MCP="arn:aws:iam::account:role/aws-mcp-role"
+  --namespace=obliq
 ```
 
 #### Full Integration (All Services)
 ```bash
 kubectl create secret generic obliq-secrets \
   --namespace=obliq \
-  --from-literal=OPENAI_API_KEY="sk-your-openai-key" \
-  --from-literal=AWS_ACCESS_KEY_ID="your-aws-access-key" \
-  --from-literal=AWS_SECRET_ACCESS_KEY="your-aws-secret-key" \
-  --from-literal=AWS_REGION="us-east-1" \
   --from-literal=SLACK_BOT_TOKEN="xoxb-your-slack-token" \
   --from-literal=SLACK_WEBHOOK_URL="https://hooks.slack.com/services/your-webhook" \
   --from-literal=DD_API_KEY="your-datadog-api-key" \
@@ -115,7 +86,6 @@ Then install with the pre-existing secret:
 helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
   --namespace obliq \
   --create-namespace \
-  --set-file global.kubeconfig.content=./kubeconfig \
   --set global.globalSecret.existing.enabled=true \
   --set global.globalSecret.existing.name=obliq-secrets \
   --set global.globalSecret.create.enabled=false
@@ -154,33 +124,20 @@ global:
 Each service requires specific environment variables from the global secret:
 
 ### Core Services (Always Enabled)
-- **backend**: `OPENAI_API_KEY`, `PORT`, `INFRA_AGENT_HOST`, `INFRA_AGENT_PORT`
-- **orchestrator**: `OPENAI_API_KEY`, `MCP_SERVERS`, `PORT`
-- **rca-agent**: `OPENAI_API_KEY`, `MCP_SERVERS`, `PORT`
-- **anomaly-detection**: `OPENAI_API_KEY`, `MCP_SERVERS`, `PORT`
-- **auto-remediation**: `OPENAI_API_KEY`, `MCP_SERVERS`, `PORT`
-- **incident-manager**: `OPENAI_API_KEY`, `MCP_SERVERS`, `PORT`
+- **backend**: `PORT`, `INFRA_AGENT_HOST`, `INFRA_AGENT_PORT`
+- **orchestrator**: `MCP_SERVERS`, `PORT`
+- **rca-agent**: `MCP_SERVERS`, `PORT`
+- **anomaly-detection**: `MCP_SERVERS`, `PORT`
+- **auto-remediation**: `MCP_SERVERS`, `PORT`
+- **incident-manager**: `MCP_SERVERS`, `PORT`
 
 ### Optional Services (Enable as needed)
-- **aws-mcp**: `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_REGION`, `AWS_ROLE_ARN_AWS_MCP`
-- **cloudwatch-mcp**: `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_REGION`
 - **prometheus-mcp**: `PROMETHEUS_URL`, `PROMETHEUS_USER`, `PROMETHEUS_PASSWORD`
 - **loki-mcp**: `LOKI_URL`, `LOKI_USERNAME`, `LOKI_PASSWORD`, `LOKI_TOKEN`
 - **slack-ingester**: `SLACK_BOT_TOKEN`
 - **service-graph-engine**: `DD_API_KEY`, `DD_APP_KEY`, `DD_SITE`
 
 ## 🎯 Configuration Examples
-
-### Enable AWS Services
-```yaml
-# Enable AWS-related services
-aws-mcp:
-  enabled: true
-cloudwatch-mcp:
-  enabled: true
-aws-ec2-cloudwatch-alarms:
-  enabled: true
-```
 
 ### Enable Observability Services
 ```yaml
@@ -217,10 +174,10 @@ kubectl get secret obliq-secrets -n obliq -o yaml
 ### Verify Environment Variables in Pods
 ```bash
 # Check backend pod environment
-kubectl exec -n obliq deployment/backend -- env | grep -E "(OPENAI|AWS|SLACK)" | sort
+kubectl exec -n obliq deployment/backend -- env | grep -E "SLACK" | sort
 
 # Check specific service
-kubectl exec -n obliq deployment/aws-mcp -- env | grep AWS
+kubectl exec -n obliq deployment/prometheus-mcp -- env | grep PROMETHEUS
 
 # Check all pods
 kubectl get pods -n obliq -o jsonpath='{range .items[*]}{.metadata.name}{"\n"}{end}'
@@ -257,11 +214,8 @@ kubectl get secret obliq-secrets -n obliq
 #### 3. Invalid Secret Values
 **Problem**: Services fail to authenticate with external APIs
 ```bash
-# Test OpenAI API
-kubectl exec -n obliq deployment/backend -- curl -H "Authorization: Bearer $OPENAI_API_KEY" https://api.openai.com/v1/models
-
-# Test AWS credentials
-kubectl exec -n obliq deployment/aws-mcp -- aws sts get-caller-identity
+# Test Prometheus connectivity
+kubectl exec -n obliq deployment/prometheus-mcp -- wget -qO- http://localhost:9090/-/healthy
 ```
 
 **Solution**: Verify credentials are correct and have proper permissions
