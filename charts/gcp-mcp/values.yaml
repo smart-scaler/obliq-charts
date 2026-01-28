@@ -21,7 +21,7 @@ image:
   # Image tag
   tag: ""
   # Image pull policy
-  pullPolicy: Always
+  pullPolicy: IfNotPresent
   # Image pull secrets - using global configuration
   # pullSecrets: []
 
