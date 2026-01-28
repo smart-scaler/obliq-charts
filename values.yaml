@@ -30,28 +30,28 @@ x-imageRegistry: &imageRegistry "avesha.azurecr.io"
 
 # Centralized image paths for all services
 x-images:
-  backend: &backendImage "agents/staging/backend"
-  obliq-unified-ui: &obliqUnifiedUiImage "agents/staging/obliq-ai-sre"
-  orchestrator: &orchestratorImage "agents/staging/orchestrator"
-  rca-agent: &rcaAgentImage "agents/staging/rca-agent"
-  anomaly-detection: &anomalyDetectionImage "agents/staging/anomaly-detection"
-  auto-remediation: &autoRemediationImage "agents/staging/auto-remediation"
-  hitl-manager: &hitlManagerImage "agents/staging/hitl-manager"
-  incident-manager: &incidentManagerImage "agents/staging/incident-manager"
-  incident-ingester: &incidentIngesterImage "agents/staging/incident-ingester"
-  service-graph-engine: &serviceGraphEngineImage "agents/staging/service-graph-engine"
-  active-inventory: &activeInventoryImage "agents/staging/active-inventory"
-  infra-agent: &infraAgentImage "agents/staging/infra-agent"
-  aws-mcp: &awsMcpImage "agents/staging/aws-mcp"
-  k8s-mcp: &k8sMcpImage "agents/staging/k8s-mcp"
-  gcp-mcp: &gcpMcpImage "agents/staging/gcp-mcp"
-  prometheus-mcp: &prometheusMcpImage "agents/staging/prometheus-mcp"
-  loki-mcp: &lokiMcpImage "agents/staging/loki-mcp"
-  neo4j-mcp: &neo4jMcpImage "agents/staging/neo4j-mcp"
-  cloudwatch-mcp: &cloudwatchMcpImage "agents/staging/cloudwatch-mcp"
-  kubernetes-events-ingester: &kubernetesEventsIngesterImage "agents/staging/kubernetes-events-ingester"
-  slack-ingester: &slackIngesterImage "agents/staging/slack-ingester"
-  aws-ec2-cloudwatch-alarms: &awsEc2CloudwatchAlarmsImage "agents/staging/aws-ec2-cloudwatch-alarms"
+  backend: &backendImage "agents/release/backend"
+  obliq-unified-ui: &obliqUnifiedUiImage "agents/release/obliq-ai-sre"
+  orchestrator: &orchestratorImage "agents/release/orchestrator"
+  rca-agent: &rcaAgentImage "agents/release/rca-agent"
+  anomaly-detection: &anomalyDetectionImage "agents/release/anomaly-detection"
+  auto-remediation: &autoRemediationImage "agents/release/auto-remediation"
+  hitl-manager: &hitlManagerImage "agents/release/hitl-manager"
+  incident-manager: &incidentManagerImage "agents/release/incident-manager"
+  incident-ingester: &incidentIngesterImage "agents/release/incident-ingester"
+  service-graph-engine: &serviceGraphEngineImage "agents/release/service-graph-engine"
+  active-inventory: &activeInventoryImage "agents/release/active-inventory"
+  infra-agent: &infraAgentImage "agents/release/infra-agent"
+  aws-mcp: &awsMcpImage "agents/release/aws-mcp"
+  k8s-mcp: &k8sMcpImage "agents/release/k8s-mcp"
+  gcp-mcp: &gcpMcpImage "agents/release/gcp-mcp"
+  prometheus-mcp: &prometheusMcpImage "agents/release/prometheus-mcp"
+  loki-mcp: &lokiMcpImage "agents/release/loki-mcp"
+  neo4j-mcp: &neo4jMcpImage "agents/release/neo4j-mcp"
+  cloudwatch-mcp: &cloudwatchMcpImage "agents/release/cloudwatch-mcp"
+  kubernetes-events-ingester: &kubernetesEventsIngesterImage "agents/release/kubernetes-events-ingester"
+  slack-ingester: &slackIngesterImage "agents/release/slack-ingester"
+  aws-ec2-cloudwatch-alarms: &awsEc2CloudwatchAlarmsImage "agents/release/aws-ec2-cloudwatch-alarms"
 
 # Common service configuration templates
 x-commonConfig: &commonServiceConfig
@@ -604,7 +604,7 @@ backend:
   fullnameOverride: "backend"
   image:
     repository: *backendImage
-    tag: "release-1.4.0"
+    tag: "1.4.0"
     pullPolicy: IfNotPresent
   
   # Use common service configuration
@@ -672,7 +672,7 @@ obliq-unified-ui:
   fullnameOverride: "obliq-unified-ui"
   image:
     repository: *obliqUnifiedUiImage
-    tag: "release-1.4.0"
+    tag: "1.4.0"
     pullPolicy: IfNotPresent
   
   # Use common service configuration
@@ -730,7 +730,7 @@ orchestrator:
   fullnameOverride: "orchestrator"
   image:
     repository: *orchestratorImage
-    tag: "release-1.4.0"
+    tag: "1.4.0"
     pullPolicy: IfNotPresent
   
   # Use common service configuration
@@ -765,7 +765,7 @@ rca-agent:
   fullnameOverride: "rca-agent"
   image:
     repository: *rcaAgentImage
-    tag: "release-1.4.0"
+    tag: "1.4.0"
   service:
     port: 8062
   env:
@@ -783,7 +783,7 @@ anomaly-detection:
   fullnameOverride: "anomaly-detection"
   image:
     repository: *anomalyDetectionImage
-    tag: "release-1.4.0"
+    tag: "1.4.0"
   service:
     port: 8061
   env:
@@ -800,7 +800,7 @@ auto-remediation:
   fullnameOverride: "auto-remediation"
   image:
     repository: *autoRemediationImage
-    tag: "release-1.4.0"
+    tag: "1.4.0"
   service:
     port: 8063
   env:
@@ -816,7 +816,7 @@ hitl-manager:
   fullnameOverride: "hitl-manager"
   image:
     repository: *hitlManagerImage
-    tag: "release-1.4.0"
+    tag: "1.4.0"
   service:
     port: 8065
   env:
@@ -838,7 +838,7 @@ incident-manager:
   fullnameOverride: "incident-manager"
   image:
     repository: *incidentManagerImage
-    tag: "release-1.4.0"
+    tag: "1.4.0"
   service:
     port: 8064
   env:
@@ -855,7 +855,7 @@ incident-ingester:
   fullnameOverride: "incident-ingester"
   image:
     repository: *incidentIngesterImage
-    tag: "release-1.4.0"
+    tag: "1.4.0"
   service:
     port: 8065
   env:
@@ -878,7 +878,7 @@ service-graph-engine:
   fullnameOverride: "service-graph-engine"
   image:
     repository: *serviceGraphEngineImage
-    tag: "release-1.4.0"
+    tag: "1.4.0"
   service:
     port: 8074
   env:
@@ -896,7 +896,7 @@ active-inventory:
   fullnameOverride: "active-inventory"
   image:
     repository: *activeInventoryImage
-    tag: "release-1.4.0"
+    tag: "1.4.0"
   service:
     port: 8065
   env:
@@ -911,7 +911,7 @@ infra-agent:
   fullnameOverride: "infra-agent"
   image:
     repository: *infraAgentImage
-    tag: "release-1.4.0"
+    tag: "1.4.0"
   service:
     port: 8051
   ingress:
@@ -929,7 +929,7 @@ aws-mcp:
   fullnameOverride: "aws-mcp"
   image:
     repository: *awsMcpImage
-    tag: "release-1.4.0"
+    tag: "1.4.0"
   service:
     port: 8080
   env:
@@ -944,7 +944,7 @@ k8s-mcp:
   fullnameOverride: "k8s-mcp"
   image:
     repository: *k8sMcpImage
-    tag: "release-1.4.0"
+    tag: "1.4.0"
   service:
     port: 8080
   # Kubeconfig configuration (inherits from global.kubeconfig.content)
@@ -961,7 +961,7 @@ gcp-mcp:
   fullnameOverride: "gcp-mcp"
   image:
     repository: *gcpMcpImage
-    tag: "release-1.4.0"
+    tag: "1.4.0"
   service:
     port: 8098
   # Startup probe configuration (disabled by default)
@@ -987,7 +987,7 @@ prometheus-mcp:
   fullnameOverride: "prometheus-mcp"
   image:
     repository: *prometheusMcpImage
-    tag: "release-1.4.0"
+    tag: "1.4.0"
   service:
     port: 8041
   env:
@@ -1003,7 +1003,7 @@ neo4j-mcp:
   fullnameOverride: "neo4j-mcp"
   image:
     repository: *neo4jMcpImage
-    tag: "release-1.4.0"
+    tag: "1.4.0"
   service:
     port: 8080
   env:
@@ -1020,7 +1020,7 @@ loki-mcp:
   fullnameOverride: "loki-mcp"
   image:
     repository: *lokiMcpImage
-    tag: "release-1.4.0"
+    tag: "1.4.0"
   service:
     port: 8089
   env:
@@ -1045,7 +1045,7 @@ cloudwatch-mcp:
   fullnameOverride: "cloudwatch-mcp"
   image:
     repository: *cloudwatchMcpImage
-    tag: "release-1.4.0"
+    tag: "1.4.0"
   service:
     port: 8000
   env:
@@ -1064,7 +1064,7 @@ kubernetes-events-ingester:
   fullnameOverride: "kubernetes-events-ingester"
   image:
     repository: *kubernetesEventsIngesterImage
-    tag: "release-1.4.0"
+    tag: "1.4.0"
   service:
     port: 8065
   # Kubeconfig configuration (uses global secret with KUBECONFIG_CONTENT key)
@@ -1090,7 +1090,7 @@ slack-ingester:
   fullnameOverride: "slack-ingester"
   image:
     repository: *slackIngesterImage
-    tag: "release-1.4.0"
+    tag: "1.4.0"
   service:
     port: 8065
   env:
@@ -1131,7 +1131,7 @@ aws-ec2-cloudwatch-alarms:
   fullnameOverride: "aws-ec2-cloudwatch-alarms"
   image:
     repository: *awsEc2CloudwatchAlarmsImage
-    tag: "release-1.4.0"
+    tag: "1.4.0"
   service:
     port: 8065
   env:
