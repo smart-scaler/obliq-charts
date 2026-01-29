@@ -2,8 +2,8 @@ apiVersion: v2
 name: cloudwatch-mcp
 description: A Helm chart for deploying the CloudWatch Model Context Protocol service with multiple environment variables
 type: application
-version: 1.3.0
-appVersion: "1.3.0"
+version: 1.4.0
+appVersion: "1.4.0"
 keywords:
   - cloudwatch-mcp
   - cloudwatch

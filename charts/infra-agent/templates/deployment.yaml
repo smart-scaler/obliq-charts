@@ -104,6 +104,13 @@ spec:
             # Environment variables from global Secret
             {{- include "obliq-sre-agent.globalSecretEnv" $ | nindent 12 }}
             
+            # INFRA-specific OpenAI configuration from global secret
+            - name: INFRA_OPENAI_MODEL
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "obliq-sre-agent.globalSecretName" $ }}
+                  key: OPENAI_MODEL
+            
             # Local environment variables (override global)
             {{- if .Values.env.common }}
               {{- range $key, $value := .Values.env.common }}

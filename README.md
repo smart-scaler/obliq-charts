@@ -16,19 +16,12 @@ A comprehensive AI-powered Site Reliability Engineering platform deployed as a s
 
 - **Kubernetes cluster** (v1.19+)
 - **Helm** (v3.8+)
-- **OpenAI API Key** - Get your own from <https://platform.openai.com/api-keys>
 - **Container Registry Access** - Contact <support@aveshasystems.com> for ACR credentials
-- **kubeconfig** file for cluster access
 
 📚 **Important Setup Guides**:
 
 - **[Kubernetes Permissions](./docs/kubernetes-permissions.md)** - Required cluster permissions and RBAC setup
 - **[Prerequisites Details](./docs/prerequisites.md)** - Comprehensive system requirements and integrations
-
-📋 **Note**: The `--set-file global.kubeconfig.content=./kubeconfig` parameter expects a kubeconfig file in the current directory. Make sure to:
-
-- Place your kubeconfig file in the same directory where you run the helm command, OR
-- Update the path to match your kubeconfig location (e.g., `--set-file global.kubeconfig.content=/path/to/your/kubeconfig`)
 
 ### 1. Add Helm Repository
 
@@ -57,13 +50,9 @@ kubectl create secret docker-registry registry \
 
 💡 **Optional: For easier environment variable management, see [.env file setup](./docs/prerequisites.md#environment-variables-with-env-file).**
 
-📋 **Note:** If you need to create a custom kubeconfig file, you can download it from your Kubernetes cluster or cloud provider.
-
 #### Minimal (Core AI Services)
 
 ```bash
-# Set your OpenAI API key (get from https://platform.openai.com/api-keys)
-export OPENAI_API_KEY="sk-your-openai-api-key"
 export DEFAULT_ADMIN_EMAIL="admin@yourcompany.com"  # Custom admin email
 export DEFAULT_ADMIN_PASSWORD="your-secure-password"  # Custom admin password
 
@@ -72,67 +61,19 @@ helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
   --namespace obliq \
   --create-namespace \
   --dependency-update `# Update chart dependencies before install` \
-  --set-file global.kubeconfig.content=./kubeconfig `# Path to your kubeconfig file` \
-  --set global.env.openai.OPENAI_API_KEY="${OPENAI_API_KEY}" `# Required for AI services` \
   --set global.env.backend.DEFAULT_ADMIN_EMAIL="${DEFAULT_ADMIN_EMAIL}" `# Custom admin email` \
   --set global.env.backend.DEFAULT_ADMIN_PASSWORD="${DEFAULT_ADMIN_PASSWORD}" `# Custom admin password` \
-  --set avesha-unified-ui.service.type=LoadBalancer `# Expose UI externally` \
-  --timeout 15m
-```
-
-#### AWS Integration
-
-📋 **Prerequisites**: Before running AWS integration, ensure you have:
-
-- **[AWS IAM Policies](./docs/aws-iam-policies.md)** - Required IAM roles and policies setup
-- **[AWS Prerequisites](./docs/prerequisites.md#aws-integration)** - AWS account configuration and permissions
-- **Valid AWS credentials** - IAM user with appropriate permissions
-
-```bash
-# Core credentials
-export OPENAI_API_KEY="sk-your-openai-api-key"  # Get from OpenAI platform
-export AWS_ACCESS_KEY_ID="your-aws-access-key"  # AWS IAM user access key
-export AWS_SECRET_ACCESS_KEY="your-aws-secret-key"  # AWS IAM user secret
-export AWS_ROLE_ARN_AWS_MCP="arn:aws:iam::123456789012:role/your-aws-mcp-role"  # IAM role for AWS MCP
-export AWS_ROLE_ARN_EC2_CLOUDWATCH_ALARMS="arn:aws:iam::123456789012:role/your-ec2-cloudwatch-role"  # IAM role for CloudWatch alarms
-export AWS_REGION="us-west-2"  # AWS region for resources
-export DEFAULT_ADMIN_EMAIL="admin@yourcompany.com"  # Custom admin email
-export DEFAULT_ADMIN_PASSWORD="your-secure-password"  # Custom admin password
-
-# Install with AWS integration and LoadBalancer UI access
-helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
-  --namespace obliq \
-  --create-namespace \
-  --dependency-update `# Update chart dependencies before install` \
-  --set-file global.kubeconfig.content=./kubeconfig `# Path to your kubeconfig` \
-  --set global.env.openai.OPENAI_API_KEY="${OPENAI_API_KEY}" `# Required for AI services` \
-  --set global.env.backend.DEFAULT_ADMIN_EMAIL="${DEFAULT_ADMIN_EMAIL}" `# Custom admin email` \
-  --set global.env.backend.DEFAULT_ADMIN_PASSWORD="${DEFAULT_ADMIN_PASSWORD}" `# Custom admin password` \
-  --set aws-mcp.enabled=true `# Enable AWS MCP service` \
-  --set cloudwatch-mcp.enabled=true `# Enable AWS CloudWatch integration` \
-  --set aws-ec2-cloudwatch-alarms.enabled=true `# Enable AWS CloudWatch alarms monitoring` \
-  --set global.env.aws.AWS_ACCESS_KEY_ID="${AWS_ACCESS_KEY_ID}" `# AWS API access` \
-  --set global.env.aws.AWS_SECRET_ACCESS_KEY="${AWS_SECRET_ACCESS_KEY}" `# AWS API secret` \
-  --set global.env.aws.AWS_ROLE_ARN_AWS_MCP="${AWS_ROLE_ARN_AWS_MCP}" `# AWS MCP role ARN` \
-  --set global.env.aws.AWS_ROLE_ARN_EC2_CLOUDWATCH_ALARMS="${AWS_ROLE_ARN_EC2_CLOUDWATCH_ALARMS}" `# CloudWatch alarms role ARN` \
-  --set global.env.aws.AWS_REGION="${AWS_REGION}" `# AWS region` \
-  --set avesha-unified-ui.service.type=LoadBalancer `# Expose UI externally` \
+  --set obliq-unified-ui.service.type=LoadBalancer `# Expose UI externally` \
   --timeout 15m
 ```
 
 #### Full Platform (All 27 Services)
 
 ```bash
-# Set your OpenAI API key (get from https://platform.openai.com/api-keys)
-export OPENAI_API_KEY="sk-your-openai-api-key"
 export DEFAULT_ADMIN_EMAIL="admin@yourcompany.com"  # Custom admin email
 export DEFAULT_ADMIN_PASSWORD="your-secure-password"  # Custom admin password
 
 # Optional: Additional credentials for integrations
-export AWS_ACCESS_KEY_ID="your-aws-access-key"  # For AWS integrations
-export AWS_SECRET_ACCESS_KEY="your-aws-secret-key"  # For AWS integrations
-export AWS_ROLE_ARN_AWS_MCP="arn:aws:iam::123456789012:role/your-aws-mcp-role"  # For AWS MCP
-export AWS_ROLE_ARN_EC2_CLOUDWATCH_ALARMS="arn:aws:iam::123456789012:role/your-ec2-cloudwatch-role"  # For CloudWatch alarms
 export DD_API_KEY="your-datadog-api-key"  # For DataDog integration
 export DD_APP_KEY="your-datadog-app-key"  # For DataDog integration
 export SLACK_BOT_TOKEN="xoxb-your-slack-bot-token"  # For Slack integration
@@ -142,8 +83,6 @@ helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
   --namespace obliq \
   --create-namespace \
   --dependency-update `# Update chart dependencies before install` \
-  --set-file global.kubeconfig.content=./kubeconfig `# Path to your kubeconfig file` \
-  --set global.env.openai.OPENAI_API_KEY="${OPENAI_API_KEY}" `# Required for AI services` \
   --set global.env.backend.DEFAULT_ADMIN_EMAIL="${DEFAULT_ADMIN_EMAIL}" `# Custom admin email` \
   --set global.env.backend.DEFAULT_ADMIN_PASSWORD="${DEFAULT_ADMIN_PASSWORD}" `# Custom admin password` \
   --set mongodb.persistence.enabled=false `# Disable persistent storage for demo` \
@@ -155,14 +94,10 @@ helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
   --set opentelemetry-collector.enabled=true \
   --set neo4j.enabled=true \
   --set mongodb.enabled=true \
-  --set aws-mcp.enabled=true \
   --set k8s-mcp.enabled=true \
-  --set gcp-mcp.enabled=true \
   --set prometheus-mcp.enabled=true \
   --set neo4j-mcp.enabled=true \
   --set loki-mcp.enabled=true \
-  --set cloudwatch-mcp.enabled=true \
-  --set aws-ec2-cloudwatch-alarms.enabled=true \
   --set kubernetes-events-ingester.enabled=true \
   --set slack-ingester.enabled=true \
   --set anomaly-detection.enabled=true \
@@ -178,8 +113,6 @@ helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
   --set obliq-unified-ui.enabled=true \
   --set orchestrator.enabled=true \
   `# Optional: Integration credentials` \
-  --set global.env.aws.AWS_ROLE_ARN_AWS_MCP="${AWS_ROLE_ARN_AWS_MCP}" \
-  --set global.env.aws.AWS_ROLE_ARN_EC2_CLOUDWATCH_ALARMS="${AWS_ROLE_ARN_EC2_CLOUDWATCH}" \
   --set global.env.sg.DD_API_KEY="${DD_API_KEY}" \
   --set global.env.sg.DD_APP_KEY="${DD_APP_KEY}" \
   --set global.env.slack.SLACK_BOT_TOKEN="${SLACK_BOT_TOKEN}" \
@@ -231,7 +164,7 @@ export DEFAULT_ADMIN_PASSWORD="your-secure-password"  # Custom admin password
 
 **Alternative access methods:**
 
-- **NodePort**: Add `--set avesha-unified-ui.service.type=NodePort` instead of LoadBalancer
+- **NodePort**: Add `--set obliq-unified-ui.service.type=NodePort` instead of LoadBalancer
 - **Port Forward** (ClusterIP): `kubectl port-forward -n obliq service/obliq-unified-ui 8080:80`
 
 ## 🗑️ Uninstall

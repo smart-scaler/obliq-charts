@@ -9,9 +9,7 @@ System requirements needed before installing the Obliq SRE Agent chart.
 | **Kubernetes cluster** | 1.19+ | Platform runtime |
 | **Helm** | 3.8+ | Chart deployment |
 | **kubectl** | Compatible with cluster | Cluster access |
-| **OpenAI API Key** | - | AI services |
 | **Container registry access** | - | Image pulling |
-| **kubeconfig file** | - | Service cluster access |
 
 ### Minimum Cluster Resources
 - **CPU**: 4 cores available
@@ -33,33 +31,11 @@ kubectl describe nodes
 
 ## Get Required Credentials
 
-1. **OpenAI API Key**: [Get from OpenAI Platform](https://platform.openai.com/api-keys)
-2. **Registry Access**: Contact support@aveshasystems.com
+1. **Registry Access**: Contact support@aveshasystems.com
 
 ## Optional Integration Requirements
 
 The following integrations are **optional** and only required if you enable specific services:
-
-### AWS Integration
-**Required for**: `aws-mcp`, `cloudwatch-mcp`, `aws-ec2-cloudwatch-alarms`
-
-| Requirement | Parameters | Reference |
-|-------------|------------|-----------|
-| **AWS Access Keys** | `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY` | AWS IAM console |
-| **IAM Policies** | Service-specific permissions | [IAM Policies Guide](aws-iam-policies.md) |
-| **IAM Roles** | `AWS_ROLE_ARN_AWS_MCP`, `AWS_ROLE_ARN_EC2_CLOUDWATCH_ALARMS` | [IAM Policies Guide](aws-iam-policies.md) |
-
-Setup: Review [aws-iam-policies.md](aws-iam-policies.md) for required policies and roles.
-
-### Google Cloud Platform Integration
-**Required for**: `gcp-mcp`
-
-| Requirement | Parameters | Reference |
-|-------------|------------|-----------|
-| **GCP Service Account** | Service account JSON file | Google Cloud Console → IAM & Admin → Service Accounts |
-| **GCP Permissions** | Required API permissions | Google Cloud Console → IAM & Admin → IAM |
-
-Setup: Create a service account in Google Cloud Console and download the JSON key file.
 
 ### ServiceNow Integration
 **Required for**: `incident-ingester`
@@ -68,7 +44,6 @@ Setup: Create a service account in Google Cloud Console and download the JSON ke
 |-------------|------------|-----------|
 | **ServiceNow Instance** | `SERVICE_NOW_INSTANCE` | ServiceNow instance URL |
 | **ServiceNow Credentials** | `SERVICE_NOW_USERNAME`, `SERVICE_NOW_PASSWORD` | ServiceNow user account with API access |
-| **OpenAI API Key** | `OPENAI_API_KEY` | OpenAI platform for LLM processing |
 
 Setup: Ensure ServiceNow user has appropriate permissions to read incident data via REST API.
 
@@ -94,8 +69,7 @@ Setup: Ensure ServiceNow user has appropriate permissions to read incident data 
 
 | Requirement | Parameters | Reference |
 |-------------|------------|-----------|
-| **kubeconfig file** | `--set-file global.kubeconfig.content=./kubeconfig` | Cluster access file |
-| **Cluster permissions** | Read events, pods, nodes | RBAC configuration |
+| **Cluster permissions** | Read events, pods, nodes | [Kubernetes Permissions](kubernetes-permissions.md) |
 
 ### Prometheus Integration
 **Required for**: `prometheus-mcp`
@@ -135,15 +109,6 @@ For easier management of multiple environment variables, you can create a `.env`
 # Create .env file with your credentials
 cat > .env << 'EOF'
 # =============================================================================
-# CORE REQUIRED VARIABLES
-# =============================================================================
-
-# OpenAI API Key (Required for all AI services)
-# Get from: https://platform.openai.com/api-keys
-# Used by: anomaly-detection, rca-agent, auto-remediation, incident-manager
-export OPENAI_API_KEY="sk-your-openai-api-key"
-
-# =============================================================================
 # COMMON CONFIGURATION (Optional)
 # =============================================================================
 
@@ -177,26 +142,6 @@ export MONGODB_PASSWORD="admin123"             # MongoDB app password
 # Neo4j MCP Service
 export NEO4J_MCP_USERNAME="admin"              # Neo4j MCP username
 export NEO4J_MCP_PASSWORD="admin123"           # Neo4j MCP password
-
-# =============================================================================
-# AWS INTEGRATION (Optional)
-# =============================================================================
-
-# Core AWS Credentials
-# Get from: AWS IAM Console → Users → Security credentials
-# Used by: aws-mcp, cloudwatch-mcp, aws-ec2-cloudwatch-alarms
-export AWS_ACCESS_KEY_ID="your-aws-access-key"
-export AWS_SECRET_ACCESS_KEY="your-aws-secret-key"
-export AWS_REGION="us-west-2"                  # AWS region (us-east-1/us-west-2/eu-west-1)
-
-# AWS IAM Roles (for cross-account access)
-# Create these roles in your AWS account with appropriate policies
-export AWS_ROLE_ARN_AWS_MCP="arn:aws:iam::123456789012:role/your-aws-mcp-role"
-export AWS_ROLE_ARN_EC2_CLOUDWATCH_ALARMS="arn:aws:iam::123456789012:role/your-ec2-cloudwatch-role"
-
-# AWS MCP Service Credentials (Optional)
-export AWS_MCP_USERNAME="admin"                # AWS MCP service username
-export AWS_MCP_PASSWORD="admin123"             # AWS MCP service password
 
 # =============================================================================
 # DATADOG INTEGRATION (Optional)
@@ -268,8 +213,6 @@ helm repo update
 helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
   --namespace obliq \
   --create-namespace \
-  --set-file global.kubeconfig.content=./kubeconfig \
-  --set global.env.openai.OPENAI_API_KEY="${OPENAI_API_KEY}" \
   # ... rest of your installation flags
 ```
 

@@ -90,11 +90,19 @@ spec:
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           env:
-            {{- range $key, $value := .Values.env.app }}
+            # Environment variables from global Secret
+            {{- include "obliq-sre-agent.globalSecretEnv" $ | nindent 12 }}
+            
+            # Local environment variables (override global)
+            {{- range $key, $value := .Values.env.common }}
             - name: {{ $key }}
               value: {{ $value | quote }}
             {{- end }}
-            {{- range $key, $value := .Values.env.common }}
+            # Service-specific environment variables from main values config
+            {{- include "obliq-sre-agent.serviceSpecificEnv" (dict "serviceName" "incident-ingester" "root" $) | nindent 12 }}
+            
+            # Local app environment variables (override global if any)
+            {{- range $key, $value := .Values.env.app }}
             - name: {{ $key }}
               value: {{ $value | quote }}
             {{- end }}

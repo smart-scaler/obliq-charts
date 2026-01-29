@@ -20,13 +20,16 @@ spec:
       labels:
         {{- include "gcp-mcp.selectorLabels" . | nindent 8 }}
     spec:
+      {{- $secretName := include "obliq-sre-agent.imagePullSecretName" $ }}
+      {{- if $secretName }}
+      imagePullSecrets:
+        - name: {{ $secretName }}
+      {{- end }}
       {{- with .Values.podSecurityContext }}
       securityContext:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       serviceAccountName: {{ include "gcp-mcp.serviceAccountName" . }}
-      securityContext:
-        {{- toYaml .Values.securityContext | nindent 8 }}
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
@@ -47,7 +50,7 @@ spec:
               containerPort: {{ .containerPort }}
               protocol: {{ .protocol }}
             {{- end }}
-          {{- if and .Values.livenessProbe (.Values.livenessProbe.enabled) }}
+          {{- if .Values.livenessProbe.enabled }}
           livenessProbe:
             {{- if .Values.livenessProbe.httpGet }}
             httpGet:
@@ -60,7 +63,7 @@ spec:
             failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
             successThreshold: {{ .Values.livenessProbe.successThreshold }}
           {{- end }}
-          {{- if and .Values.readinessProbe (.Values.readinessProbe.enabled) }}
+          {{- if .Values.readinessProbe.enabled }}
           readinessProbe:
             {{- if .Values.readinessProbe.httpGet }}
             httpGet:
@@ -73,7 +76,7 @@ spec:
             failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
             successThreshold: {{ .Values.readinessProbe.successThreshold }}
           {{- end }}
-          {{- if and .Values.startupProbe (.Values.startupProbe.enabled) }}
+          {{- if .Values.startupProbe.enabled }}
           startupProbe:
             {{- if .Values.startupProbe.httpGet }}
             httpGet:
@@ -104,9 +107,12 @@ spec:
                   name: {{ $value.secretName }}
                   key: {{ $value.key }}
             {{- end }}
-            # GCP Credentials environment variable
+            # GCP Credentials environment variable from global secret
             - name: GOOGLE_APPLICATION_CREDENTIALS
-              value: "/app/gcp.json"
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "obliq-sre-agent.globalSecretName" $ }}
+                  key: GOOGLE_APPLICATION_CREDENTIALS
             # Port environment variable
             - name: PORT
               value: "8098"

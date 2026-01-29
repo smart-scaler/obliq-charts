@@ -76,27 +76,8 @@ helm install --set backend.env.app.LOG_LEVEL="DEBUG"  # Highest priority
 | `global.env.common.TZ` | Timezone | `"UTC"` | No | `"America/New_York"` |
 | `global.env.common.ENVIRONMENT` | Environment name | `"production"` | No | `"staging"` |
 | `global.env.common.CLUSTER_NAME` | Kubernetes cluster name | `"obliq-cluster"` | No | `"my-cluster"` |
-| `global.env.common.KUBECONFIG_FILE_PATH` | Path to kubeconfig file | `"/etc/kubeconfig/config"` | No | `"/root/.kube/config"` |
 | `global.env.common.DEBUG` | Enable debug mode | `"false"` | No | `"true"` |
 | `global.env.common.AUTOMATIC_EXECUTION_ENABLED` | Enable automatic execution | `"true"` | No | `"false"` |
-
-### AWS Configuration
-
-| Parameter | Description | Default | Required | Example |
-|-----------|-------------|---------|----------|---------|
-| `global.env.aws.AWS_ACCESS_KEY_ID` | AWS access key ID | `""` | Yes | `"AKIAIOSFODNN7EXAMPLE"` |
-| `global.env.aws.AWS_SECRET_ACCESS_KEY` | AWS secret access key | `""` | Yes | `"wJalrXUtnFEMI/K7MDENG/bPxRfiCY"` |
-| `global.env.aws.AWS_REGION` | AWS region | `"us-east-1"` | No | `"us-west-2"` |
-| `global.env.aws.AWS_ROLE_ARN_AWS_MCP` | AWS MCP role ARN | `""` | For aws-mcp | `"arn:aws:iam::123456789012:role/aws-mcp"` |
-| `global.env.aws.AWS_ROLE_ARN_EC2_CLOUDWATCH_ALARMS` | CloudWatch alarms role ARN | `""` | For aws-ec2-cloudwatch-alarms | `"arn:aws:iam::123456789012:role/cloudwatch"` |
-| `global.env.aws.AWS_MCP_USERNAME` | AWS MCP username | `"admin"` | No | `"your-username"` |
-| `global.env.aws.AWS_MCP_PASSWORD` | AWS MCP password | `"admin123"` | No | `"your-password"` |
-
-### OpenAI Configuration
-
-| Parameter | Description | Default | Required | Example |
-|-----------|-------------|---------|----------|---------|
-| `global.env.openai.OPENAI_API_KEY` | OpenAI API key | `""` | Yes | `"sk-1234567890abcdef..."` |
 
 ### Database Configuration
 
@@ -136,7 +117,6 @@ helm install --set backend.env.app.LOG_LEVEL="DEBUG"  # Highest priority
 | `global.env.loki.LOKI_TOKEN` | Loki token | `""` | No | `"your-token"` |
 | `global.env.mcp.NEO4J_MCP_USERNAME` | Neo4j MCP username | `"admin"` | No | `"mcp-user"` |
 | `global.env.mcp.NEO4J_MCP_PASSWORD` | Neo4j MCP password | `"admin123"` | No | `"mcp-password"` |
-| `global.gcpCredentials.content` | GCP service account JSON file content | `""` | For gcp-mcp | File content via `--set-file` |
 
 ### JIRA Integration Configuration
 
@@ -174,27 +154,24 @@ helm install --set backend.env.app.LOG_LEVEL="DEBUG"  # Highest priority
 | `neo4j.enabled` | `true` | Graph database | None |
 | `mongodb.enabled` | `true` | Document database | None |
 | `opentelemetry-collector.enabled` | `true` | Observability | None |
-| `backend.enabled` | `true` | Main API server | OpenAI API key |
+| `backend.enabled` | `true` | Main API server | None |
 | `avesha-unified-ui.enabled` | `true` | Web interface | None |
-| `orchestrator.enabled` | `true` | Workflow engine | OpenAI API key |
-| `rca-agent.enabled` | `true` | Root cause analysis | OpenAI API key |
-| `anomaly-detection.enabled` | `true` | Anomaly detection | OpenAI API key |
-| `auto-remediation.enabled` | `true` | Auto-remediation | OpenAI API key |
-| `incident-manager.enabled` | `true` | Incident management | OpenAI API key |
+| `orchestrator.enabled` | `true` | Workflow engine | None |
+| `rca-agent.enabled` | `true` | Root cause analysis | None |
+| `anomaly-detection.enabled` | `true` | Anomaly detection | None |
+| `auto-remediation.enabled` | `true` | Auto-remediation | None |
+| `incident-manager.enabled` | `true` | Incident management | None |
 | `active-inventory.enabled` | `true` | Infrastructure inventory | None |
 | `infra-agent.enabled` | `true` | Infrastructure monitoring | None |
-| `k8s-mcp.enabled` | `true` | Kubernetes MCP | kubeconfig |
+| `k8s-mcp.enabled` | `true` | Kubernetes MCP | Cluster RBAC |
 | **Optional MCP Services (Disabled by Default)** |
-| `aws-mcp.enabled` | `false` | AWS MCP integration | AWS credentials |
 | `prometheus-mcp.enabled` | `false` | Prometheus MCP | Prometheus credentials |
 | `neo4j-mcp.enabled` | `false` | Neo4j MCP | Uses internal Neo4j |
 | `loki-mcp.enabled` | `false` | Loki MCP | Loki URL |
-| `cloudwatch-mcp.enabled` | `false` | CloudWatch MCP | AWS credentials |
 | **Optional Integration Services (Disabled by Default)** |
 | `service-graph-engine.enabled` | `false` | DataDog integration | DataDog credentials |
 | `slack-ingester.enabled` | `false` | Slack integration | Slack token |
-| `kubernetes-events-ingester.enabled` | `false` | K8s events | kubeconfig |
-| `aws-ec2-cloudwatch-alarms.enabled` | `false` | CloudWatch alarms | AWS credentials |
+| `kubernetes-events-ingester.enabled` | `false` | K8s events | Cluster RBAC |
 
 ### Common Service Parameters
 
@@ -294,28 +271,7 @@ helm repo update
 helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
   --namespace obliq \
   --create-namespace \
-  --set-file global.kubeconfig.content=./kubeconfig \
-  --set global.env.openai.OPENAI_API_KEY="${OPENAI_API_KEY}" \
-  --set avesha-unified-ui.service.type=LoadBalancer
-```
-
-### AWS Integration Deployment
-
-```bash
-# Enable AWS services and credentials
-helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
-  --namespace obliq \
-  --create-namespace \
-  --set-file global.kubeconfig.content=./kubeconfig \
-  --set global.env.openai.OPENAI_API_KEY="${OPENAI_API_KEY}" \
-  --set aws-mcp.enabled=true \
-  --set cloudwatch-mcp.enabled=true \
-  --set aws-ec2-cloudwatch-alarms.enabled=true \
-  --set global.env.aws.AWS_ACCESS_KEY_ID="${AWS_ACCESS_KEY_ID}" \
-  --set global.env.aws.AWS_SECRET_ACCESS_KEY="${AWS_SECRET_ACCESS_KEY}" \
-  --set global.env.aws.AWS_ROLE_ARN_AWS_MCP="${AWS_ROLE_ARN_AWS_MCP}" \
-  --set global.env.aws.AWS_ROLE_ARN_EC2_CLOUDWATCH_ALARMS="${AWS_ROLE_ARN_EC2_CLOUDWATCH}" \
-  --set avesha-unified-ui.service.type=LoadBalancer
+  --set obliq-unified-ui.service.type=LoadBalancer
 ```
 
 ### Full Integration Deployment
@@ -325,21 +281,12 @@ helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
 helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
   --namespace obliq \
   --create-namespace \
-  --set-file global.kubeconfig.content=./kubeconfig \
-  --set global.env.openai.OPENAI_API_KEY="${OPENAI_API_KEY}" \
-  --set aws-mcp.enabled=true \
   --set prometheus-mcp.enabled=true \
   --set neo4j-mcp.enabled=true \
   --set loki-mcp.enabled=true \
-  --set cloudwatch-mcp.enabled=true \
   --set service-graph-engine.enabled=true \
   --set slack-ingester.enabled=true \
   --set kubernetes-events-ingester.enabled=true \
-  --set aws-ec2-cloudwatch-alarms.enabled=true \
-  --set global.env.aws.AWS_ACCESS_KEY_ID="${AWS_ACCESS_KEY_ID}" \
-  --set global.env.aws.AWS_SECRET_ACCESS_KEY="${AWS_SECRET_ACCESS_KEY}" \
-  --set global.env.aws.AWS_ROLE_ARN_AWS_MCP="${AWS_ROLE_ARN_AWS_MCP}" \
-  --set global.env.aws.AWS_ROLE_ARN_EC2_CLOUDWATCH_ALARMS="${AWS_ROLE_ARN_EC2_CLOUDWATCH}" \
   --set global.env.sg.DD_API_KEY="${DD_API_KEY}" \
   --set global.env.sg.DD_APP_KEY="${DD_APP_KEY}" \
   --set global.env.slack.SLACK_BOT_TOKEN="${SLACK_BOT_TOKEN}" \
@@ -384,15 +331,13 @@ helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
 helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
   --namespace obliq \
   --dry-run \
-  --set-file global.kubeconfig.content=./kubeconfig \
-  --set global.env.openai.OPENAI_API_KEY="test" \
   # ... other parameters ...
 ```
 
 ### Common Parameter Validation Errors
 
-- **Empty required parameters**: OpenAI API key, kubeconfig content
-- **Invalid ARN formats**: AWS role ARNs must follow proper format
+- **Empty required parameters**: Missing credentials for enabled services
+- **Invalid ARN formats**: Invalid role or resource identifiers
 - **Missing service dependencies**: Enabling services without required credentials
 - **Resource conflicts**: Setting conflicting resource limits
 
@@ -400,9 +345,6 @@ helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
 
 | Parameter | Required For | Error Message |
 |-----------|-------------|---------------|
-| `global.env.openai.OPENAI_API_KEY` | Core AI services | "OpenAI API key is required for AI services" |
-| `global.kubeconfig.content` | k8s-mcp, kubernetes-events-ingester | "kubeconfig is required for Kubernetes integration" |
-| `global.env.aws.AWS_ACCESS_KEY_ID` | AWS services | "AWS credentials required for AWS integrations" |
 | `global.env.sg.DD_API_KEY` | service-graph-engine | "DataDog API key required for service graph engine" |
 | `global.env.slack.SLACK_BOT_TOKEN` | slack-ingester | "Slack bot token required for Slack integration" |
 
@@ -431,16 +373,13 @@ helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
 --set service-graph-engine.replicaCount=3
 
 # Conditional service enablement
---set aws-mcp.enabled=true \
---set global.env.aws.AWS_ACCESS_KEY_ID="${AWS_ACCESS_KEY_ID}" \
---set global.env.aws.AWS_SECRET_ACCESS_KEY="${AWS_SECRET_ACCESS_KEY}"
+--set prometheus-mcp.enabled=true \
+--set global.env.prometheus.PROMETHEUS_URL="${PROMETHEUS_URL}"
 ```
 
 ### Configuration Dependencies
 
-- **Core AI Services**: All require `global.env.openai.OPENAI_API_KEY`
-- **AWS Services**: All require `global.env.aws.AWS_ACCESS_KEY_ID` and `global.env.aws.AWS_SECRET_ACCESS_KEY`
-- **Kubernetes Services**: `k8s-mcp` and `kubernetes-events-ingester` require kubeconfig
+- **Kubernetes Services**: `k8s-mcp` and `kubernetes-events-ingester` require cluster RBAC (see [Kubernetes Permissions](kubernetes-permissions.md))
 - **Database Services**: Use `global.env.database.*` for credentials
 - **External Integrations**: Each requires service-specific credentials
 
