@@ -5,8 +5,149 @@ entries:
       category: Application
       licenses: Apache-2.0
     apiVersion: v2
+    appVersion: 1.5.0
+    created: "2026-02-16T14:07:41.495204409Z"
+    dependencies:
+    - condition: opentelemetry-collector.enabled
+      name: opentelemetry-collector
+      repository: file://./charts/opentelemetry-collector
+      version: 0.130.2
+    - condition: neo4j.enabled
+      name: neo4j
+      repository: file://./charts/neo4j
+      version: 5.26.10
+    - condition: mongodb.enabled
+      name: mongodb
+      repository: file://./charts/mongodb
+      version: 13.17.0
+    - condition: loki-mcp.enabled
+      name: loki-mcp
+      repository: file://./charts/loki-mcp
+      version: 1.5.0
+    - condition: cloudwatch-mcp.enabled
+      name: cloudwatch-mcp
+      repository: file://./charts/cloudwatch-mcp
+      version: 1.5.0
+    - condition: aws-mcp.enabled
+      name: aws-mcp
+      repository: file://./charts/aws-mcp
+      version: 1.5.0
+    - condition: k8s-mcp.enabled
+      name: k8s-mcp
+      repository: file://./charts/k8s-mcp
+      version: 1.5.0
+    - condition: gcp-mcp.enabled
+      name: gcp-mcp
+      repository: file://./charts/gcp-mcp
+      version: 1.5.0
+    - condition: oke-mcp.enabled
+      name: oke-mcp
+      repository: file://./charts/oke-mcp
+      version: 1.5.0
+    - condition: prometheus-mcp.enabled
+      name: prometheus-mcp
+      repository: file://./charts/prometheus-mcp
+      version: 1.5.0
+    - condition: aws-ec2-cloudwatch-alarms.enabled
+      name: aws-ec2-cloudwatch-alarms
+      repository: file://./charts/aws-ec2-cloudwatch-alarms
+      version: 1.5.0
+    - condition: kubernetes-events-ingester.enabled
+      name: kubernetes-events-ingester
+      repository: file://./charts/kubernetes-events-ingester
+      version: 1.5.0
+    - condition: slack-ingester.enabled
+      name: slack-ingester
+      repository: file://./charts/slack-ingester
+      version: 1.5.0
+    - condition: neo4j-mcp.enabled
+      name: neo4j-mcp
+      repository: file://./charts/neo4j-mcp
+      version: 1.5.0
+    - condition: anomaly-detection.enabled
+      name: anomaly-detection
+      repository: file://./charts/anomaly-detection
+      version: 1.5.0
+    - condition: active-inventory.enabled
+      name: active-inventory
+      repository: file://./charts/active-inventory
+      version: 1.5.0
+    - condition: incident-manager.enabled
+      name: incident-manager
+      repository: file://./charts/incident-manager
+      version: 1.5.0
+    - condition: incident-ingester.enabled
+      name: incident-ingester
+      repository: file://./charts/incident-ingester
+      version: 1.5.0
+    - condition: rca-agent.enabled
+      name: rca-agent
+      repository: file://./charts/rca-agent
+      version: 1.5.0
+    - condition: auto-remediation.enabled
+      name: auto-remediation
+      repository: file://./charts/auto-remediation
+      version: 1.5.0
+    - condition: hitl-manager.enabled
+      name: hitl-manager
+      repository: file://./charts/hitl-manager
+      version: 1.5.0
+    - condition: backend.enabled
+      name: backend
+      repository: file://./charts/backend
+      version: 1.5.0
+    - condition: service-graph-engine.enabled
+      name: service-graph-engine
+      repository: file://./charts/service-graph-engine
+      version: 1.5.0
+    - condition: infra-agent.enabled
+      name: infra-agent
+      repository: file://./charts/infra-agent
+      version: 1.5.0
+    - condition: obliq-unified-ui.enabled
+      name: obliq-unified-ui
+      repository: file://./charts/obliq-unified-ui
+      version: 1.5.0
+    - condition: orchestrator.enabled
+      name: orchestrator
+      repository: file://./charts/orchestrator
+      version: 1.5.0
+    - condition: prometheus.enabled
+      name: prometheus
+      repository: https://prometheus-community.github.io/helm-charts
+      version: 27.41.0
+    - condition: jaeger.enabled
+      name: jaeger
+      repository: https://jaegertracing.github.io/helm-charts
+      version: 0.71.0
+    description: A comprehensive umbrella Helm chart for deploying the Avesha Obliq
+      AI SRE Agent platform
+    digest: 2d620fbfb9de0d23bcb3080108149ffb3e235307de43de75e68431b32393cecc
+    home: https://avesha.io
+    icon: https://via.placeholder.com/150x150.png?text=Obliq+SRE
+    keywords:
+    - sre
+    - ai
+    - observability
+    - incident-management
+    - kubernetes
+    - helm
+    maintainers:
+    - email: support@avesha.io
+      name: Avesha Team
+    name: obliq-sre-agent
+    sources:
+    - https://github.com/avesha/obliq-sre-agent-charts
+    type: application
+    urls:
+    - https://repo.obliq.avesha.io/obliq-sre-agent-1.5.0.tgz
+    version: 1.5.0
+  - annotations:
+      category: Application
+      licenses: Apache-2.0
+    apiVersion: v2
     appVersion: 1.3.0
-    created: "2026-02-16T13:50:45.130777384Z"
+    created: "2026-02-16T14:07:41.41500852Z"
     dependencies:
     - condition: opentelemetry-collector.enabled
       name: opentelemetry-collector
@@ -143,7 +284,7 @@ entries:
       licenses: Apache-2.0
     apiVersion: v2
     appVersion: 1.2.0
-    created: "2026-02-16T13:50:45.050148194Z"
+    created: "2026-02-16T14:07:41.316301444Z"
     dependencies:
     - condition: opentelemetry-collector.enabled
       name: opentelemetry-collector
@@ -280,7 +421,7 @@ entries:
       licenses: Apache-2.0
     apiVersion: v2
     appVersion: 1.4.0
-    created: "2026-02-16T13:50:44.96048382Z"
+    created: "2026-02-16T14:07:41.235098935Z"
     dependencies:
     - condition: opentelemetry-collector.enabled
       name: opentelemetry-collector
@@ -417,7 +558,7 @@ entries:
       licenses: Apache-2.0
     apiVersion: v2
     appVersion: 1.1.1
-    created: "2026-02-16T13:50:44.882391084Z"
+    created: "2026-02-16T14:07:41.15184912Z"
     dependencies:
     - condition: opentelemetry-collector.enabled
       name: opentelemetry-collector
@@ -529,4 +670,4 @@ entries:
     urls:
     - https://repo.obliq.avesha.io/obliq-sre-agent-1.1.1.tgz
     version: 1.1.1
-generated: "2026-02-16T13:50:44.831711679Z"
+generated: "2026-02-16T14:07:41.112905997Z"
