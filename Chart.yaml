@@ -2,7 +2,7 @@ apiVersion: v2
 name: obliq-sre-agent
 description: A comprehensive umbrella Helm chart for deploying the Avesha Obliq AI SRE Agent platform
 type: application
-version: 1.1.2
+version: 1.5.0
 appVersion: "1.5.0"
 keywords:
   - sre
