@@ -2,8 +2,8 @@ apiVersion: v2
 name: incident-manager
 description: A Helm chart for deploying the incident manager service with multiple environment variables
 type: application
-version: 1.4.0
-appVersion: "1.4.0"
+version: 1.5.0
+appVersion: "1.5.0"
 keywords:
   - incident-manager
   - incident

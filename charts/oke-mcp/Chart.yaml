@@ -1,17 +1,16 @@
 apiVersion: v2
-name: cloudwatch-mcp
-description: A Helm chart for deploying the CloudWatch Model Context Protocol service with multiple environment variables
+name: oke-mcp
+description: A Helm chart for deploying the Oracle Cloud (OKE) MCP (Model Context Protocol) service
 type: application
 version: 1.5.0
 appVersion: "1.5.0"
 keywords:
-  - cloudwatch-mcp
-  - cloudwatch
+  - oke-mcp
+  - oracle-cloud
+  - oci
+  - oke
   - mcp
   - model-context-protocol
-  - aws
-  - monitoring
-  - metrics
   - application
   - container
   - deployment
@@ -21,7 +20,7 @@ maintainers:
 home: https://avesha.io
 sources:
   - https://github.com
-icon: https://via.placeholder.com/150x150.png?text=CloudWatchMCP
+icon: https://via.placeholder.com/150x150.png?text=OKEMCP
 annotations:
   category: Application
   licenses: Apache-2.0

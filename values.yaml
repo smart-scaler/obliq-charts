@@ -45,6 +45,7 @@ x-images:
   aws-mcp: &awsMcpImage "agents/release/aws-mcp"
   k8s-mcp: &k8sMcpImage "agents/release/k8s-mcp"
   gcp-mcp: &gcpMcpImage "agents/release/gcp-mcp"
+  oke-mcp: &okeMcpImage "agents/release/oke-mcp"
   prometheus-mcp: &prometheusMcpImage "agents/release/prometheus-mcp"
   loki-mcp: &lokiMcpImage "agents/release/loki-mcp"
   neo4j-mcp: &neo4jMcpImage "agents/release/neo4j-mcp"
@@ -293,6 +294,10 @@ global:
     # Used by: rca-agent, anomaly-detection, auto-remediation
     openai:
       OPENAI_API_KEY: ""                              # OpenAI API key (provide via --set)
+      OPENAI_BASE_URL: ""                             # OpenAI-compatible API base URL (provide via --set for custom endpoints)
+      LS_OPENAI_BASE_URL: ""                          # Incident-manager LS OpenAI base URL (provide via --set; falls back to OPENAI_BASE_URL if unset in app)
+      SI_OPENAI_BASE_URL: ""                          # Incident-manager SI OpenAI base URL (provide via --set; falls back to OPENAI_BASE_URL if unset in app)
+      RCA_OPENAI_BASE_URL: ""                         # RCA-agent OpenAI base URL (provide via --set; falls back to OPENAI_BASE_URL if unset in app)
       OPENAI_MODEL: "o3-mini"                         # OpenAI model for LLM processing (default: o3-mini)
     
     # ----------------------------------------
@@ -355,8 +360,8 @@ global:
       MCP_SERVERS_LOKI: "LOKI:http://loki-mcp:8089"                # Loki logs
       
       # Combined MCP server configurations
-      MCP_SERVERS_FULL: "AWS_EC2:http://aws-mcp:8080,K8s:http://k8s-mcp:8080,GCP:http://gcp-mcp:8098,PROMETHEUS:http://prometheus-mcp:8041,NEO4J:http://neo4j-mcp:8080,LOKI:http://loki-mcp:8089"
-      MCP_SERVERS: "AWS_EC2:http://aws-mcp:8080,K8s:http://k8s-mcp:8080,GCP:http://gcp-mcp:8098,PROMETHEUS:http://prometheus-mcp:8041,NEO4J:http://neo4j-mcp:8080,LOKI:http://loki-mcp:8089"
+      MCP_SERVERS_FULL: "AWS_EC2:http://aws-mcp:8080,K8s:http://k8s-mcp:8080,GCP:http://gcp-mcp:8098,PROMETHEUS:http://prometheus-mcp:8041,NEO4J:http://neo4j-mcp:8080,LOKI:http://loki-mcp:8089,OKE:http://oke-mcp:8099"
+      MCP_SERVERS: "AWS_EC2:http://aws-mcp:8080,K8s:http://k8s-mcp:8080,GCP:http://gcp-mcp:8098,PROMETHEUS:http://prometheus-mcp:8041,NEO4J:http://neo4j-mcp:8080,LOKI:http://loki-mcp:8089,OKE:http://oke-mcp:8099"
       
       # Neo4j MCP specific configuration
       NEO4J_MCP_URL: "http://neo4j-mcp:8080"                       # Neo4j MCP service URL
@@ -403,6 +408,24 @@ global:
       ORCHESTRATOR_URL: "http://orchestrator:8060"                  # Orchestrator service URL (can be overridden via --set)
       INCIDENT_MANAGER_URL: "http://incident-manager:8064"          # Incident Manager service URL (can be overridden via --set)
     
+    # ----------------------------------------
+    # Connector credentials (MongoDB fallback & timeouts)
+    # ----------------------------------------
+    # MongoDB fallback for connector credentials (copy on save, read when K8s fails). Set CREDENTIALS_MONGO_URI to enable.
+    credentials:
+      CREDENTIALS_MONGO_URI: ""                                    # MongoDB URI for connector credentials fallback (optional)
+      CREDENTIALS_MONGO_DB: "infra_db"                              # MongoDB database for connector credentials
+      CREDENTIALS_MONGO_COLLECTION: "connector_credentials"         # MongoDB collection name
+      # LLM credentials validation timeouts (seconds). Increase if OpenAI-compatible config times out.
+      CREDENTIALS_LLM_VALIDATE_CONNECTIVITY_TIMEOUT: "60"           # LLM connectivity check timeout
+      CREDENTIALS_LLM_VALIDATE_MODEL_TIMEOUT: "90"                  # LLM model validation timeout
+      # K8s secret read timeout (seconds). When cluster is unreachable, fail after this and use MongoDB fallback.
+      CREDENTIALS_K8S_READ_TIMEOUT: "15"                            # K8s secret read timeout
+      # K8s secret save timeout (seconds). When cluster is unreachable, fail after this and save to MongoDB only (avoids 504).
+      CREDENTIALS_K8S_SAVE_TIMEOUT: "15"                            # K8s secret save timeout
+      # Auto-apply to deployments timeout (seconds). When cluster is unreachable, fail after this and still return 200.
+      CREDENTIALS_APPLY_TIMEOUT: "20"                               # Auto-apply to deployments timeout
+
     # ----------------------------------------
     # Kubernetes Integration
     # ----------------------------------------
@@ -604,7 +627,7 @@ backend:
   fullnameOverride: "backend"
   image:
     repository: *backendImage
-    tag: "1.4.0"
+    tag: "1.5.0"
     pullPolicy: IfNotPresent
   
   # Use common service configuration
@@ -672,7 +695,7 @@ obliq-unified-ui:
   fullnameOverride: "obliq-unified-ui"
   image:
     repository: *obliqUnifiedUiImage
-    tag: "1.4.0"
+    tag: "1.5.0"
     pullPolicy: IfNotPresent
   
   # Use common service configuration
@@ -730,7 +753,7 @@ orchestrator:
   fullnameOverride: "orchestrator"
   image:
     repository: *orchestratorImage
-    tag: "1.4.0"
+    tag: "1.5.0"
     pullPolicy: IfNotPresent
   
   # Use common service configuration
@@ -765,7 +788,7 @@ rca-agent:
   fullnameOverride: "rca-agent"
   image:
     repository: *rcaAgentImage
-    tag: "1.4.0"
+    tag: "1.5.0"
   service:
     port: 8062
   env:
@@ -783,7 +806,7 @@ anomaly-detection:
   fullnameOverride: "anomaly-detection"
   image:
     repository: *anomalyDetectionImage
-    tag: "1.4.0"
+    tag: "1.5.0"
   service:
     port: 8061
   env:
@@ -800,7 +823,7 @@ auto-remediation:
   fullnameOverride: "auto-remediation"
   image:
     repository: *autoRemediationImage
-    tag: "1.4.0"
+    tag: "1.5.0"
   service:
     port: 8063
   env:
@@ -816,7 +839,7 @@ hitl-manager:
   fullnameOverride: "hitl-manager"
   image:
     repository: *hitlManagerImage
-    tag: "1.4.0"
+    tag: "1.5.0"
   service:
     port: 8065
   env:
@@ -838,7 +861,7 @@ incident-manager:
   fullnameOverride: "incident-manager"
   image:
     repository: *incidentManagerImage
-    tag: "1.4.0"
+    tag: "1.5.0"
   service:
     port: 8064
   env:
@@ -855,7 +878,7 @@ incident-ingester:
   fullnameOverride: "incident-ingester"
   image:
     repository: *incidentIngesterImage
-    tag: "1.4.0"
+    tag: "1.5.0"
   service:
     port: 8065
   env:
@@ -878,7 +901,7 @@ service-graph-engine:
   fullnameOverride: "service-graph-engine"
   image:
     repository: *serviceGraphEngineImage
-    tag: "1.4.0"
+    tag: "1.5.0"
   service:
     port: 8074
   env:
@@ -896,7 +919,7 @@ active-inventory:
   fullnameOverride: "active-inventory"
   image:
     repository: *activeInventoryImage
-    tag: "1.4.0"
+    tag: "1.5.0"
   service:
     port: 8065
   env:
@@ -911,7 +934,7 @@ infra-agent:
   fullnameOverride: "infra-agent"
   image:
     repository: *infraAgentImage
-    tag: "1.4.0"
+    tag: "1.5.0"
   service:
     port: 8051
   ingress:
@@ -929,7 +952,7 @@ aws-mcp:
   fullnameOverride: "aws-mcp"
   image:
     repository: *awsMcpImage
-    tag: "1.4.0"
+    tag: "1.5.0"
   service:
     port: 8080
   env:
@@ -944,7 +967,7 @@ k8s-mcp:
   fullnameOverride: "k8s-mcp"
   image:
     repository: *k8sMcpImage
-    tag: "1.4.0"
+    tag: "1.5.0"
   service:
     port: 8080
   # Kubeconfig configuration (inherits from global.kubeconfig.content)
@@ -961,7 +984,7 @@ gcp-mcp:
   fullnameOverride: "gcp-mcp"
   image:
     repository: *gcpMcpImage
-    tag: "1.4.0"
+    tag: "1.5.0"
   service:
     port: 8098
   # Startup probe configuration (disabled by default)
@@ -981,13 +1004,37 @@ gcp-mcp:
       # Note: GOOGLE_APPLICATION_CREDENTIALS is set to /app/gcp.json in deployment
 
 
+# Oracle Cloud (OKE) Model Context Protocol Server - provides OCI/OKE integration
+oke-mcp:
+  enabled: false  # OPTIONAL MCP - Enable for Oracle Cloud / OKE (requires OCI API key secret)
+  fullnameOverride: "oke-mcp"
+  image:
+    repository: *okeMcpImage
+    tag: "1.5.0"
+  service:
+    port: 8099
+  volumes:
+    ociCredentials:
+      enabled: true
+      mountPath: /root/.oci
+      secretName: oci-credentials-secret
+      configFileName: config
+      keyFileName: oci_api_key.pem
+  env:
+    app:
+      AGENT_TYPE: "oke_mcp"
+      PORT: "8099"
+      OCI_REGION: "us-phoenix-1"
+      # OCI_CLI_AUTH, OCI_CLI_CONFIG_FILE, OCI_CLI_KEY_FILE are set in the deployment from volume
+
+
 # Prometheus Model Context Protocol Server - provides Prometheus metrics integration
 prometheus-mcp:
   enabled: false  # OPTIONAL MCP - Enable for Prometheus integration (requires PROMETHEUS_URL, PROMETHEUS_MCP_USERNAME, PROMETHEUS_MCP_PASSWORD)
   fullnameOverride: "prometheus-mcp"
   image:
     repository: *prometheusMcpImage
-    tag: "1.4.0"
+    tag: "1.5.0"
   service:
     port: 8041
   env:
@@ -1003,7 +1050,7 @@ neo4j-mcp:
   fullnameOverride: "neo4j-mcp"
   image:
     repository: *neo4jMcpImage
-    tag: "1.4.0"
+    tag: "1.5.0"
   service:
     port: 8080
   env:
@@ -1020,7 +1067,7 @@ loki-mcp:
   fullnameOverride: "loki-mcp"
   image:
     repository: *lokiMcpImage
-    tag: "1.4.0"
+    tag: "1.5.0"
   service:
     port: 8089
   env:
@@ -1045,7 +1092,7 @@ cloudwatch-mcp:
   fullnameOverride: "cloudwatch-mcp"
   image:
     repository: *cloudwatchMcpImage
-    tag: "1.4.0"
+    tag: "1.5.0"
   service:
     port: 8000
   env:
@@ -1064,7 +1111,7 @@ kubernetes-events-ingester:
   fullnameOverride: "kubernetes-events-ingester"
   image:
     repository: *kubernetesEventsIngesterImage
-    tag: "1.4.0"
+    tag: "1.5.0"
   service:
     port: 8065
   # Kubeconfig configuration (uses global secret with KUBECONFIG_CONTENT key)
@@ -1090,7 +1137,7 @@ slack-ingester:
   fullnameOverride: "slack-ingester"
   image:
     repository: *slackIngesterImage
-    tag: "1.4.0"
+    tag: "1.5.0"
   service:
     port: 8065
   env:
@@ -1131,7 +1178,7 @@ aws-ec2-cloudwatch-alarms:
   fullnameOverride: "aws-ec2-cloudwatch-alarms"
   image:
     repository: *awsEc2CloudwatchAlarmsImage
-    tag: "1.4.0"
+    tag: "1.5.0"
   service:
     port: 8065
   env:

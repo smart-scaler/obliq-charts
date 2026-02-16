@@ -2,8 +2,8 @@ apiVersion: v2
 name: rca-agent
 description: A Helm chart for deploying the root cause analysis agent service with multiple environment variables
 type: application
-version: 1.4.0
-appVersion: "1.4.0"
+version: 1.5.0
+appVersion: "1.5.0"
 keywords:
   - rca-agent
   - root-cause-analysis

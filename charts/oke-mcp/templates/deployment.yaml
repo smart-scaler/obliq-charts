@@ -1,0 +1,134 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "oke-mcp.fullname" . }}
+  labels:
+    {{- include "oke-mcp.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "oke-mcp.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "oke-mcp.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- $secretName := include "obliq-sre-agent.imagePullSecretName" $ }}
+      {{- if $secretName }}
+      imagePullSecrets:
+        - name: {{ $secretName }}
+      {{- end }}
+      {{- with .Values.podSecurityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "oke-mcp.serviceAccountName" . }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.global.imageRegistry | default "avesha.azurecr.io" }}/{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{- if .Values.command }}
+          command:
+            {{- toYaml .Values.command | nindent 12 }}
+          {{- end }}
+          {{- if .Values.args }}
+          args:
+            {{- toYaml .Values.args | nindent 12 }}
+          {{- end }}
+          ports:
+            {{- range .Values.ports }}
+            - name: {{ .name }}
+              containerPort: {{ .containerPort }}
+              protocol: {{ .protocol }}
+            {{- end }}
+          {{- if .Values.livenessProbe.enabled }}
+          livenessProbe:
+            httpGet:
+              path: {{ .Values.livenessProbe.path }}
+              port: {{ .Values.livenessProbe.port }}
+            initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
+            failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
+            successThreshold: {{ .Values.livenessProbe.successThreshold }}
+          {{- end }}
+          {{- if .Values.readinessProbe.enabled }}
+          readinessProbe:
+            httpGet:
+              path: {{ .Values.readinessProbe.path }}
+              port: {{ .Values.readinessProbe.port }}
+            initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
+            failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
+            successThreshold: {{ .Values.readinessProbe.successThreshold }}
+          {{- end }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          env:
+            {{- range $key, $value := .Values.env.app }}
+            - name: {{ $key }}
+              value: {{ $value | quote }}
+            {{- end }}
+            {{- range $key, $value := .Values.env.common }}
+            - name: {{ $key }}
+              value: {{ $value | quote }}
+            {{- end }}
+            - name: OCI_CLI_AUTH
+              value: "api_key"
+            - name: OCI_CLI_CONFIG_FILE
+              value: {{ printf "%s/%s" .Values.volumes.ociCredentials.mountPath .Values.volumes.ociCredentials.configFileName | quote }}
+            - name: OCI_CLI_KEY_FILE
+              value: {{ printf "%s/%s" .Values.volumes.ociCredentials.mountPath .Values.volumes.ociCredentials.keyFileName | quote }}
+          volumeMounts:
+            {{- if .Values.volumes.ociCredentials.enabled }}
+            - name: oci-credentials
+              mountPath: {{ .Values.volumes.ociCredentials.mountPath }}
+              readOnly: true
+            {{- end }}
+            {{- if .Values.volumes.emptyDir.enabled }}
+            - name: tmp
+              mountPath: {{ .Values.volumes.emptyDir.mountPath }}
+            {{- end }}
+      volumes:
+        {{- if .Values.volumes.ociCredentials.enabled }}
+        - name: oci-credentials
+          secret:
+            secretName: {{ .Values.volumes.ociCredentials.secretName }}
+            items:
+              - key: {{ .Values.volumes.ociCredentials.configFileName }}
+                path: {{ .Values.volumes.ociCredentials.configFileName }}
+              - key: {{ .Values.volumes.ociCredentials.keyFileName }}
+                path: {{ .Values.volumes.ociCredentials.keyFileName }}
+        {{- end }}
+        {{- if .Values.volumes.emptyDir.enabled }}
+        - name: tmp
+          emptyDir:
+            {{- if .Values.volumes.emptyDir.medium }}
+            medium: {{ .Values.volumes.emptyDir.medium }}
+            {{- end }}
+            {{- if .Values.volumes.emptyDir.sizeLimit }}
+            sizeLimit: {{ .Values.volumes.emptyDir.sizeLimit }}
+            {{- end }}
+        {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

@@ -1,0 +1,104 @@
+# Default values for oke-mcp (Oracle Cloud / OKE MCP)
+# OCI credentials are provided via a Secret (create manually or use External Secrets).
+# Mount path is /root/.oci with config and oci_api_key.pem.
+
+global:
+  imageRegistry: ""
+  storageClass: ""
+
+image:
+  repository: ""
+  tag: ""
+  pullPolicy: IfNotPresent
+
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: true
+  annotations: {}
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext:
+  fsGroup: 1000
+  runAsNonRoot: true
+  runAsUser: 1000
+
+securityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+      - ALL
+  readOnlyRootFilesystem: false
+  runAsNonRoot: true
+  runAsUser: 1000
+
+service:
+  type: ClusterIP
+  port: 8099
+  additionalPorts: []
+
+resources: {}
+
+nodeSelector: {}
+tolerations: []
+affinity: {}
+
+replicaCount: 1
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 1
+  targetCPUUtilizationPercentage: 70
+  targetMemoryUtilizationPercentage: 80
+
+env:
+  common: {}
+  app: {}
+
+secrets: {}
+
+# OCI credentials volume (mounts Secret at /root/.oci)
+# Create a Secret with keys: config, oci_api_key.pem (or set configFileName/keyFileName)
+volumes:
+  persistent:
+    enabled: false
+  config:
+    enabled: false
+    mountPath: /app/config
+  ociCredentials:
+    enabled: true
+    mountPath: /root/.oci
+    secretName: oci-credentials-secret
+    configFileName: config
+    keyFileName: oci_api_key.pem
+  emptyDir:
+    enabled: false
+    mountPath: /tmp
+
+livenessProbe:
+  enabled: false
+readinessProbe:
+  enabled: false
+
+command: []
+args: []
+
+ports:
+  - name: http
+    containerPort: 8099
+    protocol: TCP
+
+networkPolicy:
+  enabled: false
+  egress: []
+
+hpa:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 1
+  targetCPUUtilizationPercentage: 80
+  targetMemoryUtilizationPercentage: 80
