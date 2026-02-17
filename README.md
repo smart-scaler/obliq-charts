@@ -67,7 +67,7 @@ helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
   --timeout 15m
 ```
 
-#### Full Platform (All 27 Services)
+#### Full Platform (All 28 Services)
 
 ```bash
 export DEFAULT_ADMIN_EMAIL="admin@yourcompany.com"  # Custom admin email
@@ -78,7 +78,7 @@ export DD_API_KEY="your-datadog-api-key"  # For DataDog integration
 export DD_APP_KEY="your-datadog-app-key"  # For DataDog integration
 export SLACK_BOT_TOKEN="xoxb-your-slack-bot-token"  # For Slack integration
 
-# Install with ALL 27 services enabled
+# Install with ALL 28 services enabled
 helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
   --namespace obliq \
   --create-namespace \
@@ -88,16 +88,21 @@ helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
   --set mongodb.persistence.enabled=false `# Disable persistent storage for demo` \
   --set neo4j.volumes.data.mode=volume `# Use volume for Neo4j data` \
   --set neo4j.volumes.data.volume.emptyDir="{}" `# Use emptyDir for Neo4j` \
-  `# Enable ALL 27 services` \
+  `# Enable ALL 28 services` \
   --set prometheus.enabled=true \
   --set jaeger.enabled=true \
   --set opentelemetry-collector.enabled=true \
   --set neo4j.enabled=true \
   --set mongodb.enabled=true \
+  --set aws-mcp.enabled=true \
   --set k8s-mcp.enabled=true \
+  --set gcp-mcp.enabled=true \
+  --set oke-mcp.enabled=true \
   --set prometheus-mcp.enabled=true \
   --set neo4j-mcp.enabled=true \
   --set loki-mcp.enabled=true \
+  --set cloudwatch-mcp.enabled=true \
+  --set aws-ec2-cloudwatch-alarms.enabled=true \
   --set kubernetes-events-ingester.enabled=true \
   --set slack-ingester.enabled=true \
   --set anomaly-detection.enabled=true \

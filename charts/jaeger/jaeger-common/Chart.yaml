@@ -1,0 +1,8 @@
+# Vendored copy of Bitnami common (1.16.x API) with template prefix "jaeger-common.*"
+# to avoid collision with MongoDB's Bitnami common chart (common.*).
+# Source: https://github.com/bitnami/charts/tree/main/bitnami/common
+apiVersion: v2
+description: Library chart for Jaeger (common helpers with jaeger-common.* prefix)
+name: jaeger-common
+type: library
+version: 1.16.0

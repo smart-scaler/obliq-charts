@@ -13,8 +13,9 @@ dependencies:
   name: kafka
   repository: https://charts.bitnami.com/bitnami
   version: ^19.1.5
-- name: common
-  repository: https://charts.bitnami.com/bitnami
+# Local library chart with jaeger-common.* templates (avoids collision with MongoDB's common)
+- name: jaeger-common
+  repository: file://./jaeger-common
   version: 1.16.0
 description: A Jaeger Helm chart for Kubernetes
 home: https://jaegertracing.io

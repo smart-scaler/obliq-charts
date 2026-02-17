@@ -1,5 +1,5 @@
 {{- if .Values.collector.autoscaling.enabled }}
-apiVersion: {{ include "common.capabilities.hpa.apiVersion" ( dict "context" $ ) }}
+apiVersion: {{ include "jaeger-common.capabilities.hpa.apiVersion" ( dict "context" $ ) }}
 kind: HorizontalPodAutoscaler
 metadata:
   name: {{ template "jaeger.collector.name" . }}
@@ -8,7 +8,7 @@ metadata:
     app.kubernetes.io/component: collector
 spec:
   scaleTargetRef:
-    apiVersion: {{ include "common.capabilities.deployment.apiVersion" . }}
+    apiVersion: {{ include "jaeger-common.capabilities.deployment.apiVersion" . }}
     kind: Deployment
     name: {{ template "jaeger.collector.name" . }}
   minReplicas: {{ .Values.collector.autoscaling.minReplicas }}
@@ -18,7 +18,7 @@ spec:
     - type: Resource
       resource:
         name: memory
-        {{- if eq "autoscaling/v2" (include "common.capabilities.hpa.apiVersion" ( dict "context" $ )) }}
+        {{- if eq "autoscaling/v2" (include "jaeger-common.capabilities.hpa.apiVersion" ( dict "context" $ )) }}
         target:
           averageUtilization: {{ .Values.collector.autoscaling.targetMemoryUtilizationPercentage }}
           type: Utilization
@@ -29,7 +29,7 @@ spec:
     - type: Resource
       resource:
         name: cpu
-        {{- if eq "autoscaling/v2" (include "common.capabilities.hpa.apiVersion" ( dict "context" $ )) }}        
+        {{- if eq "autoscaling/v2" (include "jaeger-common.capabilities.hpa.apiVersion" ( dict "context" $ )) }}        
         target:
           averageUtilization: {{ .Values.collector.autoscaling.targetCPUUtilizationPercentage | default 80 }}
           type: Utilization
