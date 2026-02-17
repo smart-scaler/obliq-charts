@@ -8,8 +8,8 @@ dependencies:
 - name: kafka
   repository: https://charts.bitnami.com/bitnami
   version: 19.1.5
-- name: common
-  repository: https://charts.bitnami.com/bitnami
+- name: jaeger-common
+  repository: file://./jaeger-common
   version: 1.16.0
-digest: sha256:60d70b3966a1bb5b87d6679139138b5a79871c486a771953d527e083ea44d9df
-generated: "2023-05-23T09:08:33.59203115Z"
+digest: sha256:ccee07c2b10ee7fa443c077d32bde8e93748335628fd1f942763929053cdf6c6
+generated: "2026-02-17T16:52:23.431263+02:00"

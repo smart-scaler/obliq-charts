@@ -37,6 +37,13 @@ for chart_dir in charts/*/; do
   fi
 done
 
+# Ensure jaeger uses only jaeger-common (no stale Bitnami "common" that collides with MongoDB)
+if [[ -d "charts/jaeger" ]]; then
+  echo "🔧 Ensuring jaeger subchart uses only jaeger-common (no common)..."
+  rm -rf charts/jaeger/charts
+  helm dependency update charts/jaeger
+fi
+
 echo "✅ All dependencies updated successfully!"
 echo ""
 echo "You can now:"
