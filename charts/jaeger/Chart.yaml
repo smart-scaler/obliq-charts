@@ -1,21 +1,9 @@
 apiVersion: v2
 appVersion: 1.45.0
 dependencies:
-- condition: provisionDataStore.cassandra
-  name: cassandra
-  repository: https://charts.helm.sh/incubator
-  version: 0.15.3
-- condition: provisionDataStore.elasticsearch
-  name: elasticsearch
-  repository: https://helm.elastic.co
-  version: ^7.11.1
-- condition: provisionDataStore.kafka
-  name: kafka
-  repository: https://charts.bitnami.com/bitnami
-  version: ^19.1.5
-# Local library chart with jaeger-common.* templates (avoids collision with MongoDB's common)
+# Local library chart (vendored in charts/jaeger-common for single-command install)
 - name: jaeger-common
-  repository: file://./jaeger-common
+  repository: file://./charts/jaeger-common
   version: 1.16.0
 description: A Jaeger Helm chart for Kubernetes
 home: https://jaegertracing.io

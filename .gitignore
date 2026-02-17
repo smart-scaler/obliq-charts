@@ -273,8 +273,14 @@ $RECYCLE.BIN/
 .Trash-*
 .nfs*
 
-# Helm specific patterns
+# Helm specific patterns (vendored subchart deps are committed for single-command install)
 charts/*/charts/
+!charts/mongodb/charts/
+!charts/mongodb/charts/common/
+!charts/mongodb/charts/common/**
+!charts/jaeger/charts/
+!charts/jaeger/charts/jaeger-common/
+!charts/jaeger/charts/jaeger-common/**
 charts/*/requirements.lock
 charts/*/requirements.yaml
 
