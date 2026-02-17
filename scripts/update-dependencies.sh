@@ -1,50 +1,14 @@
 #!/bin/bash
 
-# Script to update all Helm chart dependencies
-# Run this before packaging or installing charts locally
+# Optional: update root Helm chart dependencies (e.g. after adding a new subchart).
+# MongoDB and Jaeger subchart deps are vendored; no need to run this for a normal install.
 
 set -e
 
-echo "🔄 Updating Helm chart dependencies..."
-
-# Clean cached dependencies to avoid version conflicts
-echo "🧹 Cleaning cached dependencies and lock files..."
+echo "🔄 Updating root chart dependencies..."
 rm -f Chart.lock || true
-rm -rf charts/*/charts || true
-
-# Also clean sub-chart locks
-for chart_dir in charts/*/; do
-  if [[ -f "${chart_dir}Chart.lock" ]]; then
-    rm -f "${chart_dir}Chart.lock" || true
-  fi
-done
-
-# Update dependencies for the main chart
-echo "📦 Updating main chart dependencies..."
 helm dependency update .
-
-# Update dependencies for all sub-charts that have them
-echo "📦 Checking sub-charts for dependencies..."
-for chart_dir in charts/*/; do
-  if [[ -f "${chart_dir}Chart.yaml" ]]; then
-    echo "🔍 Checking dependencies for ${chart_dir}"
-    if grep -q "^dependencies:" "${chart_dir}Chart.yaml"; then
-      echo "⬇️  Updating dependencies for ${chart_dir}"
-      helm dependency update "${chart_dir}"
-    else
-      echo "✅ No external dependencies found for ${chart_dir}"
-    fi
-  fi
-done
-
-# Ensure jaeger uses only jaeger-common (no stale Bitnami "common" that collides with MongoDB)
-if [[ -d "charts/jaeger" ]]; then
-  echo "🔧 Ensuring jaeger subchart uses only jaeger-common (no common)..."
-  rm -rf charts/jaeger/charts
-  helm dependency update charts/jaeger
-fi
-
-echo "✅ All dependencies updated successfully!"
+echo "✅ Root dependencies updated."
 echo ""
 echo "You can now:"
 echo "  - Package the chart: helm package ."

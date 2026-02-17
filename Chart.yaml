@@ -2,7 +2,7 @@ apiVersion: v2
 name: obliq-sre-agent
 description: A comprehensive umbrella Helm chart for deploying the Avesha Obliq AI SRE Agent platform
 type: application
-version: 1.5.0
+version: 1.5.1
 appVersion: "1.5.0"
 keywords:
   - sre
@@ -169,5 +169,5 @@ dependencies:
 
   - name: jaeger
     version: 0.71.0
-    repository: https://jaegertracing.github.io/helm-charts
+    repository: file://./charts/jaeger
     condition: jaeger.enabled
