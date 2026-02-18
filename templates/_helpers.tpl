@@ -460,6 +460,11 @@ This template provides all environment variables from the global secret
     secretKeyRef:
       name: {{ include "obliq-sre-agent.globalSecretName" . }}
       key: OPENAI_API_KEY
+- name: OPENAI_BASE_URL
+  valueFrom:
+    secretKeyRef:
+      name: {{ include "obliq-sre-agent.globalSecretName" . }}
+      key: OPENAI_BASE_URL
 - name: OPENAI_MODEL
   valueFrom:
     secretKeyRef:

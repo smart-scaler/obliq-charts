@@ -243,7 +243,7 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 {{- end -}}
 
 {{- define "cassandra.host" -}}
-{{- if .Values.provisionDataStore.cassandra -}}
+{{- if and .Values.provisionDataStore .Values.provisionDataStore.cassandra -}}
 {{- if .Values.storage.cassandra.nameOverride }}
 {{- printf "%s" .Values.storage.cassandra.nameOverride | trunc 63 | trimSuffix "-" }}
 {{- else }}
@@ -256,7 +256,7 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 
 {{- define "cassandra.contact_points" -}}
 {{- $port := .Values.storage.cassandra.port | toString }}
-{{- if .Values.provisionDataStore.cassandra -}}
+{{- if and .Values.provisionDataStore .Values.provisionDataStore.cassandra -}}
 {{- if .Values.storage.cassandra.nameOverride }}
 {{- $host := printf "%s" .Values.storage.cassandra.nameOverride | trunc 63 | trimSuffix "-" -}}
 {{- printf "%s:%s" $host $port }}
