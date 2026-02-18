@@ -291,10 +291,10 @@ global:
     # AI/ML Service Configuration
     # ----------------------------------------
     # OpenAI Configuration (REQUIRED for core AI services)
-    # Used by: rca-agent, anomaly-detection, auto-remediation
+    # Used by: incident-ingester, incident-manager, rca-agent, anomaly-detection, auto-remediation
     openai:
       OPENAI_API_KEY: ""                              # OpenAI API key (provide via --set)
-      OPENAI_BASE_URL: ""                             # OpenAI-compatible API base URL (provide via --set for custom endpoints)
+      OPENAI_BASE_URL: ""                             # OpenAI-compatible API base URL (provide via --set; used by incident-ingester and others; incident-manager/RCA use LS/SI/RCA_* overrides)
       LS_OPENAI_BASE_URL: ""                          # Incident-manager LS OpenAI base URL (provide via --set; falls back to OPENAI_BASE_URL if unset in app)
       SI_OPENAI_BASE_URL: ""                          # Incident-manager SI OpenAI base URL (provide via --set; falls back to OPENAI_BASE_URL if unset in app)
       RCA_OPENAI_BASE_URL: ""                         # RCA-agent OpenAI base URL (provide via --set; falls back to OPENAI_BASE_URL if unset in app)
@@ -892,7 +892,7 @@ incident-ingester:
       INCIDENTS_START_TIME: "2025-09-26T06:00:00.0000Z"            # Start time for incident ingestion (can be overridden via --set)
       # OPENAI_MODEL is provided via globalSecretEnv (remove local definition to avoid duplication)
       LLM_TEMPERATURE: "0.2"
-      # Note: OTEL_COLLECTOR_ENDPOINT, NEO4J_URI, NEO4J_USER, NEO4J_PASSWORD, NEO4J_AUTH, NEO4J_DATABASE, SERVICE_NOW_INSTANCE, SERVICE_NOW_USERNAME, SERVICE_NOW_PASSWORD, SERVICE_NOW_CALLER_USERNAME, INCIDENT_MANAGER_URL, OPENAI_API_KEY are provided via globalSecretEnv
+      # Note: OTEL_COLLECTOR_ENDPOINT, NEO4J_URI, NEO4J_USER, NEO4J_PASSWORD, NEO4J_AUTH, NEO4J_DATABASE, SERVICE_NOW_INSTANCE, SERVICE_NOW_USERNAME, SERVICE_NOW_PASSWORD, SERVICE_NOW_CALLER_USERNAME, INCIDENT_MANAGER_URL, OPENAI_API_KEY, OPENAI_BASE_URL, OPENAI_MODEL are provided via globalSecretEnv
 
 
 # Service Topology Mapping - DataDog integration for service graphs and monitoring
@@ -1321,12 +1321,3 @@ jaeger:
     enabled: false
   agent:
     enabled: false
-  sparkDependencies:
-    enabled: false
-  elasticsearch:
-    enabled: false
-  cassandra:
-    enabled: false
-  kafka:
-    enabled: false
-
