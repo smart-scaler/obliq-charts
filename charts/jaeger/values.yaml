@@ -1,10 +1,6 @@
 # Default values for jaeger.
 # This is a YAML-formatted file.
-# Jaeger values are grouped by component. Cassandra values override subchart values
-
-provisionDataStore:
-  cassandra: true
-  elasticsearch: false
+# In-memory storage only (no Cassandra/Elasticsearch/Kafka).
 
 networkPolicy:
   enabled: false
@@ -63,83 +59,9 @@ allInOne:
   nodeSelector: {}
 
 storage:
-  # allowed values (cassandra, elasticsearch)
-  type: cassandra
-  cassandra:
-    host: cassandra
-    port: 9042
-    # Change this value to false if you want to avoid starting the
-    # -cassandra-schema Job
-    schemaJobEnabled: true
-    tls:
-      enabled: false
-      secretName: cassandra-tls-secret
-    user: user
-    usePassword: true
-    password: password
-    keyspace: jaeger_v1_test
-    ## Use existing secret (ignores previous password)
-    # existingSecret:
-    ## Cassandra related env vars to be configured on the concerned components
-    extraEnv: []
-      # - name: CASSANDRA_SERVERS
-      #   value: cassandra
-      # - name: CASSANDRA_PORT
-      #   value: "9042"
-      # - name: CASSANDRA_KEYSPACE
-      #   value: jaeger_v1_test
-      # - name: CASSANDRA_TLS_ENABLED
-      #   value: "false"
-    ## Cassandra related cmd line opts to be configured on the concerned components
-    cmdlineParams: {}
-      # cassandra.servers: cassandra
-      # cassandra.port: 9042
-      # cassandra.keyspace: jaeger_v1_test
-      # cassandra.tls.enabled: "false"
-  elasticsearch:
-    scheme: http
-    host: elasticsearch-master
-    port: 9200
-    anonymous: false
-    user: elastic
-    usePassword: true
-    password: changeme
-    # indexPrefix: test
-    ## Use existing secret (ignores previous password)
-    # existingSecret:
-    # existingSecretKey:
-    nodesWanOnly: false
-    extraEnv: []
-    ## ES related env vars to be configured on the concerned components
-      # - name: ES_SERVER_URLS
-      #   value: http://elasticsearch-master:9200
-      # - name: ES_USERNAME
-      #   value: elastic
-      # - name: ES_INDEX_PREFIX
-      #   value: test
-    ## ES related cmd line opts to be configured on the concerned components
-    cmdlineParams: {}
-      # es.server-urls: http://elasticsearch-master:9200
-      # es.username: elastic
-      # es.index-prefix: test
-    tls:
-      enabled: false
-      secretName: es-tls-secret
+  type: none
   grpcPlugin:
     extraEnv: []
-
-# Begin: Override values on the Cassandra subchart to customize for Jaeger
-cassandra:
-  persistence:
-    # To enable persistence, please see the documentation for the Cassandra chart
-    enabled: false
-  config:
-    cluster_name: jaeger
-    seed_size: 1
-    dc_name: dc1
-    rack_name: rack1
-    endpoint_snitch: GossipingPropertyFileSnitch
-# End: Override values on the Cassandra subchart to customize for Jaeger
 
 # Begin: Default values for the various components of Jaeger
 # This chart has been based on the Kubernetes integration found in the following repo:
@@ -177,10 +99,6 @@ schema:
     #   value: "172800"
     # - name: DEPENDENCIES_TTL
     #   value: "0"
-
-# For configurable values of the elasticsearch if provisioned, please see:
-# https://github.com/elastic/helm-charts/tree/master/elasticsearch#configuration
-elasticsearch: {}
 
 ingester:
   enabled: false
