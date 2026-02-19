@@ -853,6 +853,8 @@ hitl-manager:
       EVIDENCE_MONGO_COLLECTION: "evidence_files"
       EVIDENCE_GRIDFS_THRESHOLD: "262144"
       EVIDENCE_MAX_FILE_SIZE: "104857600"
+      OTEL_SERVICE_NAME: "hitl-manager"
+      OTEL_EXPORTER_JAEGER_ENDPOINT: "http://obliq-sre-agent-jaeger-collector:14268/api/traces"
       # Note: NEO4J_URI, NEO4J_USER, NEO4J_PASSWORD, EVIDENCE_MONGO_USERNAME, EVIDENCE_MONGO_PASSWORD, LOG_LEVEL, OTEL_SERVICE_NAME, OTEL_EXPORTER_JAEGER_ENDPOINT are provided via globalSecretEnv
 
 # Incident Management System - manages and tracks incidents and responses
