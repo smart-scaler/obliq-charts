@@ -28,6 +28,22 @@ spec:
       serviceAccountName: {{ include "hitl-manager.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.securityContext | nindent 8 }}
+      initContainers:
+        - name: wait-for-neo4j
+          image: busybox:1.36
+          env:
+            - name: NEO4J_HOST
+              value: "neo4j.{{ .Release.Namespace }}.svc.cluster.local"
+          command:
+            - 'sh'
+            - '-c'
+            - |
+              echo "Waiting for Neo4j to be ready..."
+              until nc -z $NEO4J_HOST 7687; do
+                echo "Neo4j not ready, waiting 5 seconds..."
+                sleep 5
+              done
+              echo "Neo4j is ready!"
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
