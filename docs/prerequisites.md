@@ -47,6 +47,10 @@ The following integrations are **optional** and only required if you enable spec
 
 Setup: Ensure ServiceNow user has appropriate permissions to read incident data via REST API.
 
+### OpenAI Integration
+| **OpenAI API Key** | `OPENAI_API_KEY` | OpenAI → API Keys |
+
+
 ### DataDog Integration
 **Required for**: `service-graph-engine`
 
