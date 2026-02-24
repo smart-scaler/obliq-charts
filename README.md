@@ -72,8 +72,6 @@ helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
   --set mongodb.persistence.enabled=false `# Disable persistent storage for demo` \
   --set global.env.sg.ADDITIONAL_SERVICE_TAGS="${ADDITIONAL_SERVICE_TAGS}"
   --set mongodb.persistence.enabled=false `# Disable persistent storage for demo` \
-  --set neo4j.volumes.data.mode=volume `# Use volume for Neo4j data` \
-  --set neo4j.volumes.data.volume.emptyDir="{}" `# Use emptyDir for Neo4j` \   
   `# Enable ALL 28 services` \
   --set prometheus.enabled=true \
   --set jaeger.enabled=true \
