@@ -46,26 +46,10 @@ kubectl create secret docker-registry registry \
 
 📚 **For advanced secret management:** Visit the [Secret Management Guide](./docs/secret-management.md)
 
-### 3. Install Options
+### 3. Install Instructions
 
-💡 **Optional: For easier environment variable management, see [.env file setup](./docs/prerequisites.md#environment-variables-with-env-file).**
+💡 **NOTE: For easier environment variable management, see [.env file setup](./docs/prerequisites.md#environment-variables-with-env-file).**
 
-#### Minimal (Core AI Services)
-
-```bash
-export DEFAULT_ADMIN_EMAIL="admin@yourcompany.com"  # Custom admin email
-export DEFAULT_ADMIN_PASSWORD="your-secure-password"  # Custom admin password
-
-# Install with LoadBalancer for external UI access
-helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
-  --namespace obliq \
-  --create-namespace \
-  --dependency-update `# Update chart dependencies before install` \
-  --set global.env.backend.DEFAULT_ADMIN_EMAIL="${DEFAULT_ADMIN_EMAIL}" `# Custom admin email` \
-  --set global.env.backend.DEFAULT_ADMIN_PASSWORD="${DEFAULT_ADMIN_PASSWORD}" `# Custom admin password` \
-  --set obliq-unified-ui.service.type=LoadBalancer `# Expose UI externally` \
-  --timeout 15m
-```
 
 #### Full Platform (All 28 Services)
 
@@ -86,8 +70,10 @@ helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
   --set global.env.backend.DEFAULT_ADMIN_EMAIL="${DEFAULT_ADMIN_EMAIL}" `# Custom admin email` \
   --set global.env.backend.DEFAULT_ADMIN_PASSWORD="${DEFAULT_ADMIN_PASSWORD}" `# Custom admin password` \
   --set mongodb.persistence.enabled=false `# Disable persistent storage for demo` \
+  --set global.env.sg.ADDITIONAL_SERVICE_TAGS="${ADDITIONAL_SERVICE_TAGS}"
+  --set mongodb.persistence.enabled=false `# Disable persistent storage for demo` \
   --set neo4j.volumes.data.mode=volume `# Use volume for Neo4j data` \
-  --set neo4j.volumes.data.volume.emptyDir="{}" `# Use emptyDir for Neo4j` \
+  --set neo4j.volumes.data.volume.emptyDir="{}" `# Use emptyDir for Neo4j` \   
   `# Enable ALL 28 services` \
   --set prometheus.enabled=true \
   --set jaeger.enabled=true \
@@ -100,6 +86,15 @@ helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
   --set oke-mcp.enabled=true \
   --set prometheus-mcp.enabled=true \
   --set neo4j-mcp.enabled=true \
+  --set global.env.database.NEO4J_URI="${NEO4J_URI:-bolt://neo4j:7687}" \
+  --set global.env.database.NEO4J_USER="${NEO4J_USER:-neo4j}" \
+  --set global.env.database.NEO4J_PASSWORD="${NEO4J_PASSWORD:-admin123}" \
+  --set global.env.openai.OPENAI_API_KEY="${OPENAI_API_KEY}" \
+  --set global.env.openai.OPENAI_BASE_URL="https://api.groq.com/openai/v1" \
+  --set global.env.openai.LS_OPENAI_BASE_URL="https://api.groq.com/openai/v1" \
+  --set global.env.openai.SI_OPENAI_BASE_URL="https://api.groq.com/openai/v1" \
+  --set global.env.openai.RCA_OPENAI_BASE_URL="https://api.groq.com/openai/v1" \
+  --set global.env.openai.OPENAI_MODEL="llama-3.3-70b-versatile" \
   --set loki-mcp.enabled=true \
   --set cloudwatch-mcp.enabled=true \
   --set aws-ec2-cloudwatch-alarms.enabled=true \
