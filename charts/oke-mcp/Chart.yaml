@@ -2,8 +2,8 @@ apiVersion: v2
 name: oke-mcp
 description: A Helm chart for deploying the Oracle Cloud (OKE) MCP (Model Context Protocol) service
 type: application
-version: 1.5.0
-appVersion: "1.5.0"
+version: 1.5.1
+appVersion: "1.5.1"
 keywords:
   - oke-mcp
   - oracle-cloud

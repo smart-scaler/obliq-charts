@@ -50,31 +50,67 @@ kubectl create secret docker-registry registry \
 
 💡 **NOTE: For easier environment variable management, see [.env file setup](./docs/prerequisites.md#environment-variables-with-env-file).**
 
-
 #### Full Platform (All 28 Services)
 
 ```bash
-export DEFAULT_ADMIN_EMAIL="admin@yourcompany.com"  # Custom admin email
-export DEFAULT_ADMIN_PASSWORD="your-secure-password"  # Custom admin password
+# Required
+export DEFAULT_ADMIN_EMAIL="admin@yourcompany.com"
+export DEFAULT_ADMIN_PASSWORD="your-secure-password"
+export OPENAI_API_KEY="sk-your-openai-api-key"
 
-# Optional: Additional credentials for integrations
-export DD_API_KEY="your-datadog-api-key"  # For DataDog integration
-export DD_APP_KEY="your-datadog-app-key"  # For DataDog integration
-export SLACK_BOT_TOKEN="xoxb-your-slack-bot-token"  # For Slack integration
+# Optional: OpenAI (defaults to Groq if unset)
+export OPENAI_BASE_URL="https://api.groq.com/openai/v1"
+export LS_OPENAI_BASE_URL="${OPENAI_BASE_URL:-https://api.groq.com/openai/v1}"
+export SI_OPENAI_BASE_URL="${OPENAI_BASE_URL:-https://api.groq.com/openai/v1}"
+export RCA_OPENAI_BASE_URL="${OPENAI_BASE_URL:-https://api.groq.com/openai/v1}"
+export OPENAI_MODEL="llama-3.3-70b-versatile"
 
-# Install with ALL 28 services enabled
-helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
+# Optional: AWS
+export AWS_ROLE_ARN_AWS_MCP="arn:aws:iam::..."
+export AWS_ROLE_ARN_EC2_CLOUDWATCH="arn:aws:iam::..."
+
+# Optional: DataDog, Slack
+export DD_API_KEY="your-datadog-api-key"
+export DD_APP_KEY="your-datadog-app-key"
+export SLACK_BOT_TOKEN="xoxb-your-slack-bot-token"
+
+# Optional: Observability
+export OTEL_JAEGER_URL="http://obliq-sre-agent-jaeger-query:16686"
+export JAEGER_URL="${OTEL_JAEGER_URL:-http://demo.example.com:8080/jaeger/ui}"
+export ADDITIONAL_SERVICE_TAGS=""
+
+# Optional: Neo4j (defaults in command)
+export NEO4J_USER="neo4j"
+export NEO4J_PASSWORD="admin123"
+
+# Optional: Prometheus, Loki, Jira
+export PROMETHEUS_URL="http://prometheus:9090"
+export PROMETHEUS_MCP_USERNAME=""
+export PROMETHEUS_MCP_PASSWORD=""
+export LOKI_URL="http://loki:3100"
+export JIRA_BASE_URL="https://yourcompany.atlassian.net"
+export JIRA_EMAIL="your-email@company.com"
+export JIRA_API_TOKEN="your-jira-api-token"
+
+helm upgrade --install obliq-sre-agent obliq-charts/obliq-sre-agent \
   --namespace obliq \
   --create-namespace \
-  --dependency-update `# Update chart dependencies before install` \
-  --set global.env.backend.DEFAULT_ADMIN_EMAIL="${DEFAULT_ADMIN_EMAIL}" `# Custom admin email` \
-  --set global.env.backend.DEFAULT_ADMIN_PASSWORD="${DEFAULT_ADMIN_PASSWORD}" `# Custom admin password` \
-  --set mongodb.persistence.enabled=false `# Disable persistent storage for demo` \
-  --set global.env.sg.ADDITIONAL_SERVICE_TAGS="${ADDITIONAL_SERVICE_TAGS}"
-  --set mongodb.persistence.enabled=false `# Disable persistent storage for demo` \
-  `# Enable ALL 28 services` \
+  --dependency-update \
+  --timeout 15m \
+  --set global.env.openai.OPENAI_API_KEY="${OPENAI_API_KEY}" \
+  --set global.env.openai.OPENAI_BASE_URL="${OPENAI_BASE_URL:-https://api.groq.com/openai/v1}" \
+  --set global.env.openai.LS_OPENAI_BASE_URL="${LS_OPENAI_BASE_URL:-${OPENAI_BASE_URL:-https://api.groq.com/openai/v1}}" \
+  --set global.env.openai.SI_OPENAI_BASE_URL="${SI_OPENAI_BASE_URL:-${OPENAI_BASE_URL:-https://api.groq.com/openai/v1}}" \
+  --set global.env.openai.RCA_OPENAI_BASE_URL="${RCA_OPENAI_BASE_URL:-${OPENAI_BASE_URL:-https://api.groq.com/openai/v1}}" \
+  --set global.env.openai.OPENAI_MODEL="${OPENAI_MODEL:-llama-3.3-70b-versatile}" \
+  --set mongodb.persistence.enabled=false \
   --set prometheus.enabled=true \
   --set jaeger.enabled=true \
+  --set jaeger.allInOne.enabled=true \
+  --set jaeger.storage.type=none \
+  --set jaeger.agent.enabled=false \
+  --set jaeger.collector.enabled=false \
+  --set jaeger.query.enabled=false \
   --set opentelemetry-collector.enabled=true \
   --set neo4j.enabled=true \
   --set mongodb.enabled=true \
@@ -84,15 +120,6 @@ helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
   --set oke-mcp.enabled=true \
   --set prometheus-mcp.enabled=true \
   --set neo4j-mcp.enabled=true \
-  --set global.env.database.NEO4J_URI="${NEO4J_URI:-bolt://neo4j:7687}" \
-  --set global.env.database.NEO4J_USER="${NEO4J_USER:-neo4j}" \
-  --set global.env.database.NEO4J_PASSWORD="${NEO4J_PASSWORD:-admin123}" \
-  --set global.env.openai.OPENAI_API_KEY="${OPENAI_API_KEY}" \
-  --set global.env.openai.OPENAI_BASE_URL="https://api.groq.com/openai/v1" \
-  --set global.env.openai.LS_OPENAI_BASE_URL="https://api.groq.com/openai/v1" \
-  --set global.env.openai.SI_OPENAI_BASE_URL="https://api.groq.com/openai/v1" \
-  --set global.env.openai.RCA_OPENAI_BASE_URL="https://api.groq.com/openai/v1" \
-  --set global.env.openai.OPENAI_MODEL="llama-3.3-70b-versatile" \
   --set loki-mcp.enabled=true \
   --set cloudwatch-mcp.enabled=true \
   --set aws-ec2-cloudwatch-alarms.enabled=true \
@@ -110,13 +137,31 @@ helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
   --set infra-agent.enabled=true \
   --set obliq-unified-ui.enabled=true \
   --set orchestrator.enabled=true \
-  `# Optional: Integration credentials` \
+  --set global.env.aws.AWS_ROLE_ARN_AWS_MCP="${AWS_ROLE_ARN_AWS_MCP}" \
+  --set global.env.aws.AWS_ROLE_ARN_EC2_CLOUDWATCH_ALARMS="${AWS_ROLE_ARN_EC2_CLOUDWATCH}" \
   --set global.env.sg.DD_API_KEY="${DD_API_KEY}" \
   --set global.env.sg.DD_APP_KEY="${DD_APP_KEY}" \
+  --set global.env.sg.OTEL_JAEGER_URL="${OTEL_JAEGER_URL}" \
+  --set global.env.sg.JAEGER_URL="${JAEGER_URL:-${OTEL_JAEGER_URL:-http://demo.example.com:8080/jaeger/ui}}" \
+  --set global.env.sg.ADDITIONAL_SERVICE_TAGS="${ADDITIONAL_SERVICE_TAGS}" \
+  --set global.env.database.NEO4J_USER="${NEO4J_USER:-neo4j}" \
+  --set global.env.database.NEO4J_PASSWORD="${NEO4J_PASSWORD:-admin123}" \
   --set global.env.slack.SLACK_BOT_TOKEN="${SLACK_BOT_TOKEN}" \
-  --set obliq-unified-ui.service.type=LoadBalancer `# Expose UI externally` \
-  --timeout 15m
+  --set global.env.prometheus.PROMETHEUS_URL="${PROMETHEUS_URL}" \
+  --set global.env.prometheus.PROMETHEUS_MCP_USERNAME="${PROMETHEUS_MCP_USERNAME}" \
+  --set global.env.prometheus.PROMETHEUS_MCP_PASSWORD="${PROMETHEUS_MCP_PASSWORD}" \
+  --set global.env.loki.LOKI_URL="${LOKI_URL}" \
+  --set global.env.jira.JIRA_BASE_URL="${JIRA_BASE_URL}" \
+  --set global.env.jira.JIRA_EMAIL="${JIRA_EMAIL}" \
+  --set global.env.jira.JIRA_API_TOKEN="${JIRA_API_TOKEN}" \
+  --set global.env.backend.DEFAULT_ADMIN_EMAIL="${DEFAULT_ADMIN_EMAIL}" \
+  --set global.env.backend.DEFAULT_ADMIN_PASSWORD="${DEFAULT_ADMIN_PASSWORD}" \
+  --set obliq-unified-ui.service.type=LoadBalancer
 ```
+
+#### Dry Run (validate without applying)
+
+Add `--dry-run --debug` to the command above to render and validate templates without creating resources.
 
 📋 **For full integration with all services:** See [Complete Deployment Examples](./docs/parameters.md#--complete-deployment-examples)
 
