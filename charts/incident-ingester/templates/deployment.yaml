@@ -92,9 +92,7 @@ spec:
           env:
             # Environment variables from global Secret
             {{- include "obliq-sre-agent.globalSecretEnv" $ | nindent 12 }}
-            # Explicit OPENAI_BASE_URL with default (ensures incident-ingester always has it)
-            - name: OPENAI_BASE_URL
-              value: {{ ($.Values.global.env.openai.OPENAI_BASE_URL | default "https://api.groq.com/openai/v1") | quote }}
+            
             # Local environment variables (override global)
             {{- range $key, $value := .Values.env.common }}
             - name: {{ $key }}

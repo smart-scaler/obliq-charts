@@ -16,7 +16,7 @@ A comprehensive AI-powered Site Reliability Engineering platform deployed as a s
 
 - **Kubernetes cluster** (v1.19+)
 - **Helm** (v3.8+)
-- **Container Registry Access** - Contact <support@aveshasystems.com> for ACR credentials
+- **Container Registry Access** - Contact [support@aveshasystems.com](mailto:support@aveshasystems.com) for ACR credentials
 
 📚 **Important Setup Guides**:
 
@@ -226,7 +226,7 @@ kubectl delete namespace obliq
 
 ### Common Issues
 
-- **ImagePullBackOff**: Get ACR credentials from <support@aveshasystems.com>
+- **ImagePullBackOff**: Get ACR credentials from [support@aveshasystems.com](mailto:support@aveshasystems.com)
 - **Pod failures**: Check logs with `kubectl logs -n obliq <pod-name>`
 - **External access**: External HTTP/HTTPS access requires separate ingress controller installation
 
@@ -245,7 +245,7 @@ kubectl get events -n obliq --sort-by='.lastTimestamp' | tail -10
 
 ## 📞 Support
 
-- **Email**: <support@aveshasystems.com>
+- **Email**: [support@aveshasystems.com](mailto:support@aveshasystems.com)
 - **Documentation**: See linked guides above
 - **Issues**: Include pod logs and deployment details
 

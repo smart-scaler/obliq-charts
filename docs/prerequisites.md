@@ -32,7 +32,7 @@ kubectl describe nodes
 
 ## Get Required Credentials
 
-1. **Registry Access**: Contact <support@aveshasystems.com>
+1. **Registry Access**: Contact [support@aveshasystems.com](mailto:support@aveshasystems.com)
 
 ## Optional Integration Requirements
 
@@ -249,4 +249,4 @@ After verifying prerequisites:
 1. Create registry secret - see [Quick Start](../README.md#1-create-acr-secret)
 2. Install chart - see [Installation](../README.md#2-install-the-chart)
 
-For issues: <support@aveshasystems.com>
+For issues: [support@aveshasystems.com](mailto:support@aveshasystems.com)
