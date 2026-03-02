@@ -2,7 +2,7 @@ apiVersion: v2
 name: backend
 description: A Helm chart for deploying the backend service with multiple environment variables
 type: application
-version: 1.5.1
+version: 1.5.2
 appVersion: "1.5.1"
 keywords:
   - backend

@@ -2,7 +2,7 @@ apiVersion: v2
 name: neo4j-mcp
 description: A Helm chart for deploying the Neo4j Model Context Protocol service
 type: application
-version: 1.5.1
+version: 1.5.2
 appVersion: "1.5.1"
 keywords:
   - neo4j-mcp

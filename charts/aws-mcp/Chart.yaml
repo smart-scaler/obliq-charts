@@ -2,7 +2,7 @@ apiVersion: v2
 name: aws-mcp
 description: A Helm chart for deploying the AWS MCP (Model Context Protocol) service with multiple environment variables
 type: application
-version: 1.5.1
+version: 1.5.2
 appVersion: "1.5.1"
 keywords:
   - aws-mcp

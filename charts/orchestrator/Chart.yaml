@@ -2,7 +2,7 @@ apiVersion: v2
 name: orchestrator
 description: A Helm chart for deploying a single container application with multiple environment variables
 type: application
-version: 1.5.1
+version: 1.5.2
 appVersion: "1.5.1"
 keywords:
   - application

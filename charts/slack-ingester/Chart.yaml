@@ -2,7 +2,7 @@ apiVersion: v2
 name: slack-ingester
 description: A Helm chart for deploying the Slack ingester service with multiple environment variables
 type: application
-version: 1.5.1
+version: 1.5.2
 appVersion: "1.5.1"
 keywords:
   - slack-ingester

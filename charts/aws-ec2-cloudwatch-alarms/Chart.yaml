@@ -2,7 +2,7 @@ apiVersion: v2
 name: aws-ec2-cloudwatch-alarms
 description: A Helm chart for deploying the AWS EC2 CloudWatch alarms service with multiple environment variables
 type: application
-version: 1.5.1
+version: 1.5.2
 appVersion: "1.5.1"
 keywords:
   - aws-ec2-cloudwatch-alarms
