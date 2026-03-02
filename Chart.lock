@@ -83,5 +83,5 @@ dependencies:
 - name: jaeger
   repository: file://./charts/jaeger
   version: 0.71.0
-digest: sha256:9dabf7313dd1b2d181f625912a862f0acc015868dd8ec3ff7acb47e1a957c8ff
-generated: "2026-02-17T17:59:04.297161+02:00"
+digest: sha256:fb25568431e1c0a4fb0e7ec8631398fc68d6e944471677e87aa413744c97a218
+generated: "2026-03-02T11:16:04.920753Z"
