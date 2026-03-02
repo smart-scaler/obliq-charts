@@ -10,78 +10,78 @@ dependencies:
   version: 13.17.0
 - name: loki-mcp
   repository: file://./charts/loki-mcp
-  version: 1.5.0
+  version: 1.5.1
 - name: cloudwatch-mcp
   repository: file://./charts/cloudwatch-mcp
-  version: 1.5.0
+  version: 1.5.1
 - name: aws-mcp
   repository: file://./charts/aws-mcp
-  version: 1.5.0
+  version: 1.5.1
 - name: k8s-mcp
   repository: file://./charts/k8s-mcp
-  version: 1.5.0
+  version: 1.5.1
 - name: gcp-mcp
   repository: file://./charts/gcp-mcp
-  version: 1.5.0
+  version: 1.5.1
 - name: oke-mcp
   repository: file://./charts/oke-mcp
-  version: 1.5.0
+  version: 1.5.1
 - name: prometheus-mcp
   repository: file://./charts/prometheus-mcp
-  version: 1.5.0
+  version: 1.5.1
 - name: aws-ec2-cloudwatch-alarms
   repository: file://./charts/aws-ec2-cloudwatch-alarms
-  version: 1.5.0
+  version: 1.5.1
 - name: kubernetes-events-ingester
   repository: file://./charts/kubernetes-events-ingester
-  version: 1.5.0
+  version: 1.5.1
 - name: slack-ingester
   repository: file://./charts/slack-ingester
-  version: 1.5.0
+  version: 1.5.1
 - name: neo4j-mcp
   repository: file://./charts/neo4j-mcp
-  version: 1.5.0
+  version: 1.5.1
 - name: anomaly-detection
   repository: file://./charts/anomaly-detection
-  version: 1.5.0
+  version: 1.5.1
 - name: active-inventory
   repository: file://./charts/active-inventory
-  version: 1.5.0
+  version: 1.5.1
 - name: incident-manager
   repository: file://./charts/incident-manager
-  version: 1.5.0
+  version: 1.5.1
 - name: incident-ingester
   repository: file://./charts/incident-ingester
-  version: 1.5.0
+  version: 1.5.1
 - name: rca-agent
   repository: file://./charts/rca-agent
-  version: 1.5.0
+  version: 1.5.1
 - name: auto-remediation
   repository: file://./charts/auto-remediation
-  version: 1.5.0
+  version: 1.5.1
 - name: hitl-manager
   repository: file://./charts/hitl-manager
-  version: 1.5.0
+  version: 1.5.1
 - name: backend
   repository: file://./charts/backend
-  version: 1.5.0
+  version: 1.5.1
 - name: service-graph-engine
   repository: file://./charts/service-graph-engine
-  version: 1.5.0
+  version: 1.5.1
 - name: infra-agent
   repository: file://./charts/infra-agent
-  version: 1.5.0
+  version: 1.5.1
 - name: obliq-unified-ui
   repository: file://./charts/obliq-unified-ui
-  version: 1.5.0
+  version: 1.5.1
 - name: orchestrator
   repository: file://./charts/orchestrator
-  version: 1.5.0
+  version: 1.5.1
 - name: prometheus
   repository: https://prometheus-community.github.io/helm-charts
   version: 27.41.0
 - name: jaeger
   repository: file://./charts/jaeger
   version: 0.71.0
-digest: sha256:9dabf7313dd1b2d181f625912a862f0acc015868dd8ec3ff7acb47e1a957c8ff
-generated: "2026-02-17T17:59:04.297161+02:00"
+digest: sha256:fb25568431e1c0a4fb0e7ec8631398fc68d6e944471677e87aa413744c97a218
+generated: "2026-03-02T11:16:04.920753Z"

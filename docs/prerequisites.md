@@ -12,6 +12,7 @@ System requirements needed before installing the Obliq SRE Agent chart.
 | **Container registry access** | - | Image pulling |
 
 ### Minimum Cluster Resources
+
 - **CPU**: 4 cores available
 - **Memory**: 8GB available
 - **Permissions**: Cluster admin for initial setup
@@ -31,13 +32,14 @@ kubectl describe nodes
 
 ## Get Required Credentials
 
-1. **Registry Access**: Contact support@aveshasystems.com
+1. **Registry Access**: Contact [support@aveshasystems.com](mailto:support@aveshasystems.com)
 
 ## Optional Integration Requirements
 
 The following integrations are **optional** and only required if you enable specific services:
 
 ### ServiceNow Integration
+
 **Required for**: `incident-ingester`
 
 | Requirement | Parameters | Reference |
@@ -48,10 +50,13 @@ The following integrations are **optional** and only required if you enable spec
 Setup: Ensure ServiceNow user has appropriate permissions to read incident data via REST API.
 
 ### OpenAI Integration
+
+| Requirement | Parameters | Reference |
+|-------------|------------|-----------|
 | **OpenAI API Key** | `OPENAI_API_KEY` | OpenAI → API Keys |
 
-
 ### DataDog Integration
+
 **Required for**: `service-graph-engine`
 
 | Requirement | Parameters | Reference |
@@ -61,6 +66,7 @@ Setup: Ensure ServiceNow user has appropriate permissions to read incident data 
 | **DataDog Site** (optional) | `DD_SITE` | Default: `us5.datadoghq.com` |
 
 ### Slack Integration
+
 **Required for**: `slack-ingester`
 
 | Requirement | Parameters | Reference |
@@ -69,6 +75,7 @@ Setup: Ensure ServiceNow user has appropriate permissions to read incident data 
 | **Slack Webhook** (optional) | `SLACK_WEBHOOK_URL` | Slack App → Incoming Webhooks |
 
 ### Kubernetes Events
+
 **Required for**: `kubernetes-events-ingester`
 
 | Requirement | Parameters | Reference |
@@ -76,6 +83,7 @@ Setup: Ensure ServiceNow user has appropriate permissions to read incident data 
 | **Cluster permissions** | Read events, pods, nodes | [Kubernetes Permissions](kubernetes-permissions.md) |
 
 ### Prometheus Integration
+
 **Required for**: `prometheus-mcp`
 
 | Requirement | Parameters | Reference |
@@ -84,6 +92,7 @@ Setup: Ensure ServiceNow user has appropriate permissions to read incident data 
 | **Auth credentials** | `PROMETHEUS_MCP_USERNAME`, `PROMETHEUS_MCP_PASSWORD` | Prometheus auth |
 
 ### Loki Integration
+
 **Required for**: `loki-mcp`
 
 | Requirement | Parameters | Reference |
@@ -92,6 +101,7 @@ Setup: Ensure ServiceNow user has appropriate permissions to read incident data 
 | **Auth credentials** (optional) | `LOKI_USERNAME`, `LOKI_PASSWORD`, `LOKI_TOKEN` | Loki auth |
 
 ### JIRA Integration
+
 **Used by**: Multiple services for incident management
 
 | Requirement | Parameters | Reference |
@@ -136,7 +146,7 @@ export NEO4J_PASSWORD="admin123"               # Neo4j password
 export NEO4J_AUTH="neo4j/admin123"             # Neo4j auth string
 export NEO4J_DATABASE="neo4j"                  # Neo4j database name
 
-# MongoDB Document Database  
+# MongoDB Document Database
 export MONGO_ROOT_USERNAME="admin"             # MongoDB root username
 export MONGO_ROOT_PASSWORD="admin123"          # MongoDB root password
 export MONGODB_DATABASE="infra_db"             # MongoDB database name
@@ -180,7 +190,7 @@ export PROMETHEUS_URL="http://your-prometheus:9090"
 export PROMETHEUS_MCP_USERNAME="your-prometheus-user"    # If auth enabled
 export PROMETHEUS_MCP_PASSWORD="your-prometheus-password" # If auth enabled
 
-# Loki Log Aggregation  
+# Loki Log Aggregation
 # Used by: loki-mcp for log collection and analysis
 export LOKI_URL="http://your-loki:3100"
 export LOKI_USERNAME="your-loki-user"          # If auth enabled
@@ -223,6 +233,7 @@ helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
 ### Security Best Practices
 
 ⚠️ **Important Security Notes:**
+
 - Add `.env` to your `.gitignore` to avoid committing credentials to version control
 - Set appropriate file permissions: `chmod 600 .env`
 - Never share or commit your `.env` file
@@ -234,7 +245,8 @@ helm install obliq-sre-agent obliq-charts/obliq-sre-agent \
 ## Next Steps
 
 After verifying prerequisites:
+
 1. Create registry secret - see [Quick Start](../README.md#1-create-acr-secret)
 2. Install chart - see [Installation](../README.md#2-install-the-chart)
 
-For issues: support@aveshasystems.com
+For issues: [support@aveshasystems.com](mailto:support@aveshasystems.com)

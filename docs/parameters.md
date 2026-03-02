@@ -400,4 +400,4 @@ For additional help:
 
 - **Documentation**: [Services Configuration](services.md)
 - **Prerequisites**: [System Requirements](prerequisites.md)
-- **Support**: <support@aveshasystems.com>
+- **Support**: [support@aveshasystems.com](mailto:support@aveshasystems.com)
