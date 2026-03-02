@@ -67,7 +67,7 @@ export OPENAI_MODEL="llama-3.3-70b-versatile"
 
 # Optional: AWS
 export AWS_ROLE_ARN_AWS_MCP="arn:aws:iam::..."
-export AWS_ROLE_ARN_EC2_CLOUDWATCH="arn:aws:iam::..."
+export AWS_ROLE_ARN_EC2_CLOUDWATCH_ALARMS="arn:aws:iam::..."
 
 # Optional: DataDog, Slack
 export DD_API_KEY="your-datadog-api-key"
@@ -138,7 +138,7 @@ helm upgrade --install obliq-sre-agent obliq-charts/obliq-sre-agent \
   --set obliq-unified-ui.enabled=true \
   --set orchestrator.enabled=true \
   --set global.env.aws.AWS_ROLE_ARN_AWS_MCP="${AWS_ROLE_ARN_AWS_MCP}" \
-  --set global.env.aws.AWS_ROLE_ARN_EC2_CLOUDWATCH_ALARMS="${AWS_ROLE_ARN_EC2_CLOUDWATCH}" \
+  --set global.env.aws.AWS_ROLE_ARN_EC2_CLOUDWATCH_ALARMS="${AWS_ROLE_ARN_EC2_CLOUDWATCH_ALARMS}" \
   --set global.env.sg.DD_API_KEY="${DD_API_KEY}" \
   --set global.env.sg.DD_APP_KEY="${DD_APP_KEY}" \
   --set global.env.sg.OTEL_JAEGER_URL="${OTEL_JAEGER_URL}" \
