@@ -79,7 +79,7 @@ Get the image registry
 {{- if .Values.global.imageRegistry }}
 {{- .Values.global.imageRegistry }}
 {{- else }}
-{{- "avesha.azurecr.io" }}
+{{- "harbor.saas.smart-scaler.io" }}
 {{- end }}
 {{- end }}
 

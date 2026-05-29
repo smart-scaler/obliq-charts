@@ -26,33 +26,33 @@
 #   --set global.env.aws.AWS_SECRET_ACCESS_KEY="..."
 
 # Centralized configuration
-x-imageRegistry: &imageRegistry "avesha.azurecr.io"
+x-imageRegistry: &imageRegistry "harbor.saas.smart-scaler.io"
 
 # Centralized image paths for all services
 x-images:
-  backend: &backendImage "agents/release/backend"
-  obliq-unified-ui: &obliqUnifiedUiImage "agents/release/obliq-ai-sre"
-  orchestrator: &orchestratorImage "agents/release/orchestrator"
-  rca-agent: &rcaAgentImage "agents/release/rca-agent"
-  anomaly-detection: &anomalyDetectionImage "agents/release/anomaly-detection"
-  auto-remediation: &autoRemediationImage "agents/release/auto-remediation"
-  hitl-manager: &hitlManagerImage "agents/release/hitl-manager"
-  incident-manager: &incidentManagerImage "agents/release/incident-manager"
-  incident-ingester: &incidentIngesterImage "agents/release/incident-ingester"
-  service-graph-engine: &serviceGraphEngineImage "agents/release/service-graph-engine"
-  active-inventory: &activeInventoryImage "agents/release/active-inventory"
-  infra-agent: &infraAgentImage "agents/release/infra-agent"
-  aws-mcp: &awsMcpImage "agents/release/aws-mcp"
-  k8s-mcp: &k8sMcpImage "agents/release/k8s-mcp"
-  gcp-mcp: &gcpMcpImage "agents/release/gcp-mcp"
-  oke-mcp: &okeMcpImage "agents/release/oke-mcp"
-  prometheus-mcp: &prometheusMcpImage "agents/release/prometheus-mcp"
-  loki-mcp: &lokiMcpImage "agents/release/loki-mcp"
-  neo4j-mcp: &neo4jMcpImage "agents/release/neo4j-mcp"
-  cloudwatch-mcp: &cloudwatchMcpImage "agents/release/cloudwatch-mcp"
-  kubernetes-events-ingester: &kubernetesEventsIngesterImage "agents/release/kubernetes-events-ingester"
-  slack-ingester: &slackIngesterImage "agents/release/slack-ingester"
-  aws-ec2-cloudwatch-alarms: &awsEc2CloudwatchAlarmsImage "agents/release/aws-ec2-cloudwatch-alarms"
+  backend: &backendImage "avesha/aveshadev/backend"
+  obliq-unified-ui: &obliqUnifiedUiImage "avesha/aveshadev/obliq-ai-sre"
+  orchestrator: &orchestratorImage "avesha/aveshadev/orchestrator"
+  rca-agent: &rcaAgentImage "avesha/aveshadev/rca-agent"
+  anomaly-detection: &anomalyDetectionImage "avesha/aveshadev/anomaly-detection"
+  auto-remediation: &autoRemediationImage "avesha/aveshadev/auto-remediation"
+  hitl-manager: &hitlManagerImage "avesha/aveshadev/hitl-manager"
+  incident-manager: &incidentManagerImage "avesha/aveshadev/incident-manager"
+  incident-ingester: &incidentIngesterImage "avesha/aveshadev/incident-ingester"
+  service-graph-engine: &serviceGraphEngineImage "avesha/aveshadev/service-graph-engine"
+  active-inventory: &activeInventoryImage "avesha/aveshadev/active-inventory"
+  infra-agent: &infraAgentImage "avesha/aveshadev/infra-agent"
+  aws-mcp: &awsMcpImage "avesha/aveshadev/aws-mcp"
+  k8s-mcp: &k8sMcpImage "avesha/aveshadev/k8s-mcp"
+  gcp-mcp: &gcpMcpImage "avesha/aveshadev/gcp-mcp"
+  oke-mcp: &okeMcpImage "avesha/aveshadev/oke-mcp"
+  prometheus-mcp: &prometheusMcpImage "avesha/aveshadev/prometheus-mcp"
+  loki-mcp: &lokiMcpImage "avesha/aveshadev/loki-mcp"
+  neo4j-mcp: &neo4jMcpImage "avesha/aveshadev/neo4j-mcp"
+  cloudwatch-mcp: &cloudwatchMcpImage "avesha/aveshadev/cloudwatch-mcp"
+  kubernetes-events-ingester: &kubernetesEventsIngesterImage "avesha/aveshadev/kubernetes-events-ingester"
+  slack-ingester: &slackIngesterImage "avesha/aveshadev/slack-ingester"
+  aws-ec2-cloudwatch-alarms: &awsEc2CloudwatchAlarmsImage "avesha/aveshadev/aws-ec2-cloudwatch-alarms"
 
 # Common service configuration templates
 x-commonConfig: &commonServiceConfig
@@ -121,10 +121,9 @@ global:
   # ----------------------------------------
   # Image Registry Configuration
   # ----------------------------------------
-  # Global image registry disabled to prevent third-party charts from using it
-  # In-house services use template defaults ({{ .Values.global.imageRegistry | default "avesha.azurecr.io" }})
-  # Set to null to force explicit registry configuration per service
-  imageRegistry: null
+  # Global image registry for in-house Obliq services (third-party charts ignore this when null in their chart)
+  # In-house services use: {{ .Values.global.imageRegistry | default "harbor.saas.smart-scaler.io" }}
+  imageRegistry: "harbor.saas.smart-scaler.io"
   
   # ----------------------------------------
   # Kubernetes Configuration
@@ -150,10 +149,10 @@ global:
   # Container Registry Authentication
   # ----------------------------------------
   # Global image pull secrets configuration
-  # Required for pulling images from private Avesha registry (avesha.azurecr.io)
+  # Required for pulling images from private Harbor registry (harbor.saas.smart-scaler.io)
   imagePullSecrets:
     # Use existing secret by name (must be created beforehand)
-    # kubectl create secret docker-registry registry --docker-server=avesha.azurecr.io --docker-username=... --docker-password=...
+    # kubectl create secret docker-registry registry --docker-server=https://harbor.saas.smart-scaler.io --docker-username=... --docker-password=...
     - name: registry
   
   # Image pull secret creation configuration (alternative to manual creation)
@@ -162,8 +161,8 @@ global:
     create:
       enabled: false  # Set to true if you want chart to create the secret
       name: "registry"
-      # Docker registry credentials (contact support@aveshasystems.com for access)
-      registry: "avesha.azurecr.io"
+      # Docker registry credentials for Harbor
+      registry: "harbor.saas.smart-scaler.io"
       username: ""  # Provide via --set or values override
       password: ""  # Provide via --set or values override
     # Use existing pre-created image pull secret (if provided)
