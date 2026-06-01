@@ -121,9 +121,7 @@ global:
   # ----------------------------------------
   # Image Registry Configuration
   # ----------------------------------------
-  # Global image registry for in-house Obliq services (third-party charts ignore this when null in their chart)
-  # In-house services use: {{ .Values.global.imageRegistry | default "harbor.saas.smart-scaler.io" }}
-  imageRegistry: "harbor.saas.smart-scaler.io"
+  imageRegistry: null
   
   # ----------------------------------------
   # Kubernetes Configuration
